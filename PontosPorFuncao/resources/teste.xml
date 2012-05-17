@@ -1,0 +1,1023 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<system>
+	<data-model>
+		<ilf name="Empregado">
+			<subset name="Empregado">
+				<field name="nome" />
+				<field name="matricula" />
+				<field name="endereco" />
+				<field name="bairro" />
+				<field name="dataAdmissao" />
+				<field name="dataRescisao" />
+				<field name="cpf" />
+				<field name="tipoContrato" />
+				<field name="nomeMae" />
+				<field name="nomePai" />
+				<field name="dataNascimento" />
+				<field name="ctps" />
+				<field name="ctpsOrgaoExpeditor" />
+				<field name="rg" />
+				<field name="rgOrgaoExpeditor" />
+				<field name="idEscolatidade" ref="Escolaridade" />
+				<field name="cep" />
+				<field name="idCidade" ref="Cidade" />
+			</subset>
+			<subset name="HistoricoFuncional">
+				<field name="idEmpregado" ref="Empregado" />
+				<field name="idCargo" ref="Cargo" />
+				<field name="dataInicio" />
+				<field name="dataTermino" />
+			</subset>
+			<subset name="HoraExtra">
+				<field name="idEmpregado" ref="Empregado" />
+				<field name="idGerente" ref="Gerente" dataModelElement="Empregado"/>
+				<field name="dataHoraExtra" />
+				<field name="horaInicio" />
+				<field name="horaTermino" />
+			</subset>
+			<subset name="Afastamento">
+				<field name="idEmpregado" ref="Empregado" />
+				<field name="idMotivoAfastamento" ref="MotivoAfastamento" />
+				<field name="dataInicio" />
+				<field name="dataRetorno" />
+			</subset>
+			<subset name="Gerente">
+				<field name="idEmpregado" ref="Empregado" />
+				<field name="idCentroDeCusto" ref="CentroDeCusto" dataModelElement="Estabelecimento"/>
+				<field name="dataInicio" />
+				<field name="dataTermino" />
+			</subset>
+			<subset name="HistoricoLotacao">
+				<field name="idEmpregado" ref="Empregado" />
+				<field name="idCentroDeCusto" ref="CentroDeCusto" dataModelElement="Estabelecimento" />
+				<field name="idMotivoTransferencia" ref="MotivoTransferencia" />
+				<field name="dataInicio" />
+				<field name="dataTermino" />
+			</subset>
+			<subset name="Falta">
+				<field name="idEmpregado" ref="Empregado" />
+				<field name="idMotivoFalta" ref="MotivoFalta" />
+				<field name="idGerente" ref="Gerente" dataModelElement="Empregado" description="Gerente que abonou a falta!"/>
+				<field name="dataFalta" />
+				<field name="dataTermino" />
+			</subset>
+			<subset name="ContraCheque">
+				<field name="idEmpregado" ref="Empregado" />
+				<field name="anoMes" />
+				<field name="tipoPagamento" />
+			</subset>
+			<subset name="ContraChequeVerba">
+				<field name="idContraCheque" ref="ContraCheque" dataModelElement="Empregado" />
+				<field name="idVerba" ref="Verba" />
+				<field name="valor" />
+			</subset>
+		</ilf>
+		<ilf name="MotivoAfastamento">
+			<subset name="MotivoAfastamento">
+				<field name="descricao"/>
+			</subset>
+		</ilf>
+		<ilf name="Estabelecimento">
+			<subset name="Estabelecimento">
+				<field name="idCidade" ref="Cidade" />
+				<field name="descricao"/>
+				<field name="endereco"/>
+				<field name="cep"/>
+				<field name="bairro"/>
+			</subset>
+			<subset name="CentroDeCusto">
+				<field name="idEstabelecimento" ref="Estabelecimento" />
+				<field name="descricao"/>
+				<field name="sigla"/>
+			</subset>			
+		</ilf>
+		<ilf name="MotivoTransferencia">
+			<subset name="MotivoTransferencia">
+				<field name="descricao"/>
+			</subset>
+		</ilf>
+		<ilf name="MotivoFalta">
+			<subset name="MotivoFalta">
+				<field name="descricao"/>
+			</subset>
+		</ilf>
+		<ilf name="Verba">
+			<subset name="Verba">
+				<field name="descricao"/>
+			</subset>
+		</ilf>
+		<ilf name="Cargo">
+			<subset name="Cargo">
+				<field name="descricao"/>
+			</subset>
+			<subset name="SalarioCargo">				
+				<field name="idCargo" ref="Cargo"/>
+				<field name="valor"/>
+				<field name="anoMesInicio"/>
+				<field name="anoMesTermino"/>
+			</subset>
+		</ilf>
+		<eif name="Cidade">
+			<subset name="Cidade">
+				<field name="nome" />
+				<field name="estado" />
+			</subset>
+		</eif>
+		<eif name="Escolaridade">
+			<subset name="Escolaridade">
+				<field name="descricao" />
+			</subset>
+		</eif>
+	</data-model>
+
+	<transaction-model>
+		<transaction name="IncluirNovoEmpregado" errorMsg="true" type="EI">
+			<ftr-list>
+				<ftr name="Empregado" subset="Empregado" useAllFields="true" />
+				<ftr name="Cidade" subset="Cidade">
+					<field name="nome"/>
+				</ftr>
+				<ftr name="Escolaridade">
+					<field name="descricao"/>
+				</ftr>
+			</ftr-list>			
+		</transaction>
+		<transaction name="AlterarEmpregado" errorMsg="true" type="EI">
+			<ftr-list>
+				<ftr name="Empregado" subset="Empregado" useAllFields="true" />
+				<ftr name="Cidade" subset="Cidade">
+					<field name="nome"/>
+				</ftr>
+				<ftr name="Escolaridade"  subset="Escolaridade">
+					<field name="descricao"/>
+				</ftr>
+			</ftr-list>
+			<dependencies>
+					<dependency ref="IncluirNovoEmpregado"/>
+					<dependency ref="ConsultarEmpregado"/>
+			</dependencies>			
+		</transaction>
+		<transaction name="RemoverEmpregado" errorMsg="true" type="EI">
+			<ftr-list>
+				<ftr name="Empregado" subset="Empregado">
+					<field name="matricula"/>
+					<field name="nome"/>
+				</ftr>
+			</ftr-list>
+			<dependencies>
+					<dependency ref="IncluirNovoEmpregado"/>
+					<dependency ref="ConsultarEmpregado"/>
+			</dependencies>			
+		</transaction>
+		<transaction name="ConsultarEmpregado" errorMsg="true" type="EQ">
+			<ftr-list>
+				<ftr name="Empregado" subset="Empregado">
+					<field name="matricula"/>
+					<field name="nome"/>
+					<field name="dataAdmissao"/>
+					<field name="dataRescisao"/>
+				</ftr>
+			</ftr-list>
+			<dependencies>
+					<dependency ref="IncluirNovoEmpregado"/>
+			</dependencies>			
+		</transaction>
+		<transaction name="IncluirAfastamento" errorMsg="true" type="EI">
+			<ftr-list>
+				<ftr name="Afastamento" subset="Afastamento" dataModelElement="Empregado">
+					<field name="dataInicio"/>
+				</ftr>
+				<ftr name="MotivoAfastamento">
+				 	<field name="descricao"/>
+				</ftr>
+				<ftr name="Empregado">
+				 	<field name="matricula"/>
+				 	<field name="nome"/>
+				</ftr>
+			</ftr-list>
+			<dependencies>
+					<dependency ref="IncluirNovoEmpregado"/>
+					<dependency ref="IncluirMotivoDeAfastamento"/>
+			</dependencies>			
+		</transaction>
+		<transaction name="AlterarAfastamento" errorMsg="true" type="EI">
+			<ftr-list>
+				<ftr name="Afastamento"  subset="Afastamento" dataModelElement="Empregado" useAllFields="true"/>
+				<ftr name="MotivoAfastamento">
+				 	<field name="descricao"/>
+				</ftr>
+				<ftr name="Empregado">
+				 	<field name="matricula"/>
+				 	<field name="nome"/>
+				</ftr>				
+			</ftr-list>
+			<dependencies>
+					<dependency ref="IncluirAfastamento"/>
+					<dependency ref="ConsultarAfastamentos"/>
+			</dependencies>			
+		</transaction>
+		<transaction name="CancelarAfastamento" errorMsg="true" type="EI">
+			<ftr-list>
+				<ftr name="Afastamento" subset="Afastamento" dataModelElement="Empregado">
+					<field name="dataInicio"/>
+				</ftr>
+				<ftr name="Empregado">
+				 	<field name="matricula"/>
+				 	<field name="nome"/>
+				</ftr>
+			</ftr-list>
+			<dependencies>
+					<dependency ref="IncluirAfastamento"/>
+					<dependency ref="ConsultarAfastamentos"/>
+			</dependencies>			
+		</transaction>
+		<transaction name="ConsultarAfastamentos" errorMsg="true" type="EQ">
+			<ftr-list>
+				<ftr name="Afastamento" subset="Afastamento" dataModelElement="Empregado" useAllFields="true"/>
+				<ftr name="MotivoAfastamento">
+				 	<field name="descricao"/>
+				</ftr>
+				<ftr name="Empregado">
+				 	<field name="matricula"/>
+				 	<field name="nome"/>
+				</ftr>
+			</ftr-list>
+			<dependencies>
+					<dependency ref="IncluirAfastamento"/>
+			</dependencies>			
+		</transaction>
+		<transaction name="DesignarGerencia" errorMsg="true" type="EI">
+			<ftr-list>
+				<ftr name="Gerente" subset="Gerente" dataModelElement="Empregado">
+					<field name="dataInicio"/>
+				</ftr>
+				<ftr name="CentroDeCusto" subset="CentroDeCusto" dataModelElement="Estabelecimento">
+				 	<field name="sigla"/>
+				</ftr>
+				<ftr name="Empregado">
+				 	<field name="matricula"/>
+				 	<field name="nome"/>
+				</ftr>
+			</ftr-list>
+			<dependencies>
+					<dependency ref="IncluirNovoEmpregado"/>
+					<dependency ref="IncluirCentroDeCusto"/>
+			</dependencies>			
+		</transaction>
+		<transaction name="AlterarDesignacaoDeGerencia" errorMsg="true" type="EI">
+			<ftr-list>
+				<ftr name="Gerente" subset="Gerente" dataModelElement="Empregado" useAllFields="true"/>
+				<ftr name="CentroDeCusto" subset="CentroDeCusto" dataModelElement="Estabelecimento">
+				 	<field name="sigla"/>
+				</ftr>
+				<ftr name="Empregado">
+				 	<field name="matricula"/>
+				 	<field name="nome"/>
+				</ftr>
+			</ftr-list>
+			<dependencies>
+					<dependency ref="DesignarGerencia"/>
+					<dependency ref="ConsultarDesignacaoDeGerencia"/>
+			</dependencies>			
+		</transaction>
+		<transaction name="RemoverDesignacaoDeGerencia" errorMsg="true" type="EI">
+			<ftr-list>
+				<ftr name="Gerente" subset="Gerente" dataModelElement="Empregado">
+					<field name="dataInicio"/>
+				</ftr>
+				<ftr name="Empregado">
+				 	<field name="matricula"/>
+				 	<field name="nome"/>
+				</ftr>
+			</ftr-list>
+			<dependencies>
+					<dependency ref="DesignarGerencia"/>
+					<dependency ref="ConsultarDesignacaoDeGerencia"/>
+			</dependencies>			
+		</transaction>
+		<transaction name="ConsultarDesignacaoDeGerencia" errorMsg="true" type="EQ">
+			<ftr-list>
+				<ftr name="Gerente" subset="Gerente" dataModelElement="Empregado" useAllFields="true" />
+				<ftr name="CentroDeCusto" subset="CentroDeCusto" dataModelElement="Estabelecimento">
+				 	<field name="sigla"/>
+				</ftr>
+				<ftr name="Empregado">
+				 	<field name="matricula"/>
+				 	<field name="nome"/>
+				</ftr>
+			</ftr-list>
+			<dependencies>
+					<dependency ref="DesignarGerencia"/>
+			</dependencies>			
+		</transaction>		
+		<transaction name="IncluirLotacao" errorMsg="true" type="EI">
+			<ftr-list>
+				<ftr name="HistoricoLotacao" subset="HistoricoLotacao" dataModelElement="Empregado">
+					<field name="dataInicio"/>
+					<field name="dataTermino"/>
+				</ftr>
+				<ftr name="CentroDeCusto" subset="CentroDeCusto" dataModelElement="Estabelecimento">
+				 	<field name="sigla"/>
+				</ftr>
+				<ftr name="Empregado">
+				 	<field name="matricula"/>
+				 	<field name="nome"/>
+				</ftr>
+				<ftr name="MotivoTransferencia">
+				 	<field name="descricao"/>
+				</ftr>
+			</ftr-list>
+			<dependencies>
+					<dependency ref="IncluirNovoEmpregado"/>
+					<dependency ref="IncluirCentroDeCusto"/>
+					<dependency ref="IncluirMotivoDeTransferencia"/>
+			</dependencies>			
+		</transaction>
+		<transaction name="RemoverLotacao" errorMsg="true" type="EI">
+			<ftr-list>
+				<ftr name="HistoricoLotacao" subset="HistoricoLotacao" dataModelElement="Empregado">
+					<field name="dataInicio"/>
+				</ftr>>
+				<ftr name="Empregado">
+				 	<field name="matricula"/>
+				 	<field name="nome"/>
+				</ftr>
+			</ftr-list>
+			<dependencies>
+					<dependency ref="IncluirLotacao"/>
+					<dependency ref="ConsultarLotacoes"/>
+			</dependencies>			
+		</transaction>
+		<transaction name="ConsultarLotacoes" errorMsg="true" type="EQ">
+			<ftr-list>
+				<ftr name="HistoricoLotacao" subset="HistoricoLotacao" dataModelElement="Empregado">
+					<field name="dataInicio"/>
+				</ftr>>
+				<ftr name="Empregado">
+				 	<field name="matricula"/>
+				 	<field name="nome"/>
+				</ftr>
+			</ftr-list>
+			<dependencies>
+					<dependency ref="IncluirLotacao"/>
+			</dependencies>			
+		</transaction>
+
+		<transaction name="IncluirFalta" errorMsg="true" type="EI">
+			<ftr-list>
+				<ftr name="Falta" subset="Falta" dataModelElement="Empregado" useAllFields="true"/>
+				<ftr name="Empregado">
+				 	<field name="matricula"/>
+				 	<field name="nome"/>
+				</ftr>
+				<ftr name="MotivoFalta">
+				 	<field name="descricao"/>
+				</ftr>
+			</ftr-list>
+			<dependencies>
+					<dependency ref="IncluirNovoEmpregado"/>
+					<dependency ref="IncluirMotivoDeFalta"/>
+			</dependencies>			
+		</transaction>
+		
+		<transaction name="AbonarFalta" errorMsg="true" type="EI">
+			<ftr-list>
+				<ftr name="Falta" dataModelElement="Empregado" subset="Falta" useAllFields="true"/>
+				<ftr name="Empregado">
+				 	<field name="matricula"/>
+				 	<field name="nome"/>
+				</ftr>
+				<ftr name="MotivoFalta">
+				 	<field name="descricao"/>
+				</ftr>
+				<ftr name="Gerente" subset="Gerente" dataModelElement="Empregado">
+				</ftr>
+			</ftr-list>
+			<dependencies>
+					<dependency ref="IncluirFalta"/>
+					<dependency ref="ConsultarFaltas"/>
+					<dependency ref="DesignarGerencia"/>
+			</dependencies>			
+		</transaction>
+		
+		
+		<transaction name="RemoverFalta" errorMsg="true" type="EI">
+			<ftr-list>
+				<ftr name="Falta" dataModelElement="Empregado" subset="Falta">
+					<field name="dataFalta"/>
+				</ftr>
+				<ftr name="Empregado">
+				 	<field name="matricula"/>
+				 	<field name="nome"/>
+				</ftr>
+			</ftr-list>
+			<dependencies>
+					<dependency ref="IncluirFalta"/>
+					<dependency ref="ConsultarFaltas"/>
+			</dependencies>			
+		</transaction>
+
+		<transaction name="AlterarFalta" errorMsg="true" type="EI">
+			<ftr-list>
+				<ftr name="Falta" dataModelElement="Empregado" subset="Falta">
+					<field name="dataFalta"/>
+				</ftr>
+				<ftr name="Empregado">
+				 	<field name="matricula"/>
+				 	<field name="nome"/>
+				</ftr>
+			</ftr-list>
+			<dependencies>
+					<dependency ref="IncluirFalta"/>
+					<dependency ref="ConsultarFaltas"/>
+			</dependencies>			
+		</transaction>
+		
+		<transaction name="ConsultarFaltas" errorMsg="true" type="EQ">
+			<ftr-list>
+				<ftr name="Falta" dataModelElement="Empregado" subset="Falta">
+					<field name="dataFalta"/>
+				</ftr>
+				<ftr name="Empregado">
+				 	<field name="matricula"/>
+				 	<field name="nome"/>
+				</ftr>
+			</ftr-list>
+			<dependencies>
+					<dependency ref="IncluirFalta"/>
+			</dependencies>			
+		</transaction>
+		
+		<transaction name="IncluirHoraExtra" errorMsg="true" type="EI">
+			<ftr-list>
+				<ftr name="HoraExtra" dataModelElement="Empregado" subset="HoraExtra"  useAllFields="true"/>
+				<ftr name="Empregado">
+				 	<field name="matricula"/>
+				 	<field name="nome"/>
+				</ftr>
+				<ftr name="Gerente" dataModelElement="Empregado" subset="Gerente">
+				</ftr>
+			</ftr-list>
+			<dependencies>
+					<dependency ref="IncluirNovoEmpregado"/>
+					<dependency ref="DesignarGerencia"/>
+			</dependencies>			
+		</transaction>
+		<transaction name="AlterarHoraExtra" errorMsg="true" type="EI">
+			<ftr-list>
+				<ftr name="HoraExtra" subset="HoraExtra" dataModelElement="Empregado">
+					<field name="dataHoraExtra"/>
+				</ftr>
+				<ftr name="Empregado">
+				 	<field name="matricula"/>
+				 	<field name="nome"/>
+				</ftr>
+			</ftr-list>
+			<dependencies>
+					<dependency ref="IncluirHoraExtra"/>
+					<dependency ref="ConsultarHorasExtras"/>
+			</dependencies>			
+		</transaction>
+		<transaction name="RemoverHoraExtra" errorMsg="true" type="EI">
+			<ftr-list>
+				<ftr name="HoraExtra" subset="HoraExtra" dataModelElement="Empregado">
+					<field name="dataHoraExtra"/>
+				</ftr>
+				<ftr name="Empregado">
+				 	<field name="matricula"/>
+				 	<field name="nome"/>
+				</ftr>
+			</ftr-list>
+			<dependencies>
+					<dependency ref="IncluirHoraExtra"/>
+					<dependency ref="ConsultarHorasExtras"/>
+			</dependencies>			
+		</transaction>
+		<transaction name="ConsultarHorasExtras" errorMsg="true" type="EQ">
+			<ftr-list>
+				<ftr name="HoraExtra" dataModelElement="Empregado" subset="HoraExtra"  useAllFields="true"/>
+				<ftr name="Empregado">
+				 	<field name="matricula"/>
+				 	<field name="nome"/>
+				</ftr>
+				<ftr name="Gerente" dataModelElement="Empregado" subset="Gerente">
+				</ftr>
+			</ftr-list>
+			<dependencies>
+					<dependency ref="IncluirHoraExtra"/>
+			</dependencies>			
+		</transaction>
+		<transaction name="AssociarCargoAEmpregado" errorMsg="true" type="EI">
+			<ftr-list>
+				<ftr name="HistoricoFuncional" dataModelElement="Empregado" subset="HistoricoFuncional"  useAllFields="true"/>
+				<ftr name="Cargo">
+					<field name="descricao"/>
+				</ftr>
+				<ftr name="Empregado">
+				 	<field name="matricula"/>
+				 	<field name="nome"/>
+				</ftr>
+			</ftr-list>
+			<dependencies>
+					<dependency ref="IncluirNovoEmpregado"/>
+					<dependency ref="IncluirCargo"/>
+			</dependencies>			
+		</transaction>
+		<transaction name="RemoverCargoDeEmpregado" errorMsg="true" type="EI">
+			<ftr-list>
+				<ftr name="HistoricoFuncional" dataModelElement="Empregado" subset="HistoricoFuncional">
+					<field name="dataInicio"/>
+				</ftr>
+				<ftr name="Cargo">
+					<field name="descricao"/>
+				</ftr>
+				<ftr name="Empregado">
+				 	<field name="matricula"/>
+				 	<field name="nome"/>
+				</ftr>
+			</ftr-list>
+			<dependencies>
+					<dependency ref="AssociarCargoAEmpregado"/>
+					<dependency ref="ConsultarCargosDeEmpregado"/>
+			</dependencies>			
+		</transaction>
+		<transaction name="ConsultarCargosDeEmpregado" errorMsg="true" type="EQ">
+			<ftr-list>
+				<ftr name="HistoricoFuncional" dataModelElement="Empregado" subset="HistoricoFuncional">
+					<field name="dataInicio"/>
+				</ftr>
+				<ftr name="Cargo">
+					<field name="descricao"/>
+				</ftr>
+				<ftr name="Empregado">
+				 	<field name="matricula"/>
+				 	<field name="nome"/>
+				</ftr>
+			</ftr-list>
+			<dependencies>
+					<dependency ref="AssociarCargoAEmpregado"/>
+			</dependencies>			
+		</transaction>
+		<transaction name="IncluirEstabelecimento" errorMsg="true" type="EI">
+			<ftr-list>
+				<ftr name="Estabelecimento" useAllFields="true"/>
+			</ftr-list>
+		</transaction>
+		<transaction name="RemoverEstabelecimento" errorMsg="true" type="EI">
+			<ftr-list>			
+				<ftr-list>
+					<ftr name="Estabelecimento">
+						<field name="descricao" />					
+					</ftr>
+				</ftr-list>
+			</ftr-list>
+			<dependencies>
+					<dependency ref="IncluirEstabelecimento"/>
+					<dependency ref="ConsultarEstabelecimento"/>
+			</dependencies>			
+		</transaction>
+		<transaction name="AlterarEstabelecimento" errorMsg="true" type="EI">
+			<ftr-list>
+				<ftr name="Estabelecimento" useAllFields="true"/>
+			</ftr-list>
+			<dependencies>
+					<dependency ref="IncluirEstabelecimento"/>
+					<dependency ref="ConsultarEstabelecimento"/>
+			</dependencies>			
+		</transaction>
+		<transaction name="ConsultarEstabelecimento" errorMsg="true" type="EQ">
+			<ftr-list>
+				<ftr name="Estabelecimento">
+					<field name="descricao" />					
+				</ftr>
+			</ftr-list>
+			<dependencies>
+					<dependency ref="IncluirEstabelecimento"/>
+			</dependencies>			
+		</transaction>
+
+		<transaction name="IncluirCentroDeCusto" errorMsg="true" type="EI">
+			<ftr-list>
+				<ftr name="CentroDeCusto" dataModelElement="Estabelecimento" subset="CentroDeCusto" useAllFields="true"/>
+				<ftr name="Estabelecimento">
+				 	<field name="descricao"/>
+				</ftr>
+			</ftr-list>
+			<dependencies>
+					<dependency ref="IncluirEstabelecimento"/>
+			</dependencies>			
+		</transaction>
+		
+		
+		<transaction name="AlterarCentroDeCusto" errorMsg="true" type="EI">
+			<ftr-list>
+				<ftr name="CentroDeCusto" dataModelElement="Estabelecimento" subset="CentroDeCusto" useAllFields="true"/>
+				<ftr name="Estabelecimento">
+				 	<field name="descricao"/>
+				</ftr>
+			</ftr-list>
+			<dependencies>
+					<dependency ref="IncluirCentroDeCusto"/>
+					<dependency ref="ConsultarCentroDeCusto"/>
+			</dependencies>			
+		</transaction>
+		
+		<transaction name="RemoverCentroDeCusto" errorMsg="true" type="EI">
+			<ftr-list>
+				<ftr name="CentroDeCusto" dataModelElement="Estabelecimento" subset="CentroDeCusto">
+					<field name="descricao"/>
+				</ftr>
+			</ftr-list>
+			<dependencies>
+					<dependency ref="IncluirCentroDeCusto"/>
+					<dependency ref="ConsultarCentroDeCusto"/>
+			</dependencies>			
+		</transaction>
+		
+		<transaction name="ConsultarCentroDeCusto" errorMsg="true" type="EQ">
+			<ftr-list>
+				<ftr name="CentroDeCusto" dataModelElement="Estabelecimento" subset="CentroDeCusto">
+					<field name="descricao"/>
+				</ftr>
+				<ftr name="Estabelecimento">
+				 	<field name="descricao"/>
+				</ftr>
+			</ftr-list>
+			<dependencies>
+					<dependency ref="IncluirCentroDeCusto"/>
+			</dependencies>			
+		</transaction>
+		<transaction name="IncluirMotivoDeAfastamento" errorMsg="true" type="EI">
+			<ftr-list>
+				<ftr name="MotivoAfastamento" useAllFields="true"/>
+			</ftr-list>
+		</transaction>
+		<transaction name="RemoverMotivoDeAfastamento" errorMsg="true" type="EI">
+			<ftr-list>			
+				<ftr name="MotivoAfastamento" useAllFields="true"/>
+			</ftr-list>
+			<dependencies>
+					<dependency ref="IncluirMotivoDeAfastamento"/>
+					<dependency ref="ConsultarMotivosDeAfastamento"/>
+			</dependencies>			
+		</transaction>
+		<transaction name="AlterarMotivoDeAfastamento" errorMsg="true" type="EI">
+			<ftr-list>
+				<ftr name="MotivoAfastamento" useAllFields="true"/>
+			</ftr-list>
+			<dependencies>
+					<dependency ref="IncluirMotivoDeAfastamento"/>
+					<dependency ref="ConsultarMotivosDeAfastamento"/>
+			</dependencies>			
+		</transaction>
+		<transaction name="ConsultarMotivosDeAfastamento" errorMsg="true" type="EQ">
+			<ftr-list>
+				<ftr name="MotivoAfastamento" useAllFields="true"/>
+			</ftr-list>
+			<dependencies>
+					<dependency ref="IncluirMotivoDeAfastamento"/>
+			</dependencies>			
+		</transaction>
+		<transaction name="IncluirMotivoDeFalta" errorMsg="true" type="EI">
+			<ftr-list>
+				<ftr name="MotivoFalta" useAllFields="true"/>
+			</ftr-list>
+		</transaction>
+		<transaction name="RemoverMotivoDeFalta" errorMsg="true" type="EI">
+			<ftr-list>			
+				<ftr name="MotivoFalta" useAllFields="true"/>
+			</ftr-list>
+			<dependencies>
+					<dependency ref="IncluirMotivoDeFalta"/>
+					<dependency ref="ConsultarMotivosDeFalta"/>
+			</dependencies>			
+		</transaction>
+		<transaction name="AlterarMotivoDeFalta" errorMsg="true" type="EI">
+			<ftr-list>
+				<ftr name="MotivoFalta" useAllFields="true"/>
+			</ftr-list>
+			<dependencies>
+					<dependency ref="IncluirMotivoDeFalta"/>
+					<dependency ref="ConsultarMotivosDeFalta"/>
+			</dependencies>			
+		</transaction>
+		<transaction name="ConsultarMotivosDeFalta" errorMsg="true" type="EQ">
+			<ftr-list>
+				<ftr name="MotivoFalta" useAllFields="true"/>
+			</ftr-list>
+			<dependencies>
+					<dependency ref="IncluirMotivoDeFalta"/>
+			</dependencies>			
+		</transaction>		
+		<transaction name="IncluirMotivoDeTransferencia" errorMsg="true" type="EI">
+			<ftr-list>
+				<ftr name="MotivoTransferencia" useAllFields="true"/>
+			</ftr-list>
+		</transaction>
+		<transaction name="RemoverMotivoDeTransferencia" errorMsg="true" type="EI">
+			<ftr-list>			
+				<ftr name="MotivoTransferencia" useAllFields="true"/>
+			</ftr-list>
+			<dependencies>
+					<dependency ref="IncluirMotivoDeTransferencia"/>
+					<dependency ref="ConsultarMotivosDeTransferencia"/>
+			</dependencies>			
+		</transaction>
+		<transaction name="AlterarMotivoDeTransferencia" errorMsg="true" type="EI">
+			<ftr-list>
+				<ftr name="MotivoTransferencia" useAllFields="true"/>
+			</ftr-list>
+			<dependencies>
+					<dependency ref="IncluirMotivoDeTransferencia"/>
+					<dependency ref="ConsultarMotivosDeTransferencia"/>
+			</dependencies>			
+		</transaction>
+		<transaction name="ConsultarMotivosDeTransferencia" errorMsg="true" type="EQ">
+			<ftr-list>
+				<ftr name="MotivoTransferencia" useAllFields="true"/>
+			</ftr-list>
+			<dependencies>
+					<dependency ref="IncluirMotivoDeTransferencia"/>
+			</dependencies>			
+		</transaction>				
+		<transaction name="IncluirVerba" errorMsg="true" type="EI">
+			<ftr-list>
+				<ftr name="Verba" useAllFields="true"/>
+			</ftr-list>
+		</transaction>
+		<transaction name="RemoverVerba" errorMsg="true" type="EI">
+			<ftr-list>			
+				<ftr name="Verba" useAllFields="true"/>
+			</ftr-list>
+			<dependencies>
+					<dependency ref="IncluirVerba"/>
+					<dependency ref="ConsultarVerbas"/>
+			</dependencies>			
+		</transaction>
+		<transaction name="AlteraVerba" errorMsg="true" type="EI">
+			<ftr-list>
+				<ftr name="Verba" useAllFields="true"/>
+			</ftr-list>
+			<dependencies>
+					<dependency ref="IncluirVerba"/>
+					<dependency ref="ConsultarVerbas"/>
+			</dependencies>			
+		</transaction>
+		<transaction name="ConsultarVerbas" errorMsg="true" type="EQ">
+			<ftr-list>
+				<ftr name="Verba" useAllFields="true"/>
+			</ftr-list>
+			<dependencies>
+					<dependency ref="IncluirVerba"/>
+			</dependencies>			
+		</transaction>
+		
+		<transaction name="IncluirEscolaridade" errorMsg="true" type="EI">
+			<ftr-list>
+				<ftr name="Escolaridade" useAllFields="true"/>
+			</ftr-list>
+		</transaction>
+		<transaction name="RemoverEscolaridade" errorMsg="true" type="EI">
+			<ftr-list>			
+				<ftr name="Escolaridade" useAllFields="true"/>
+			</ftr-list>
+			<dependencies>
+					<dependency ref="IncluirEscolaridade"/>
+					<dependency ref="ConsultarEscolaridades"/>
+			</dependencies>			
+		</transaction>
+		<transaction name="AlteraEscolaridade" errorMsg="true" type="EI">
+			<ftr-list>
+				<ftr name="Escolaridade" useAllFields="true"/>
+			</ftr-list>
+			<dependencies>
+					<dependency ref="IncluirEscolaridade"/>
+					<dependency ref="ConsultarEscolaridades"/>
+			</dependencies>			
+		</transaction>
+		<transaction name="ConsultarEscolaridades" errorMsg="true" type="EQ">
+			<ftr-list>
+				<ftr name="Escolaridade" useAllFields="true"/>
+			</ftr-list>
+			<dependencies>
+					<dependency ref="IncluirEscolaridade"/>
+			</dependencies>			
+		</transaction>
+		<transaction name="IncluirCargo" errorMsg="true" type="EI">
+			<ftr-list>
+				<ftr name="Cargo" useAllFields="true"/>
+			</ftr-list>
+		</transaction>
+		<transaction name="RemoverCargo" errorMsg="true" type="EI">
+			<ftr-list>			
+				<ftr name="Cargo" useAllFields="true"/>
+			</ftr-list>
+			<dependencies>
+					<dependency ref="IncluirCargo"/>
+					<dependency ref="ConsultarCargos"/>
+			</dependencies>			
+		</transaction>
+		<transaction name="AlteraCargo" errorMsg="true" type="EI">
+			<ftr-list>
+				<ftr name="Cargo" useAllFields="true"/>
+			</ftr-list>
+			<dependencies>
+					<dependency ref="IncluirCargo"/>
+					<dependency ref="ConsultarCargos"/>
+			</dependencies>			
+		</transaction>
+		<transaction name="ConsultarCargos" errorMsg="true" type="EQ">
+			<ftr-list>
+				<ftr name="Cargo" useAllFields="true"/>
+			</ftr-list>
+			<dependencies>
+					<dependency ref="IncluirCargo"/>
+			</dependencies>			
+		</transaction>
+		<transaction name="IncluirSalarioDoCargo" errorMsg="true" type="EI">
+			<ftr-list>
+				<ftr name="SalarioCargo" dataModelElement="Cargo" subset="SalarioCargo">
+					<field name="valor"/>
+					<field name="anoMesInicio"/>
+				</ftr>
+				<ftr name="Cargo">
+					<field name="descricao"/>
+				</ftr>				
+			</ftr-list>
+			<dependencies>
+					<dependency ref="IncluirCargo"/>
+			</dependencies>	
+		</transaction>
+		<transaction name="RemoverCargo" errorMsg="true" type="EI">
+			<ftr-list>			
+				<ftr name="SalarioCargo" subset="SalarioCargo" dataModelElement="Cargo">
+					<field name="valor"/>
+					<field name="anoMesInicio"/>
+				</ftr>
+				<ftr name="Cargo">
+					<field name="descricao"/>
+				</ftr>
+			</ftr-list>
+			<dependencies>
+					<dependency ref="IncluirSalarioDoCargo"/>
+					<dependency ref="ConsultarSalariosDoCargo"/>
+			</dependencies>			
+		</transaction>
+		<transaction name="AlteraCargo" errorMsg="true" type="EI">
+			<ftr-list>
+				<ftr name="SalarioCargo" dataModelElement="Cargo" useAllFields="true"/>
+				<ftr name="Cargo">
+					<field name="descricao"/>
+				</ftr>
+			</ftr-list>
+			<dependencies>
+					<dependency ref="IncluirSalarioDoCargo"/>
+					<dependency ref="ConsultarSalariosDoCargo"/>
+			</dependencies>			
+		</transaction>
+		<transaction name="ConsultarSalariosDoCargo" errorMsg="true" type="EQ">
+			<ftr-list>
+				<ftr name="SalarioCargo" dataModelElement="Cargo">
+					<field name="valor"/>
+					<field name="anoMesInicio"/>
+				</ftr>
+				<ftr name="Cargo">
+					<field name="descricao"/>
+				</ftr>
+			</ftr-list>
+			<dependencies>
+					<dependency ref="IncluirSalarioDoCargo"/>
+			</dependencies>			
+		</transaction>	
+		
+		
+		<transaction name="ProcessarFolha" errorMsg="true" type="EO">
+			<ftr-list>
+				<ftr name="ContraChequeVerba" dataModelElement="Empregado" subset="ContraChequeVerba" useAllFields="true"/>
+				<ftr name="ContraCheque"  dataModelElement="Empregado" subset="ContraCheque" useAllFields="true"/>	
+				<ftr name="Verba"  useAllFields="true"/>
+				<ftr name="Empregado"/>
+				<ftr name="Falta" dataModelElement="Empregado" subset="Falta">
+					<field name="idEmpregado"/>
+					<field name="idGerente"/>
+					<field name="dataFalta"/>
+				</ftr>
+				<ftr name="Gerente" dataModelElement="Empregado" subset="Gerente">
+					<field name="idEmpregado"/>
+					<field name="dataInicio"/>
+					<field name="dataTermino"/>
+				</ftr>
+				<ftr name="Afastamento" dataModelElement="Empregado" subset="Afastamento">
+					<field name="idEmpregado"/>
+					<field name="dataInicio"/>
+					<field name="dataRetorno"/>
+				</ftr>
+				<ftr name="HoraExtra" dataModelElement="Empregado" subset="HoraExtra">
+					<field name="idEmpregado"/>
+					<field name="dataHoraExtra"/>
+					<field name="horarioInicio"/>
+					<field name="horarioTermino"/>
+				</ftr>
+				<ftr name="HistoricoFuncional" dataModelElement="Empregado" subset="HistoricoFuncional">
+					<field name="idEmpregado"/>
+					<field name="idCargo"/>
+					<field name="dataInicio"/>
+					<field name="dataTermino"/>
+				</ftr>
+				<ftr name="SalarioCargo" dataModelElement="Cargo">
+					<field name="idCargo"/>
+					<field name="anoMesInicio"/>
+					<field name="anoMesTermino"/>
+					<field name="valor"/>
+				</ftr>
+			</ftr-list>
+			<dependencies>
+					<dependency ref="IncluirVerba"/>
+					<dependency ref="IncluirNovoEmpregado"/>
+					<dependency ref="IncluirHoraExtra"/>
+					<dependency ref="IncluirSalarioDoCargo"/>
+					<dependency ref="DesignarGerencia"/>
+					<dependency ref="IncluirAfastamento"/>
+					<dependency ref="AssociarCargoAEmpregado"/>
+					<dependency ref="IncluirFalta"/>
+					<dependency ref="IncluirHoraExtra"/>
+					<dependency ref="IncluirLotacao"/>
+			</dependencies>	
+		</transaction>
+				
+		<transaction name="AdicionarVerbaParaEmpregado" errorMsg="true" type="EI">
+			<ftr-list>
+				<ftr name="ContraChequeVerba" dataModelElement="Empregado" subset="ContraChequeVerba" useAllFields="true"/>
+				<ftr name="ContraCheque"  dataModelElement="Empregado" subset="ContraCheque" useAllFields="true"/>	
+				<ftr name="Verba"  useAllFields="true"/>
+				<ftr name="Empregado">
+					<field name="nome"/>
+					<field name="matricula"/>
+				</ftr>
+			</ftr-list>
+			<dependencies>
+					<dependency ref="IncluirVerba"/>
+					<dependency ref="IncluirNovoEmpregado"/>
+					<dependency ref="ProcessarFolha"/>
+			</dependencies>	
+		</transaction>
+		<transaction name="RemoverVerbaDeEmpregado" errorMsg="true" type="EI">
+			<ftr-list>			
+				<ftr name="ContraChequeVerba" dataModelElement="Empregado" subset="ContraChequeVerba" useAllFields="true"/>
+				<ftr name="ContraCheque"  dataModelElement="Empregado" subset="ContraCheque" useAllFields="true"/>	
+				<ftr name="Verba"  useAllFields="true"/>
+				<ftr name="Empregado">
+					<field name="nome"/>
+					<field name="matricula"/>
+				</ftr>
+			</ftr-list>
+			<dependencies>
+					<dependency ref="ProcessarFolha"/>
+					<dependency ref="VisualizarContraCheques"/>
+			</dependencies>			
+		</transaction>
+		<transaction name="AlterarVerbaDeEmpregado" errorMsg="true" type="EI">
+			<ftr-list>
+				<ftr name="ContraChequeVerba" dataModelElement="Empregado" subset="ContraChequeVerba" useAllFields="true"/>
+				<ftr name="ContraCheque"  dataModelElement="Empregado" subset="ContraCheque" useAllFields="true"/>	
+				<ftr name="Verba"  useAllFields="true"/>
+				<ftr name="Empregado">
+					<field name="nome"/>
+					<field name="matricula"/>
+				</ftr>
+			</ftr-list>
+			<dependencies>
+					<dependency ref="ProcessarFolha"/>
+					<dependency ref="VisualizarContraCheques"/>
+			</dependencies>			
+		</transaction>
+		<transaction name="VisualizarContraCheques" errorMsg="true" type="EQ">
+			<ftr-list>
+				<ftr name="ContraChequeVerba" dataModelElement="Empregado" subset="ContraChequeVerba" useAllFields="true"/>
+				<ftr name="ContraCheque"  dataModelElement="Empregado" subset="ContraCheque" useAllFields="true"/>	
+				<ftr name="Verba"  useAllFields="true"/>
+				<ftr name="Empregado">
+					<field name="nome"/>
+					<field name="matricula"/>
+				</ftr>
+			</ftr-list>
+			<dependencies>
+					<dependency ref="ProcessarFolha"/>
+			</dependencies>			
+		</transaction>
+		<transaction name="VisualizarProprioContraCheque" errorMsg="true"  type="EQ">
+			<ftr-list>
+				<ftr name="ContraChequeVerba" dataModelElement="Empregado" subset="ContraChequeVerba" useAllFields="true"/>
+				<ftr name="ContraCheque"  dataModelElement="Empregado" subset="ContraCheque" useAllFields="true"/>	
+				<ftr name="Verba"  useAllFields="true"/>
+				<ftr name="Empregado">
+					<field name="nome"/>
+					<field name="matricula"/>
+				</ftr>
+			</ftr-list>
+			<dependencies>
+					<dependency ref="ProcessarFolha"/>
+			</dependencies>			
+		</transaction>	
+	</transaction-model>
+</system>
