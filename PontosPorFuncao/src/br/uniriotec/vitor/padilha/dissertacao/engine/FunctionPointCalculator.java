@@ -18,16 +18,19 @@ import br.uniriotec.vitor.padilha.dissertacao.transactionModel.FTR;
 import br.uniriotec.vitor.padilha.dissertacao.transactionModel.FTRField;
 import br.uniriotec.vitor.padilha.dissertacao.transactionModel.Transaction;
 import br.uniriotec.vitor.padilha.dissertacao.transactionModel.TransactionModel;
+import br.uniriotec.vitor.padilha.dissertacao.transactionModel.TransactionType;
 import br.uniriotec.vitor.padilha.dissertacao.view.IFunctionPointView;
 
 public class FunctionPointCalculator {
 	
-	private IFunctionPointView functionPointView;
+	private Set<IFunctionPointView> functionsView;
 	
 	private Map<String, List<String>> ignoredFields;
-	
-	public FunctionPointCalculator(IFunctionPointView functionPointView) {
-		this.functionPointView = functionPointView;
+	public FunctionPointCalculator() {
+		this.functionsView = new HashSet<IFunctionPointView>();
+	}
+	public FunctionPointCalculator(Set<IFunctionPointView> functionsView) {
+		this.functionsView = functionsView;
 		ignoredFields = new HashMap<String, List<String>>();
 	}
 
@@ -71,11 +74,17 @@ public class FunctionPointCalculator {
 				}
 				for(Field field:ret.getFields()) {
 					totalDet++;
+					field.setFlagcanBeDetInTransation(true);
 					if(field.getSubsetRef()!=null){
 						if(field.getSubsetRef().getParent().getName().equals(ret.getParent().getName())) {
 							totalDet--;
 							continue;
-						}						
+						}
+						else if(field.getPrimaryKey()!=null && field.getPrimaryKey()) {
+							field.setFlagcanBeDetInTransation(false);
+							totalDet--;
+							continue;
+						}
 					}
 					dets.add(field.getParent().getName()+"."+field.getName());
 				}
@@ -106,11 +115,15 @@ public class FunctionPointCalculator {
 				detsNorm[cont]=det;
 				cont++;
 			}
-			int totalFunctionPointRet = calculateFunctionPointRetDataModelElement(totalRet, totalDet, dataModelElement.getType());
-			getFunctionPointView().renderDataModelElementValue(dataModelElement, retsNorm, detsNorm, totalFunctionPointRet);
+			int totalFunctionPointRet = calculateFunctionPointDataModelElement(totalRet, totalDet, dataModelElement.getType());
+			for(IFunctionPointView view :getFunctionsView()) {
+				view.renderDataModelElementValue(dataModelElement, retsNorm, detsNorm, totalFunctionPointRet);
+			}
 			totalFunctionPoint+=totalFunctionPointRet;
 		}
-		getFunctionPointView().renderDataModelValue(dataModel, dataModelElements.size(), totalFunctionPoint);
+		for(IFunctionPointView view :getFunctionsView()) {
+			view.renderDataModelValue(dataModel, dataModelElements.size(), totalFunctionPoint);
+		}
 		return totalFunctionPoint;
 	}
 
@@ -120,23 +133,26 @@ public class FunctionPointCalculator {
 			int totalFtr = 0;
 			int totalDet = 0;
 			Set<String> arquivosLidos = new HashSet<String>();
+			List<String> fields = new ArrayList<String>();
 			for(FTR ftr:transaction.getFtrList()){
 				if(!arquivosLidos.contains(ftr.getDataModelElement())) {
 					arquivosLidos.add(ftr.getDataModelElement());
 					totalFtr++;
 				}
-				List<Field> fields = new ArrayList<Field>();
+				
 				if(ftr.getFields()!=null && (ftr.getUseAllFields()==null || !ftr.getUseAllFields())) {
 					for(FTRField field:ftr.getFields()) {
-						totalDet++;
-						fields.add(field.getField());
+						if(field.getField()!=null && field.getField().getFlagcanBeDetInTransation()!=null && field.getField().getFlagcanBeDetInTransation()) {
+							totalDet++;
+							fields.add(field.getParent().getName()+"."+field.getField().getName());
+						}
 					}
 				}
 				else if(ftr.getUseAllFields()!=null && ftr.getUseAllFields()){
 					for(Field field:ftr.getSubsetRef().getFields()) {
-						if(field.getPrimaryKey()==null || !field.getPrimaryKey()){
+						if(field.getFlagcanBeDetInTransation()){
 							totalDet++;
-							fields.add(field);
+							fields.add(field.getParent().getName()+"."+field.getName());
 						}
 					}
 				}
@@ -144,13 +160,35 @@ public class FunctionPointCalculator {
 			}
 			if(transaction.getErrorMsg()){
 				totalDet++;
+				fields.add("Mensagens em geral");
+			}
+			String[] ftrs = new String[arquivosLidos.size()];
+			int cont = 0;
+			for(String ftr1:arquivosLidos){
+				ftrs[cont]=ftr1;
+				cont++;
 			}
 			
+			String[] dets = new String[fields.size()];
+			cont = 0;
+			for(String det1:fields){
+				dets[cont]=det1;
+				cont++;
+			}
+			
+			int totalFunctionsPoint = calculateFunctionPointTransactionModelElement(ftrs.length, dets.length, transaction.getType());
+			for(IFunctionPointView view :getFunctionsView()) {
+				view.renderTransactionValue(transaction, ftrs, dets, totalFunctionsPoint);
+			}
+			totalFunctionPoint+=totalFunctionsPoint;
+		}
+		for(IFunctionPointView view :getFunctionsView()) {
+			view.renderTransactionModelValue(transactionModel, transactionModel.getTransactions().size(), totalFunctionPoint);
 		}
 		return totalFunctionPoint;
 	}
 	
-	private int calculateFunctionPointRetDataModelElement(int ret, int det, DataModelElementType dataModelElementType){
+	private int calculateFunctionPointDataModelElement(int ret, int det, DataModelElementType dataModelElementType){
 		Complexity complexity = null;
 		if((ret>=6 && det>=20) || (ret<=5 && ret>=2 && det>=51) ) {
 			complexity=Complexity.HIGH;
@@ -176,11 +214,65 @@ public class FunctionPointCalculator {
 		else return 0;
 	}
 	
-	public IFunctionPointView getFunctionPointView() {
-		return functionPointView;
+	private int calculateFunctionPointTransactionModelElement(int ftrs, int dets, TransactionType transactionType){
+		Complexity complexity = null;
+		if(	
+				(((ftrs>=3 && dets>=5) || (ftrs==2 && dets>=16)) && transactionType.equals(TransactionType.EI)) 
+				||
+				(((ftrs>=4 && dets>=6) || (ftrs>=2 && ftrs<=3 && dets>=20)) && (transactionType.equals(TransactionType.EO)||transactionType.equals(TransactionType.EQ))) 
+			){
+			complexity=Complexity.HIGH;
+		}
+		else if(	
+				(((ftrs>=3 && dets <=4) || (ftrs==2 && dets>=5 && dets<=15)
+						|| (ftrs<=1 && dets>=16)) && transactionType.equals(TransactionType.EI)) 
+				||
+				(((ftrs>=4 && dets <=5) || (ftrs>=2 && ftrs<=3 && dets>=6 && dets<=19)
+						|| (ftrs<=1 && dets>=20)) && (transactionType.equals(TransactionType.EO)||transactionType.equals(TransactionType.EQ))) 
+			){
+			complexity=Complexity.MEDIUM;
+		}
+		else if(	
+				(((ftrs<=1 && dets<=15)
+						|| (ftrs==2 && dets<=4)) && transactionType.equals(TransactionType.EI)) 
+				||
+				(((ftrs<=1 && dets<=19)
+						|| (ftrs<=3 && ftrs>2 && dets>=5)) && (transactionType.equals(TransactionType.EO)||transactionType.equals(TransactionType.EQ))) 
+			){
+			complexity=Complexity.LOW;
+		}
+//			complexity=Complexity.HIGH;
+//		}
+//		else if(ret>=6 || (ret<=5 && ret>=2 && det>=20 && det<=50) || (ret==1 && det>=51)) {
+//			complexity=Complexity.MEDIUM;
+//		}
+//		else if((ret==1 && det<=50) || (ret<=5 && ret>=2 && det<20)) {
+//			complexity=Complexity.LOW;
+//		}
+		
+		if((complexity==Complexity.LOW && transactionType.equals(TransactionType.EO) ) ||
+				(complexity==Complexity.MEDIUM && (transactionType.equals(TransactionType.EI) || transactionType.equals(TransactionType.EQ)) ) 
+				)
+			return 4;
+		else if((complexity==Complexity.MEDIUM && transactionType.equals(TransactionType.EO)))
+			return 5;
+		else if(complexity==Complexity.HIGH && transactionType.equals(TransactionType.EO))
+			return 7;
+		else if(complexity==Complexity.LOW && (transactionType.equals(TransactionType.EI) || transactionType.equals(TransactionType.EQ)))
+			return 3;
+		else if(complexity==Complexity.HIGH && (transactionType.equals(TransactionType.EI) || transactionType.equals(TransactionType.EQ)))
+			return 6;
+		else 
+			return 0;
 	}
 
-	public void setFunctionPointView(IFunctionPointView functionPointView) {
-		this.functionPointView = functionPointView;
+	public Set<IFunctionPointView> getFunctionsView() {
+		return functionsView;
 	}
+
+	public void setFunctionsView(Set<IFunctionPointView> functionsView) {
+		this.functionsView = functionsView;
+	}
+	
+	
 }

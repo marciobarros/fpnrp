@@ -197,7 +197,7 @@
 			</ftr-list>
 			<dependencies>
 					<dependency ref="IncluirNovoEmpregado"/>
-					<dependency ref="IncluirMotivoDeAfastamento"/>
+					<dependency ref="IncluirMotivoDeAfastamento" canBeWeak="true"/>
 			</dependencies>			
 		</transaction>
 		<transaction name="AlterarAfastamento" errorMsg="true" type="EI">
@@ -376,7 +376,7 @@
 			</ftr-list>
 			<dependencies>
 					<dependency ref="IncluirNovoEmpregado"/>
-					<dependency ref="IncluirMotivoDeFalta"/>
+					<dependency ref="IncluirMotivoDeFalta" canBeWeak="true"/>
 			</dependencies>			
 		</transaction>
 		
@@ -604,7 +604,7 @@
 				</ftr>
 			</ftr-list>
 			<dependencies>
-					<dependency ref="IncluirEstabelecimento"/>
+					<dependency ref="IncluirEstabelecimento" canBeWeak="true"/>
 			</dependencies>			
 		</transaction>
 		
@@ -769,38 +769,6 @@
 			</ftr-list>
 			<dependencies>
 					<dependency ref="IncluirVerba"/>
-			</dependencies>			
-		</transaction>
-		
-		<transaction name="IncluirEscolaridade" errorMsg="true" type="EI">
-			<ftr-list>
-				<ftr name="Escolaridade" useAllFields="true"/>
-			</ftr-list>
-		</transaction>
-		<transaction name="RemoverEscolaridade" errorMsg="true" type="EI">
-			<ftr-list>			
-				<ftr name="Escolaridade" useAllFields="true"/>
-			</ftr-list>
-			<dependencies>
-					<dependency ref="IncluirEscolaridade"/>
-					<dependency ref="ConsultarEscolaridades"/>
-			</dependencies>			
-		</transaction>
-		<transaction name="AlteraEscolaridade" errorMsg="true" type="EI">
-			<ftr-list>
-				<ftr name="Escolaridade" useAllFields="true"/>
-			</ftr-list>
-			<dependencies>
-					<dependency ref="IncluirEscolaridade"/>
-					<dependency ref="ConsultarEscolaridades"/>
-			</dependencies>			
-		</transaction>
-		<transaction name="ConsultarEscolaridades" errorMsg="true" type="EQ">
-			<ftr-list>
-				<ftr name="Escolaridade" useAllFields="true"/>
-			</ftr-list>
-			<dependencies>
-					<dependency ref="IncluirEscolaridade"/>
 			</dependencies>			
 		</transaction>
 		<transaction name="IncluirCargo" errorMsg="true" type="EI">

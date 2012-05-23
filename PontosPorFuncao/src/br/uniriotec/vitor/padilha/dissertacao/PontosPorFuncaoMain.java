@@ -11,9 +11,11 @@ import javax.xml.bind.Unmarshaller;
 import br.uniriotec.vitor.padilha.dissertacao.engine.FunctionPointCalculator;
 import br.uniriotec.vitor.padilha.dissertacao.exception.ElementException;
 import br.uniriotec.vitor.padilha.dissertacao.utils.UtilsArquivo;
+import br.uniriotec.vitor.padilha.dissertacao.view.IFunctionPointView;
 import br.uniriotec.vitor.padilha.dissertacao.view.SystemOutFunctionPointView;
+import br.uniriotec.vitor.padilha.dissertacao.view.TextFunctionPointView;
 
-public class PontosPorFuncaoParser {
+public class PontosPorFuncaoMain {
 
 	/**
 	 * @param args
@@ -90,10 +92,13 @@ public class PontosPorFuncaoParser {
 
 		Object obj = um.unmarshal(new File("resources/teste.xml"));
 
-		SystemOutFunctionPointView functionPointView = new SystemOutFunctionPointView();
+		IFunctionPointView functionPointView = new TextFunctionPointView();
+		IFunctionPointView systemOutFunctionPointView = new SystemOutFunctionPointView();
 
 		FunctionPointSystem functionPointSystem = (FunctionPointSystem) obj;
-		FunctionPointCalculator functionPointCalculator = new FunctionPointCalculator(functionPointView);
+		FunctionPointCalculator functionPointCalculator = new FunctionPointCalculator();
+		functionPointCalculator.getFunctionsView().add(functionPointView);
+		functionPointCalculator.getFunctionsView().add(systemOutFunctionPointView);
 		try {
 			if(functionPointSystem.validate()) {
 				
