@@ -23,6 +23,8 @@ public class Field extends XmlFunctionPointElementWithParent<Subset> implements 
 	
 	private Subset subsetRef;
 	
+	private Boolean flagcanBeDetInTransation;
+	
 	@XmlAttribute(required=true)
 	public String getName() {
 		return name;
@@ -115,4 +117,12 @@ public class Field extends XmlFunctionPointElementWithParent<Subset> implements 
 		this.subsetRef = subsetRef;
 	}
 
+	@XmlTransient
+	public Boolean getFlagcanBeDetInTransation() {
+		return flagcanBeDetInTransation;
+	}
+
+	public void setFlagcanBeDetInTransation(Boolean flagcanBeDetInTransation) {
+		this.flagcanBeDetInTransation = flagcanBeDetInTransation;
+	}
 }

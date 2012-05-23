@@ -12,14 +12,25 @@ public class SystemOutFunctionPointView extends GenericFunctionPointView{
 	@Override
 	public void renderTransactionModelValue(TransactionModel transactionModel,
 			int totalTransations, int totalFunctionsPoint) {
-		// TODO Auto-generated method stub
+		System.out.println("**** Total de pontos por função não ajustado para transações: "+totalFunctionsPoint+" para "+totalTransations+" transações");
+
 		
 	}
 
 	@Override
 	public void renderTransactionValue(Transaction transaction, String[] ftrs,
 			String[] dets, int totalFunctionsPoint) {
-		// TODO Auto-generated method stub
+		System.out.println("*** "+transaction.getType().name()+" - "+transaction.getName());
+		System.out.println("**** FTRS:");
+		for(int a=0;a<ftrs.length;a++){
+			System.out.println("***** "+ftrs[a]);
+		}
+		System.out.println("**** DETS:");
+		for(int a=0;a<dets.length;a++){
+			System.out.println("***** "+dets[a]);
+		}
+		System.out.println("*** Valor de pontos por função: "+totalFunctionsPoint);
+		System.out.println("*** FIM-"+transaction.getName());
 		
 	}
 

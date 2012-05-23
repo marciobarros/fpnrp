@@ -5,7 +5,7 @@ RemoverEmpregado->IncluirNovoEmpregado
 RemoverEmpregado->ConsultarEmpregado
 ConsultarEmpregado->IncluirNovoEmpregado
 IncluirAfastamento->IncluirNovoEmpregado
-IncluirAfastamento->IncluirMotivoDeAfastamento
+IncluirAfastamento->IncluirMotivoDeAfastamento[style=dotted]
 AlterarAfastamento->IncluirAfastamento
 AlterarAfastamento->ConsultarAfastamentos
 CancelarAfastamento->IncluirAfastamento
@@ -25,7 +25,7 @@ RemoverLotacao->IncluirLotacao
 RemoverLotacao->ConsultarLotacoes
 ConsultarLotacoes->IncluirLotacao
 IncluirFalta->IncluirNovoEmpregado
-IncluirFalta->IncluirMotivoDeFalta
+IncluirFalta->IncluirMotivoDeFalta[style=dotted]
 AbonarFalta->IncluirFalta
 AbonarFalta->ConsultarFaltas
 AbonarFalta->DesignarGerencia
@@ -51,7 +51,7 @@ RemoverEstabelecimento->ConsultarEstabelecimento
 AlterarEstabelecimento->IncluirEstabelecimento
 AlterarEstabelecimento->ConsultarEstabelecimento
 ConsultarEstabelecimento->IncluirEstabelecimento
-IncluirCentroDeCusto->IncluirEstabelecimento
+IncluirCentroDeCusto->IncluirEstabelecimento[style=dotted]
 AlterarCentroDeCusto->IncluirCentroDeCusto
 AlterarCentroDeCusto->ConsultarCentroDeCusto
 RemoverCentroDeCusto->IncluirCentroDeCusto
@@ -77,11 +77,6 @@ RemoverVerba->ConsultarVerbas
 AlteraVerba->IncluirVerba
 AlteraVerba->ConsultarVerbas
 ConsultarVerbas->IncluirVerba
-RemoverEscolaridade->IncluirEscolaridade
-RemoverEscolaridade->ConsultarEscolaridades
-AlteraEscolaridade->IncluirEscolaridade
-AlteraEscolaridade->ConsultarEscolaridades
-ConsultarEscolaridades->IncluirEscolaridade
 RemoverCargo->IncluirCargo
 RemoverCargo->ConsultarCargos
 AlteraCargo->IncluirCargo

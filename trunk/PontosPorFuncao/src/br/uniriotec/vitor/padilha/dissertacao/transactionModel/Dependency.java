@@ -15,6 +15,8 @@ public class Dependency extends XmlFunctionPointElementWithParent<Transaction> i
 	private Transaction transactionDependency;
 	
 	private String ref;
+	
+	private Boolean canBeWeak;
 
 	public Transaction getTransactionDependency() {
 		return transactionDependency;
@@ -33,10 +35,21 @@ public class Dependency extends XmlFunctionPointElementWithParent<Transaction> i
 		this.ref = ref;
 	}
 
+	@XmlAttribute(required=false)
+	public Boolean getCanBeWeak() {
+		return canBeWeak;
+	}
+
+	public void setCanBeWeak(Boolean canBeWeak) {
+		this.canBeWeak = canBeWeak;
+	}
+
 	@Override
 	public boolean validate() throws ElementException {
 		if(this.getRef()==null || this.getRef().equals(""))
 			throw new ElementException("Referência obrigatória",this);
+		if(getCanBeWeak()==null)
+			this.setCanBeWeak(false);
 		if(getParent().getParent().getTransactions()!=null){
 			for(Transaction transaction:getParent().getParent().getTransactions()) {
 				if(transaction.getName().equals(getRef()))

@@ -99,7 +99,10 @@ public class Transaction extends XmlFunctionPointElementWithParent<TransactionMo
 		String retorno = "";
 		if(getDependencies()!=null) {	
 			for(Dependency dependency:getDependencies()) {
-				retorno+=getName()+"->"+dependency.getRef()+"\n";
+				retorno+=getName()+"->"+dependency.getRef();
+				if(dependency.getCanBeWeak())
+					retorno+="[style=dotted]";
+				retorno+="\n";
 			}
 		}
 		return retorno;
