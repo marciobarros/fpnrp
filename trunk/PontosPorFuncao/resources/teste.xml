@@ -816,7 +816,7 @@
 					<dependency ref="IncluirCargo"/>
 			</dependencies>	
 		</transaction>
-		<transaction name="RemoverCargo" errorMsg="true" type="EI">
+		<transaction name="RemoverSalarioDoCargo" errorMsg="true" type="EI">
 			<ftr-list>			
 				<ftr name="SalarioCargo" subset="SalarioCargo" dataModelElement="Cargo">
 					<field name="valor"/>
@@ -831,7 +831,7 @@
 					<dependency ref="ConsultarSalariosDoCargo"/>
 			</dependencies>			
 		</transaction>
-		<transaction name="AlteraCargo" errorMsg="true" type="EI">
+		<transaction name="AlteraSalarioDoCargo" errorMsg="true" type="EI">
 			<ftr-list>
 				<ftr name="SalarioCargo" dataModelElement="Cargo" useAllFields="true"/>
 				<ftr name="Cargo">
