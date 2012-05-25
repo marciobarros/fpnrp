@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<system>
+	<stakeholders>
+		<stakeholder name="DPCadastro"/>
+		<stakeholder name="DPBeneficio"/>
+		<stakeholder name="DPPagadoria"/>
+		<stakeholder name="Empregado"/>
+	</stakeholders>
+	<interests>
+	<!-- Empregado -->
+		<interest stakeholder="DPCadastro" transactionRef="IncluirNovoEmpregado" value="100"/>
+		<interest stakeholder="DPBeneficio" transactionRef="IncluirNovoEmpregado" value="100"/>
+		<interest stakeholder="DPPagadoria" transactionRef="IncluirNovoEmpregado" value="100"/>		
+		<interest stakeholder="DPCadastro" transactionRef="AlterarEmpregado" value="50"/>
+		<interest stakeholder="DPCadastro" transactionRef="RemoverEmpregado" value="100"/>
+		<interest stakeholder="DPCadastro" transactionRef="ConsultarEmpregado" value="100"/>
+		<interest stakeholder="DPBeneficio" transactionRef="ConsultarEmpregado" value="100"/>
+		<interest stakeholder="DPPagadoria" transactionRef="ConsultarEmpregado" value="100"/>
+		
+	<!-- Afastamento -->
+		<interest stakeholder="DPBeneficio" transactionRef="IncluirAfastamento" value="100"/>
+		<interest stakeholder="DPPagadoria" transactionRef="IncluirAfastamento" value="50"/>
+		<interest stakeholder="DPBeneficio" transactionRef="AlterarAfastamento" value="50"/>
+		<interest stakeholder="DPBeneficio" transactionRef="CancelarAfastamento" value="100"/>
+		<interest stakeholder="DPBeneficio" transactionRef="ConsultarAfastamentos" value="100"/>
+	
+	<!-- Gerência -->		
+		<interest stakeholder="DPCadastro" transactionRef="DesignarGerencia" value="100"/>
+		<interest stakeholder="DPPagadoria" transactionRef="DesignarGerencia" value="50"/>
+		<interest stakeholder="DPCadastro" transactionRef="AlterarDesignacaoDeGerencia" value="50"/>
+		<interest stakeholder="DPCadastro" transactionRef="RemoverDesignacaoDeGerencia" value="100"/>
+		<interest stakeholder="DPCadastro" transactionRef="ConsultarDesignacaoDeGerencia" value="100"/>
+	
+	<!-- Lotação -->		
+		<interest stakeholder="DPCadastro" transactionRef="IncluirLotacao" value="50"/>
+		<interest stakeholder="DPCadastro" transactionRef="RemoverLotacao" value="50"/>
+		<interest stakeholder="DPCadastro" transactionRef="ConsultarLotacoes" value="50"/>
+		
+	<!-- Falta -->	
+		<interest stakeholder="DPCadastro" transactionRef="IncluirFalta" value="100"/>
+		<interest stakeholder="DPPagadoria" transactionRef="IncluirFalta" value="50"/>
+		<interest stakeholder="DPCadastro" transactionRef="RemoverFalta" value="100"/>
+		<interest stakeholder="DPCadastro" transactionRef="AlterarFalta" value="50"/>
+		<interest stakeholder="Empregado" transactionRef="AbonarFalta" value="25"/>		
+		<interest stakeholder="DPCadastro" transactionRef="ConsultarFaltas" value="100"/>
+		
+	<!-- Hora Extra -->
+		
+		<interest stakeholder="DPCadastro" transactionRef="IncluirNovoEmpregado" value="100"/>
+		<interest stakeholder="DPCadastro" transactionRef="IncluirNovoEmpregado" value="100"/>
+		<interest stakeholder="DPCadastro" transactionRef="IncluirNovoEmpregado" value="100"/>
+		<interest stakeholder="DPCadastro" transactionRef="IncluirNovoEmpregado" value="100"/>
+	</interests>
+</system>
