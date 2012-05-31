@@ -2,6 +2,8 @@ package br.uniriotec.vitor.padilha.dissertacao;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -10,6 +12,9 @@ import javax.xml.bind.Unmarshaller;
 
 import br.uniriotec.vitor.padilha.dissertacao.engine.FunctionPointCalculator;
 import br.uniriotec.vitor.padilha.dissertacao.exception.ElementException;
+import br.uniriotec.vitor.padilha.dissertacao.jaxb.MyValidationEventHandler;
+import br.uniriotec.vitor.padilha.dissertacao.model.FunctionPointSystem;
+import br.uniriotec.vitor.padilha.dissertacao.transactionModel.Transaction;
 import br.uniriotec.vitor.padilha.dissertacao.utils.UtilsArquivo;
 import br.uniriotec.vitor.padilha.dissertacao.view.IFunctionPointView;
 import br.uniriotec.vitor.padilha.dissertacao.view.SystemOutFunctionPointView;
@@ -89,6 +94,7 @@ public class PontosPorFuncaoMain {
 //
 //	        m.marshal(functionsPointSystem, System.out);
 		Unmarshaller um = context.createUnmarshaller();
+		um.setEventHandler(new MyValidationEventHandler());
 
 		Object obj = um.unmarshal(new File("resources/teste.xml"));
 
@@ -99,14 +105,25 @@ public class PontosPorFuncaoMain {
 		FunctionPointCalculator functionPointCalculator = new FunctionPointCalculator();
 		functionPointCalculator.getFunctionsView().add(functionPointView);
 		functionPointCalculator.getFunctionsView().add(systemOutFunctionPointView);
+		
 		try {
 			if(functionPointSystem.validate()) {
-				
-				functionPointCalculator.calculate(functionPointSystem);
-				
 				if(functionPointSystem.getTransactionModel()!=null) {
 					UtilsArquivo.salvar("resources/grafo.xdot", functionPointSystem.getTransactionModel().doDot(), false);
 				}
+				List<Transaction> transactions= new ArrayList<Transaction>(functionPointSystem.getTransactionModel().getTransactions());
+				for(Transaction transaction:transactions){
+					if(transaction.getName().equals("IncluirMotivoDeTransferencia") 
+							|| 	transaction.getName().equals("RemoverMotivoDeTransferencia")
+							|| 	transaction.getName().equals("AlterarMotivoDeTransferencia")
+							|| 	transaction.getName().equals("ConsultarMotivosDeTransferencia")
+							) {
+						functionPointSystem.getTransactionModel().getTransactions().remove(transaction);
+					}
+				}
+				functionPointSystem.clear();
+				functionPointCalculator.calculate(functionPointSystem);
+
 			}
 		} catch (ElementException e) {
 			System.out.print(e.getMessage());

@@ -4,6 +4,7 @@ import java.util.List;
 
 import br.uniriotec.vitor.padilha.dissertacao.dataModel.DataModel;
 import br.uniriotec.vitor.padilha.dissertacao.dataModel.DataModelElement;
+import br.uniriotec.vitor.padilha.dissertacao.dataModel.Field;
 import br.uniriotec.vitor.padilha.dissertacao.transactionModel.Transaction;
 import br.uniriotec.vitor.padilha.dissertacao.transactionModel.TransactionModel;
 
@@ -60,6 +61,12 @@ public class SystemOutFunctionPointView extends GenericFunctionPointView{
 		}
 		System.out.println("*** Valor de pontos por função: "+totalFunctionsPoint);
 		System.out.println("*** FIM-"+dataModelElement.getName());
+	}
+
+	@Override
+	public void renderNoUsedField(Field field) {
+		System.out.println("Campo removido = "+field.getParent().getName()+"/"+field.getName());
+		
 	}
 
 }

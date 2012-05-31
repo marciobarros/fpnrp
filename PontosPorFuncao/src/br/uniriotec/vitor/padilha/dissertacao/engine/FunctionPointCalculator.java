@@ -8,12 +8,12 @@ import java.util.Map;
 import java.util.Set;
 
 import br.uniriotec.vitor.padilha.dissertacao.Complexity;
-import br.uniriotec.vitor.padilha.dissertacao.FunctionPointSystem;
 import br.uniriotec.vitor.padilha.dissertacao.dataModel.DataModel;
 import br.uniriotec.vitor.padilha.dissertacao.dataModel.DataModelElement;
 import br.uniriotec.vitor.padilha.dissertacao.dataModel.DataModelElementType;
 import br.uniriotec.vitor.padilha.dissertacao.dataModel.Field;
 import br.uniriotec.vitor.padilha.dissertacao.dataModel.Subset;
+import br.uniriotec.vitor.padilha.dissertacao.model.FunctionPointSystem;
 import br.uniriotec.vitor.padilha.dissertacao.transactionModel.FTR;
 import br.uniriotec.vitor.padilha.dissertacao.transactionModel.FTRField;
 import br.uniriotec.vitor.padilha.dissertacao.transactionModel.Transaction;
@@ -273,6 +273,5 @@ public class FunctionPointCalculator {
 	public void setFunctionsView(Set<IFunctionPointView> functionsView) {
 		this.functionsView = functionsView;
 	}
-	
 	
 }

@@ -1,9 +1,12 @@
 package br.uniriotec.vitor.padilha.dissertacao.exception;
 
+import br.uniriotec.vitor.padilha.dissertacao.XmlFunctionPointElement;
+
 public class ElementException extends Exception{
 
-	public ElementException(String string, Object object) {
-		super(string);
+	public ElementException(String string, XmlFunctionPointElement object) {
+		super(string+". Linha ="+object.getLocation().getLineNumber());
+
 	}
 
 	/**
