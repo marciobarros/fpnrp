@@ -121,6 +121,9 @@ public class FTR extends XmlFunctionPointElementWithParent<Transaction> implemen
 					return false;
 			}
 		}
+		else if(getFields()==null && (getUseAllFields()==null || !getUseAllFields())){
+			throw new ElementException("FTR sem campos: "+getDataModelElement()+"."+referencia+"", this);
+		}
 		return true;
 	}
 }

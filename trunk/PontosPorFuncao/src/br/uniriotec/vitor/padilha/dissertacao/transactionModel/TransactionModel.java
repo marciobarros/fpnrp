@@ -6,9 +6,9 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
 import br.uniriotec.vitor.padilha.dissertacao.ElementValidator;
-import br.uniriotec.vitor.padilha.dissertacao.FunctionPointSystem;
 import br.uniriotec.vitor.padilha.dissertacao.XmlFunctionPointElementWithParent;
 import br.uniriotec.vitor.padilha.dissertacao.exception.ElementException;
+import br.uniriotec.vitor.padilha.dissertacao.model.FunctionPointSystem;
 
 @XmlType(name="transaction-model")
 public class TransactionModel extends XmlFunctionPointElementWithParent<FunctionPointSystem> implements ElementValidator{

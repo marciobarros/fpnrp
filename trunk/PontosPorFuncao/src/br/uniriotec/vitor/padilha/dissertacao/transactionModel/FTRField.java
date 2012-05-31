@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 import br.uniriotec.vitor.padilha.dissertacao.ElementValidator;
@@ -28,7 +29,7 @@ public class FTRField extends XmlFunctionPointElementWithParent<FTR> implements 
 	public void setName(String name) {
 		this.name = name;
 	}
-
+	@XmlTransient
 	public Field getField() {
 		return field;
 	}
@@ -58,6 +59,9 @@ public class FTRField extends XmlFunctionPointElementWithParent<FTR> implements 
 		if(getName()==null || getName().equals(""))
 		{
 			throw new ElementException("Nome obrigatório",this);
+		}
+		if(getField()==null) {
+			throw new ElementException("Campo não encontrado: "+getParent().getName()+" - "+getName(),this);
 		}
 		return true;
 	}
