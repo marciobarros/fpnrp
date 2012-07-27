@@ -14,11 +14,11 @@ import br.uniriotec.vitor.padilha.dissertacao.engine.FunctionPointCalculator;
 import br.uniriotec.vitor.padilha.dissertacao.exception.ElementException;
 import br.uniriotec.vitor.padilha.dissertacao.jaxb.MyValidationEventHandler;
 import br.uniriotec.vitor.padilha.dissertacao.model.FunctionPointSystem;
-import br.uniriotec.vitor.padilha.dissertacao.transactionModel.Transaction;
-import br.uniriotec.vitor.padilha.dissertacao.utils.UtilsArquivo;
+import br.uniriotec.vitor.padilha.dissertacao.model.stakeholdersInterests.StakeholderInterests;
+import br.uniriotec.vitor.padilha.dissertacao.model.transactionModel.Transaction;
 import br.uniriotec.vitor.padilha.dissertacao.view.IFunctionPointView;
 import br.uniriotec.vitor.padilha.dissertacao.view.SystemOutFunctionPointView;
-import br.uniriotec.vitor.padilha.dissertacao.view.TextFunctionPointView;
+import br.uniriotec.vitor.padilha.dissertacao.view.WebFunctionPointView;
 
 public class PontosPorFuncaoMain {
 
@@ -28,6 +28,7 @@ public class PontosPorFuncaoMain {
 	 */
 	public static void main(String[] args) throws JAXBException, IOException {
 		JAXBContext context = JAXBContext.newInstance(FunctionPointSystem.class);
+		JAXBContext contextInterests = JAXBContext.newInstance(StakeholderInterests.class);
 		
 //		FunctionsPointSystem functionsPointSystem = new FunctionsPointSystem();
 //		
@@ -95,23 +96,30 @@ public class PontosPorFuncaoMain {
 //	        m.marshal(functionsPointSystem, System.out);
 		Unmarshaller um = context.createUnmarshaller();
 		um.setEventHandler(new MyValidationEventHandler());
+		Unmarshaller um2 = contextInterests.createUnmarshaller();
+		um2.setEventHandler(new MyValidationEventHandler());
 
 		Object obj = um.unmarshal(new File("resources/teste.xml"));
+		Object obj2 = um2.unmarshal(new File("resources/grauInteresse.xml"));
 
-		IFunctionPointView functionPointView = new TextFunctionPointView();
+		IFunctionPointView functionPointView = new WebFunctionPointView();
 		IFunctionPointView systemOutFunctionPointView = new SystemOutFunctionPointView();
 
 		FunctionPointSystem functionPointSystem = (FunctionPointSystem) obj;
+		StakeholderInterests stakeholderInterests = (StakeholderInterests) obj2;
+		
 		FunctionPointCalculator functionPointCalculator = new FunctionPointCalculator();
 		functionPointCalculator.getFunctionsView().add(functionPointView);
 		functionPointCalculator.getFunctionsView().add(systemOutFunctionPointView);
 		
 		try {
 			if(functionPointSystem.validate()) {
-				if(functionPointSystem.getTransactionModel()!=null) {
-					UtilsArquivo.salvar("resources/grafo.xdot", functionPointSystem.getTransactionModel().doDot(), false);
-				}
+				stakeholderInterests.validade(functionPointSystem,false);
+//				if(functionPointSystem.getTransactionModel()!=null) {
+//					//UtilsArquivo.salvar("resources/grafo.xdot", functionPointSystem.getTransactionModel().doDot(), false);
+//				}
 				List<Transaction> transactions= new ArrayList<Transaction>(functionPointSystem.getTransactionModel().getTransactions());
+				Transaction[] transactionsInArray = (Transaction[]) transactions.toArray();
 				for(Transaction transaction:transactions){
 					if(transaction.getName().equals("IncluirMotivoDeTransferencia") 
 							|| 	transaction.getName().equals("RemoverMotivoDeTransferencia")
@@ -122,7 +130,7 @@ public class PontosPorFuncaoMain {
 					}
 				}
 				functionPointSystem.clear();
-				functionPointCalculator.calculate(functionPointSystem);
+				System.out.println("Total:"+functionPointCalculator.calculate(functionPointSystem));
 
 			}
 		} catch (ElementException e) {

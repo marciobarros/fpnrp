@@ -21,4 +21,6 @@ public abstract class XmlFunctionPointElementWithParent<T extends XmlFunctionPoi
 	public void setParent(T parent) {
 		this.parent = parent;
 	} 
+	
+
 }
