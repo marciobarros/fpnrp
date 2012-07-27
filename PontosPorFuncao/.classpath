@@ -4,5 +4,6 @@
 	<classpathentry kind="src" path="resources"/>
 	<classpathentry kind="lib" path="lib/JAXB2_20120218.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/JMetal"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
