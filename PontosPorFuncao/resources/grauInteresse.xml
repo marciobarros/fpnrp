@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<system>
+<stakeholders-interests>
 	<!-- Definição dos Stakeholders -->
 	<stakeholders>
 		<stakeholder name="DPCadastro"/>
@@ -120,4 +120,4 @@
 		<interest stakeholder="DPPagadoria" transactionRef="VisualizarContraCheques" value="100"/>	
 		<interest stakeholder="Empregado" transactionRef="VisualizarProprioContraCheque" value="50"/>
 	</interests>
-</system>
+</stakeholders-interests>

@@ -32,8 +32,8 @@
 				<field name="idEmpregado" ref="Empregado" />
 				<field name="idGerente" ref="Gerente" dataModelElement="Empregado"/>
 				<field name="dataHoraExtra" />
-				<field name="horaInicio" />
-				<field name="horaTermino" />
+				<field name="horarioInicio" />
+				<field name="horarioTermino" />
 			</subset>
 			<subset name="Afastamento">
 				<field name="idEmpregado" ref="Empregado" />
@@ -323,9 +323,9 @@
 				 	<field name="matricula"/>
 				 	<field name="nome"/>
 				</ftr>
-				<ftr name="MotivoTransferencia">
+				<!--ftr name="MotivoTransferencia">
 				 	<field name="descricao"/>
-				</ftr>
+				</ftr-->
 			</ftr-list>
 			<dependencies>
 					<dependency ref="IncluirNovoEmpregado"/>
@@ -391,6 +391,7 @@
 				 	<field name="descricao"/>
 				</ftr>
 				<ftr name="Gerente" subset="Gerente" dataModelElement="Empregado">
+					<field name="idEmpregado"/>
 				</ftr>
 			</ftr-list>
 			<dependencies>
@@ -456,6 +457,7 @@
 				 	<field name="nome"/>
 				</ftr>
 				<ftr name="Gerente" dataModelElement="Empregado" subset="Gerente">
+					<field name="idEmpregado"/>
 				</ftr>
 			</ftr-list>
 			<dependencies>
@@ -501,6 +503,7 @@
 				 	<field name="nome"/>
 				</ftr>
 				<ftr name="Gerente" dataModelElement="Empregado" subset="Gerente">
+					<field name="idEmpregado"/>
 				</ftr>
 			</ftr-list>
 			<dependencies>
@@ -565,11 +568,9 @@
 		</transaction>
 		<transaction name="RemoverEstabelecimento" errorMsg="true" type="EI">
 			<ftr-list>			
-				<ftr-list>
-					<ftr name="Estabelecimento">
-						<field name="descricao" />					
-					</ftr>
-				</ftr-list>
+				<ftr name="Estabelecimento">
+					<field name="descricao" />					
+				</ftr>
 			</ftr-list>
 			<dependencies>
 					<dependency ref="IncluirEstabelecimento"/>
@@ -864,7 +865,9 @@
 				<ftr name="ContraChequeVerba" dataModelElement="Empregado" subset="ContraChequeVerba" useAllFields="true"/>
 				<ftr name="ContraCheque"  dataModelElement="Empregado" subset="ContraCheque" useAllFields="true"/>	
 				<ftr name="Verba"  useAllFields="true"/>
-				<ftr name="Empregado"/>
+				<ftr name="Empregado">
+					<field name="matricula"/>
+				</ftr>
 				<ftr name="Falta" dataModelElement="Empregado" subset="Falta">
 					<field name="idEmpregado"/>
 					<field name="idGerente"/>

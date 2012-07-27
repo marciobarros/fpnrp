@@ -1,13 +1,12 @@
-### ILF - Empregado (DETs: 41, RETs: 9). Pontos por Função: 15
+### ILF - Empregado (DETs: 39, RETs: 9). Pontos por Função: 15
 ### ILF - MotivoAfastamento (DETs: 1, RETs: 1). Pontos por Função: 7
 ### ILF - Estabelecimento (DETs: 7, RETs: 2). Pontos por Função: 7
-### ILF - MotivoTransferencia (DETs: 1, RETs: 1). Pontos por Função: 7
 ### ILF - MotivoFalta (DETs: 1, RETs: 1). Pontos por Função: 7
 ### ILF - Verba (DETs: 1, RETs: 1). Pontos por Função: 7
 ### ILF - Cargo (DETs: 4, RETs: 2). Pontos por Função: 7
-### EIF - Cidade (DETs: 2, RETs: 1). Pontos por Função: 5
+### EIF - Cidade (DETs: 1, RETs: 1). Pontos por Função: 5
 ### EIF - Escolaridade (DETs: 1, RETs: 1). Pontos por Função: 5
-#### Total de pontos por função não ajustado para função de dados: 67 para 9 arquivos
+#### Total de pontos por função não ajustado para função de dados: 60 para 8 arquivos
 ### EI - IncluirNovoEmpregado (DETs: 21, FTRs: 3). Pontos Por Função: 6
 ### EI - AlterarEmpregado (DETs: 21, FTRs: 3). Pontos Por Função: 6
 ### EI - RemoverEmpregado (DETs: 3, FTRs: 1). Pontos Por Função: 3
@@ -20,23 +19,23 @@
 ### EI - AlterarDesignacaoDeGerencia (DETs: 8, FTRs: 2). Pontos Por Função: 4
 ### EI - RemoverDesignacaoDeGerencia (DETs: 4, FTRs: 1). Pontos Por Função: 3
 ### EQ - ConsultarDesignacaoDeGerencia (DETs: 8, FTRs: 2). Pontos Por Função: 4
-### EI - IncluirLotacao (DETs: 7, FTRs: 3). Pontos Por Função: 6
+### EI - IncluirLotacao (DETs: 6, FTRs: 2). Pontos Por Função: 4
 ### EI - RemoverLotacao (DETs: 4, FTRs: 1). Pontos Por Função: 3
 ### EQ - ConsultarLotacoes (DETs: 4, FTRs: 1). Pontos Por Função: 3
 ### EI - IncluirFalta (DETs: 9, FTRs: 2). Pontos Por Função: 4
-### EI - AbonarFalta (DETs: 9, FTRs: 2). Pontos Por Função: 4
+### EI - AbonarFalta (DETs: 10, FTRs: 2). Pontos Por Função: 4
 ### EI - RemoverFalta (DETs: 4, FTRs: 1). Pontos Por Função: 3
 ### EI - AlterarFalta (DETs: 4, FTRs: 1). Pontos Por Função: 3
 ### EQ - ConsultarFaltas (DETs: 4, FTRs: 1). Pontos Por Função: 3
-### EI - IncluirHoraExtra (DETs: 8, FTRs: 1). Pontos Por Função: 3
+### EI - IncluirHoraExtra (DETs: 9, FTRs: 1). Pontos Por Função: 3
 ### EI - AlterarHoraExtra (DETs: 4, FTRs: 1). Pontos Por Função: 3
 ### EI - RemoverHoraExtra (DETs: 4, FTRs: 1). Pontos Por Função: 3
-### EQ - ConsultarHorasExtras (DETs: 8, FTRs: 1). Pontos Por Função: 3
+### EQ - ConsultarHorasExtras (DETs: 9, FTRs: 1). Pontos Por Função: 3
 ### EI - AssociarCargoAEmpregado (DETs: 8, FTRs: 2). Pontos Por Função: 4
 ### EI - RemoverCargoDeEmpregado (DETs: 5, FTRs: 2). Pontos Por Função: 4
 ### EQ - ConsultarCargosDeEmpregado (DETs: 5, FTRs: 2). Pontos Por Função: 0
 ### EI - IncluirEstabelecimento (DETs: 6, FTRs: 1). Pontos Por Função: 3
-### EI - RemoverEstabelecimento (DETs: 1, FTRs: 0). Pontos Por Função: 3
+### EI - RemoverEstabelecimento (DETs: 2, FTRs: 1). Pontos Por Função: 3
 ### EI - AlterarEstabelecimento (DETs: 6, FTRs: 1). Pontos Por Função: 3
 ### EQ - ConsultarEstabelecimento (DETs: 2, FTRs: 1). Pontos Por Função: 3
 ### EI - IncluirCentroDeCusto (DETs: 5, FTRs: 1). Pontos Por Função: 3
@@ -51,10 +50,6 @@
 ### EI - RemoverMotivoDeFalta (DETs: 2, FTRs: 1). Pontos Por Função: 3
 ### EI - AlterarMotivoDeFalta (DETs: 2, FTRs: 1). Pontos Por Função: 3
 ### EQ - ConsultarMotivosDeFalta (DETs: 2, FTRs: 1). Pontos Por Função: 3
-### EI - IncluirMotivoDeTransferencia (DETs: 2, FTRs: 1). Pontos Por Função: 3
-### EI - RemoverMotivoDeTransferencia (DETs: 2, FTRs: 1). Pontos Por Função: 3
-### EI - AlterarMotivoDeTransferencia (DETs: 2, FTRs: 1). Pontos Por Função: 3
-### EQ - ConsultarMotivosDeTransferencia (DETs: 2, FTRs: 1). Pontos Por Função: 3
 ### EI - IncluirVerba (DETs: 2, FTRs: 1). Pontos Por Função: 3
 ### EI - RemoverVerba (DETs: 2, FTRs: 1). Pontos Por Função: 3
 ### EI - AlteraVerba (DETs: 2, FTRs: 1). Pontos Por Função: 3
@@ -64,13 +59,13 @@
 ### EI - AlteraCargo (DETs: 2, FTRs: 1). Pontos Por Função: 3
 ### EQ - ConsultarCargos (DETs: 2, FTRs: 1). Pontos Por Função: 3
 ### EI - IncluirSalarioDoCargo (DETs: 4, FTRs: 1). Pontos Por Função: 3
-### EI - RemoverCargo (DETs: 4, FTRs: 1). Pontos Por Função: 3
-### EI - AlteraCargo (DETs: 6, FTRs: 1). Pontos Por Função: 3
+### EI - RemoverSalarioDoCargo (DETs: 4, FTRs: 1). Pontos Por Função: 3
+### EI - AlteraSalarioDoCargo (DETs: 6, FTRs: 1). Pontos Por Função: 3
 ### EQ - ConsultarSalariosDoCargo (DETs: 4, FTRs: 1). Pontos Por Função: 3
-### EO - ProcessarFolha (DETs: 27, FTRs: 3). Pontos Por Função: 7
+### EO - ProcessarFolha (DETs: 30, FTRs: 3). Pontos Por Função: 7
 ### EI - AdicionarVerbaParaEmpregado (DETs: 10, FTRs: 2). Pontos Por Função: 4
 ### EI - RemoverVerbaDeEmpregado (DETs: 10, FTRs: 2). Pontos Por Função: 4
 ### EI - AlterarVerbaDeEmpregado (DETs: 10, FTRs: 2). Pontos Por Função: 4
 ### EQ - VisualizarContraCheques (DETs: 10, FTRs: 2). Pontos Por Função: 4
 ### EQ - VisualizarProprioContraCheque (DETs: 10, FTRs: 2). Pontos Por Função: 4
-### Total de pontos por função não ajustado para transações: 220 para 65 transações
+### Total de pontos por função não ajustado para transações: 206 para 61 transações
