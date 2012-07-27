@@ -8,30 +8,29 @@ import java.util.Map;
 import java.util.Set;
 
 import br.uniriotec.vitor.padilha.dissertacao.Complexity;
-import br.uniriotec.vitor.padilha.dissertacao.dataModel.DataModel;
-import br.uniriotec.vitor.padilha.dissertacao.dataModel.DataModelElement;
-import br.uniriotec.vitor.padilha.dissertacao.dataModel.DataModelElementType;
-import br.uniriotec.vitor.padilha.dissertacao.dataModel.Field;
-import br.uniriotec.vitor.padilha.dissertacao.dataModel.Subset;
 import br.uniriotec.vitor.padilha.dissertacao.model.FunctionPointSystem;
-import br.uniriotec.vitor.padilha.dissertacao.transactionModel.FTR;
-import br.uniriotec.vitor.padilha.dissertacao.transactionModel.FTRField;
-import br.uniriotec.vitor.padilha.dissertacao.transactionModel.Transaction;
-import br.uniriotec.vitor.padilha.dissertacao.transactionModel.TransactionModel;
-import br.uniriotec.vitor.padilha.dissertacao.transactionModel.TransactionType;
+import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.DataModel;
+import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.DataModelElement;
+import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.DataModelElementType;
+import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.Field;
+import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.Subset;
+import br.uniriotec.vitor.padilha.dissertacao.model.stakeholdersInterests.Interest;
+import br.uniriotec.vitor.padilha.dissertacao.model.transactionModel.FTR;
+import br.uniriotec.vitor.padilha.dissertacao.model.transactionModel.FTRField;
+import br.uniriotec.vitor.padilha.dissertacao.model.transactionModel.Transaction;
+import br.uniriotec.vitor.padilha.dissertacao.model.transactionModel.TransactionModel;
+import br.uniriotec.vitor.padilha.dissertacao.model.transactionModel.TransactionType;
 import br.uniriotec.vitor.padilha.dissertacao.view.IFunctionPointView;
 
 public class FunctionPointCalculator {
 	
 	private Set<IFunctionPointView> functionsView;
 	
-	private Map<String, List<String>> ignoredFields;
 	public FunctionPointCalculator() {
 		this.functionsView = new HashSet<IFunctionPointView>();
 	}
 	public FunctionPointCalculator(Set<IFunctionPointView> functionsView) {
 		this.functionsView = functionsView;
-		ignoredFields = new HashMap<String, List<String>>();
 	}
 
 	public int calculate(FunctionPointSystem functionPointSystem){
@@ -42,15 +41,14 @@ public class FunctionPointCalculator {
 		if(functionPointSystem.getTransactionModel()!=null) {
 			totalPontosPorFuncaoNaoAjustada+=calculateTransactionModel(functionPointSystem.getTransactionModel());
 		}
+		
 		return totalPontosPorFuncaoNaoAjustada;
 	}
 	
 	private int calculateDataModel(DataModel dataModel) {
 		int totalFunctionPoint = 0;
-		List<DataModelElement> dataModelElements = new ArrayList<DataModelElement>();
-		dataModelElements.addAll(dataModel.getIlfs());
-		dataModelElements.addAll(dataModel.getEifs());
-		for(DataModelElement dataModelElement:dataModelElements) {
+
+		for(DataModelElement dataModelElement:dataModel.getDataModelElements()) {
 			int totalDet = 0;
 			int totalRet = 0;
 			Set<String> dets = new HashSet<String>();
@@ -115,14 +113,15 @@ public class FunctionPointCalculator {
 				detsNorm[cont]=det;
 				cont++;
 			}
-			int totalFunctionPointRet = calculateFunctionPointDataModelElement(totalRet, totalDet, dataModelElement.getType());
+			Complexity complexity = calculateDataModelElementComplexity(totalRet, totalDet);
+			int totalFunctionPointRet = calculateFunctionPointDataModelElement(complexity, dataModelElement.getType());
 			for(IFunctionPointView view :getFunctionsView()) {
-				view.renderDataModelElementValue(dataModelElement, retsNorm, detsNorm, totalFunctionPointRet);
+				view.addDataModelElementValue(dataModelElement, retsNorm, detsNorm,complexity, totalFunctionPointRet);
 			}
 			totalFunctionPoint+=totalFunctionPointRet;
 		}
 		for(IFunctionPointView view :getFunctionsView()) {
-			view.renderDataModelValue(dataModel, dataModelElements.size(), totalFunctionPoint);
+			view.renderDataModelValue(dataModel, dataModel.getDataModelElements().size(), totalFunctionPoint);
 		}
 		return totalFunctionPoint;
 	}
@@ -175,10 +174,10 @@ public class FunctionPointCalculator {
 				dets[cont]=det1;
 				cont++;
 			}
-			
-			int totalFunctionsPoint = calculateFunctionPointTransactionModelElement(ftrs.length, dets.length, transaction.getType());
+			Complexity complexity = calculateTransactionComplexity(ftrs.length, dets.length, transaction.getType());
+			int totalFunctionsPoint = calculateFunctionPointTransactionModelElement(complexity, transaction.getType());
 			for(IFunctionPointView view :getFunctionsView()) {
-				view.renderTransactionValue(transaction, ftrs, dets, totalFunctionsPoint);
+				view.addTransactionValue(transaction, ftrs, dets, complexity, totalFunctionsPoint);
 			}
 			totalFunctionPoint+=totalFunctionsPoint;
 		}
@@ -188,17 +187,8 @@ public class FunctionPointCalculator {
 		return totalFunctionPoint;
 	}
 	
-	private int calculateFunctionPointDataModelElement(int ret, int det, DataModelElementType dataModelElementType){
-		Complexity complexity = null;
-		if((ret>=6 && det>=20) || (ret<=5 && ret>=2 && det>=51) ) {
-			complexity=Complexity.HIGH;
-		}
-		else if(ret>=6 || (ret<=5 && ret>=2 && det>=20 && det<=50) || (ret==1 && det>=51)) {
-			complexity=Complexity.MEDIUM;
-		}
-		else if((ret==1 && det<=50) || (ret<=5 && ret>=2 && det<20)) {
-			complexity=Complexity.LOW;
-		}
+	private int calculateFunctionPointDataModelElement(Complexity complexity, DataModelElementType dataModelElementType){
+		
 		if((complexity==Complexity.LOW && dataModelElementType.equals(DataModelElementType.ILF)) ||
 				(complexity==Complexity.MEDIUM && dataModelElementType.equals(DataModelElementType.EIF)) 
 				)
@@ -213,8 +203,40 @@ public class FunctionPointCalculator {
 			return 15;
 		else return 0;
 	}
+	private Complexity calculateDataModelElementComplexity(int ret, int det) {
+		Complexity complexity = null;
+		if((ret>=6 && det>=20) || (ret<=5 && ret>=2 && det>=51) ) {
+			complexity=Complexity.HIGH;
+		}
+		else if(ret>=6 || (ret<=5 && ret>=2 && det>=20 && det<=50) || (ret==1 && det>=51)) {
+			complexity=Complexity.MEDIUM;
+		}
+		else if((ret==1 && det<=50) || (ret<=5 && ret>=2 && det<20)) {
+			complexity=Complexity.LOW;
+		}
+		return complexity;
+	}
 	
-	private int calculateFunctionPointTransactionModelElement(int ftrs, int dets, TransactionType transactionType){
+	private int calculateFunctionPointTransactionModelElement(Complexity complexity, TransactionType transactionType){
+	
+		if((complexity==Complexity.LOW && transactionType.equals(TransactionType.EO) ) ||
+				(complexity==Complexity.MEDIUM && (transactionType.equals(TransactionType.EI) || transactionType.equals(TransactionType.EQ)) ) 
+				)
+			
+			return 4;
+		else if((complexity==Complexity.MEDIUM && transactionType.equals(TransactionType.EO)))
+			return 5;
+		else if(complexity==Complexity.HIGH && transactionType.equals(TransactionType.EO))
+			return 7;
+		else if(complexity==Complexity.LOW && (transactionType.equals(TransactionType.EI) || transactionType.equals(TransactionType.EQ)))
+			return 3;
+		else if(complexity==Complexity.HIGH && (transactionType.equals(TransactionType.EI) || transactionType.equals(TransactionType.EQ)))
+			return 6;
+		else 
+			return 0;
+	}
+	private Complexity calculateTransactionComplexity(int ftrs, int dets,
+			TransactionType transactionType) {
 		Complexity complexity = null;
 		if(	
 				(((ftrs>=3 && dets>=5) || (ftrs==2 && dets>=16)) && transactionType.equals(TransactionType.EI)) 
@@ -237,35 +259,24 @@ public class FunctionPointCalculator {
 						|| (ftrs==2 && dets<=4)) && transactionType.equals(TransactionType.EI)) 
 				||
 				(((ftrs<=1 && dets<=19)
-						|| (ftrs<=3 && ftrs>2 && dets>=5)) && (transactionType.equals(TransactionType.EO)||transactionType.equals(TransactionType.EQ))) 
+						|| (ftrs<=3 && ftrs>=2 && dets>=5)) && (transactionType.equals(TransactionType.EO)||transactionType.equals(TransactionType.EQ))) 
 			){
 			complexity=Complexity.LOW;
 		}
-//			complexity=Complexity.HIGH;
-//		}
-//		else if(ret>=6 || (ret<=5 && ret>=2 && det>=20 && det<=50) || (ret==1 && det>=51)) {
-//			complexity=Complexity.MEDIUM;
-//		}
-//		else if((ret==1 && det<=50) || (ret<=5 && ret>=2 && det<20)) {
-//			complexity=Complexity.LOW;
-//		}
-		
-		if((complexity==Complexity.LOW && transactionType.equals(TransactionType.EO) ) ||
-				(complexity==Complexity.MEDIUM && (transactionType.equals(TransactionType.EI) || transactionType.equals(TransactionType.EQ)) ) 
-				)
-			return 4;
-		else if((complexity==Complexity.MEDIUM && transactionType.equals(TransactionType.EO)))
-			return 5;
-		else if(complexity==Complexity.HIGH && transactionType.equals(TransactionType.EO))
-			return 7;
-		else if(complexity==Complexity.LOW && (transactionType.equals(TransactionType.EI) || transactionType.equals(TransactionType.EQ)))
-			return 3;
-		else if(complexity==Complexity.HIGH && (transactionType.equals(TransactionType.EI) || transactionType.equals(TransactionType.EQ)))
-			return 6;
-		else 
-			return 0;
+		return complexity;
 	}
-
+	public Long calculateUserSatisfaction(FunctionPointSystem functionPointSystem) {
+		Long interesseTotal = 0L;
+		List<String> transactionsNames = new ArrayList<String>();
+		for(Transaction transaction:functionPointSystem.getTransactionModel().getTransactions()) {
+			transactionsNames.add(transaction.getName());
+		}
+		for(Interest interest:functionPointSystem.getStakeholderInterests().getInterests()) {
+			if(transactionsNames.contains(interest.getTransaction().getName()))
+				interesseTotal+=interest.getInterest();
+		}
+		return interesseTotal;
+	}
 	public Set<IFunctionPointView> getFunctionsView() {
 		return functionsView;
 	}
