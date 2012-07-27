@@ -7,20 +7,22 @@ import java.util.Set;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 import br.uniriotec.vitor.padilha.dissertacao.ElementValidator;
 import br.uniriotec.vitor.padilha.dissertacao.XmlFunctionPointElement;
-import br.uniriotec.vitor.padilha.dissertacao.dataModel.DataModel;
-import br.uniriotec.vitor.padilha.dissertacao.dataModel.DataModelElement;
-import br.uniriotec.vitor.padilha.dissertacao.dataModel.EIF;
-import br.uniriotec.vitor.padilha.dissertacao.dataModel.Field;
-import br.uniriotec.vitor.padilha.dissertacao.dataModel.ILF;
-import br.uniriotec.vitor.padilha.dissertacao.dataModel.Subset;
 import br.uniriotec.vitor.padilha.dissertacao.exception.ElementException;
-import br.uniriotec.vitor.padilha.dissertacao.transactionModel.FTR;
-import br.uniriotec.vitor.padilha.dissertacao.transactionModel.FTRField;
-import br.uniriotec.vitor.padilha.dissertacao.transactionModel.Transaction;
-import br.uniriotec.vitor.padilha.dissertacao.transactionModel.TransactionModel;
+import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.DataModel;
+import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.DataModelElement;
+import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.DataModelElementType;
+import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.Field;
+import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.Subset;
+import br.uniriotec.vitor.padilha.dissertacao.model.stakeholdersInterests.StakeholderInterests;
+import br.uniriotec.vitor.padilha.dissertacao.model.transactionModel.FTR;
+import br.uniriotec.vitor.padilha.dissertacao.model.transactionModel.FTRField;
+import br.uniriotec.vitor.padilha.dissertacao.model.transactionModel.Transaction;
+import br.uniriotec.vitor.padilha.dissertacao.model.transactionModel.TransactionModel;
+import br.uniriotec.vitor.padilha.dissertacao.model.transactionModel.TransactionType;
 
 @XmlRootElement(name="system")
 public class FunctionPointSystem extends XmlFunctionPointElement implements ElementValidator{
@@ -28,6 +30,8 @@ public class FunctionPointSystem extends XmlFunctionPointElement implements Elem
 	private DataModel dataModel;
 	
 	private TransactionModel transactionModel;
+	
+	private StakeholderInterests stakeholderInterests;
 	
 	@XmlElement(required=true,name="data-model")
 	public DataModel getDataModel() {
@@ -53,47 +57,56 @@ public class FunctionPointSystem extends XmlFunctionPointElement implements Elem
 			return true;
 		return false;
 	}
+	
+	public void charge(){
+		this.getDataModel().charge();
+		this.getTransactionModel().charge();
+	}
 	public void clear() {
 		clearNoUsedFields();
 		clearNoUsedRets();
+		transformILFInEIF();
 	}
 	
-
+	private void transformILFInEIF(){
+		List<String> ilfsInInputTransactions = new ArrayList<String>();
+		if(this.transactionModel!=null) {
+			if(this.transactionModel.getTransactions()!=null) {
+				for(Transaction transaction:this.transactionModel.getTransactions()) {
+					if(transaction.getType().equals(TransactionType.EI)) {
+						for(FTR ftr:transaction.getFtrList()) {
+							ilfsInInputTransactions.add(ftr.getSubsetRef().getParent().getName());
+						}
+					}
+				}
+			}
+		}
+		if(this.getDataModel()!=null) {
+			for(DataModelElement ilf:this.getDataModel().getDataModelElements()) {
+				if(!ilfsInInputTransactions.contains(ilf.getName()))
+					ilf.setType(DataModelElementType.EIF);
+			}
+		}
+	}
 	private void clearNoUsedRets() {
-		List<ILF> ilfs = new ArrayList<ILF>(this.dataModel.getIlfs());
+		List<DataModelElement> dataModelElements = new ArrayList<DataModelElement>(this.dataModel.getDataModelElements());
 		
-		for(ILF ilf:this.dataModel.getIlfs()) {
-			List<Subset> rets = new ArrayList<Subset>(ilf.getSubsets());
-			for(Subset ret:ilf.getSubsets()) {
+		for(DataModelElement dataModelElement:this.dataModel.getDataModelElements()) {
+			List<Subset> rets = new ArrayList<Subset>(dataModelElement.getSubsets());
+			for(Subset ret:dataModelElement.getSubsets()) {
 				if(ret.getFields().isEmpty()) {
-					System.out.println("RET removido = "+ret.getParent().getName()+"/"+ret.getName());
+					//System.out.println("RET removido = "+ret.getParent().getName()+"/"+ret.getName());
 					rets.remove(ret);
 				}
 			}
-			ilf.setSubsets(rets);
+			dataModelElement.setSubsets(rets);
 			if(rets.isEmpty()) {
-				System.out.println("ILF removido = "+ilf.getName());
-				ilfs.remove(ilf);
+				//System.out.println("ILF removido = "+ilf.getName());
+				dataModelElements.remove(dataModelElement);
 			}
 		}
-		List<EIF> eifs = new ArrayList<EIF>(this.dataModel.getEifs());
 		
-		for(EIF eif:this.dataModel.getEifs()) {
-			List<Subset> rets = new ArrayList<Subset>(eif.getSubsets());
-			for(Subset ret:eif.getSubsets()) {
-				if(ret.getFields().isEmpty()) {
-					System.out.println("Campo removido = "+ret.getParent().getName()+"/"+ret.getName());
-					rets.remove(ret);
-				}
-			}
-			eif.setSubsets(rets);
-			if(rets.isEmpty()) {
-				System.out.println("ILF removido = "+eif.getName());
-				ilfs.remove(eif);
-			}
-		}
-		this.dataModel.setIlfs(ilfs);
-		this.dataModel.setEifs(eifs);
+		this.dataModel.setDataModelElements(dataModelElements);
 	}
 
 	protected void clearNoUsedFields() {
@@ -101,8 +114,10 @@ public class FunctionPointSystem extends XmlFunctionPointElement implements Elem
 		for(Transaction transaction:transactionModel.getTransactions()){
 			for(FTR ftr:transaction.getFtrList()) {
 				if(ftr.getUseAllFields()!=null && ftr.getUseAllFields()){
-					for(Field field:ftr.getSubsetRef().getFields()) {
-						utilsFields.add(field);
+					if(ftr.getSubsetRef().getFields()!=null) {
+						for(Field field:ftr.getSubsetRef().getFields()) {
+							utilsFields.add(field);
+						}
 					}
 				}
 				else {
@@ -112,30 +127,39 @@ public class FunctionPointSystem extends XmlFunctionPointElement implements Elem
 				}
 			}
 		}
-		for(DataModelElement dataModelElement:dataModel.getIlfs()) {
+		for(DataModelElement dataModelElement:dataModel.getDataModelElements()) {
 			for(Subset subset:dataModelElement.getSubsets()) {
 				List<Field> fields = new ArrayList<Field>(subset.getFields());
 				for(Field field:subset.getFields()) {
 					if(!utilsFields.contains(field)) {
-						System.out.println("Campo removido = "+field.getParent().getName()+"/"+field.getName());
+						//System.out.println("Campo removido = "+field.getParent().getName()+"/"+field.getName());
 						fields.remove(field);
 					}
 				}
 				subset.setFields(fields);
 			}
 		}
-		for(DataModelElement dataModelElement:dataModel.getEifs()) {
-			for(Subset subset:dataModelElement.getSubsets()) {
-				List<Field> fields = new ArrayList<Field>(subset.getFields());
-				for(Field field:subset.getFields()) {
-					if(!utilsFields.contains(field)) {
-						System.out.println("Campo removido = "+field.getParent().getName()+"/"+field.getName());
-						fields.remove(field);
-					}
-				}
-				subset.setFields(fields);
-			}
-		}
+		
+	}
+
+	@XmlTransient
+	public StakeholderInterests getStakeholderInterests() {
+		return stakeholderInterests;
+	}
+
+	public void setStakeholderInterests(StakeholderInterests stakeholderInterests) {
+		this.stakeholderInterests = stakeholderInterests;
 	}
 	
+	public String doDot(FunctionPointSystem baseFunctionPointSystem,boolean showDataModel) {
+		
+		String returnValue = "digraph teste {\n";
+		if(showDataModel) {
+			returnValue+=this.dataModel.doDot(baseFunctionPointSystem.getDataModel().getDataModelElements());
+		}
+		returnValue+=this.transactionModel.doDot(baseFunctionPointSystem.getTransactionModel().getTransactions(),showDataModel);
+		
+		returnValue+="}";
+		return returnValue;
+	}
 }

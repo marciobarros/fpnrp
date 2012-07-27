@@ -3,7 +3,7 @@ package br.uniriotec.vitor.padilha.dissertacao.model;
 import java.util.HashSet;
 import java.util.Set;
 
-import br.uniriotec.vitor.padilha.dissertacao.transactionModel.Transaction;
+import br.uniriotec.vitor.padilha.dissertacao.model.transactionModel.Transaction;
 
 public class FunctionPointSet {
 
