@@ -1,0 +1,6 @@
+digraph teste {
+A->B
+B->C[style=dotted]
+D->B
+E->D
+}
