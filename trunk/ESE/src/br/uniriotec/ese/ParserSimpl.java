@@ -5,8 +5,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -78,5 +76,65 @@ public class ParserSimpl {
 		fileWriterPacotes.close();
 	}
 	
+	public static Map<Aplicacao,Map<DistribuicaoDosDados,List<Instancia>>> retornaInstanciasEvolution(File arquivo) throws IOException {
+		Map<Aplicacao,Map<DistribuicaoDosDados,List<Instancia>>> instanciasPorTipo = new HashMap<Aplicacao, Map<DistribuicaoDosDados,List<Instancia>>>();
+		
+		BufferedReader in  = new BufferedReader(new FileReader(arquivo));
+		String str;
+		boolean cabecalho = true;
+		DistribuicaoDosDados distribuicao = null;
+		Aplicacao aplicacaoAnterior = null;
+		Aplicacao aplicacao = null;
+		int ciclo = -1;
+		while (in.ready()) {
+            str = in.readLine();
+            if(str.equals("")) {
+            	cabecalho = true;
+            	continue;
+            }
+            
+            if (cabecalho) {
+            	String[] strSplit = str.split(" ");
+            	distribuicao = DistribuicaoDosDados.valueOf(strSplit[0].trim());
+            	aplicacao = Aplicacao.valueOf(strSplit[1].trim().toUpperCase());
+            	if (aplicacaoAnterior==null||aplicacao!=aplicacaoAnterior)
+            		ciclo = 0;
+            	else
+            		ciclo++;
+            	aplicacaoAnterior = aplicacao;
+            	cabecalho = false;
+            	System.out.println("Aplicação=" + aplicacao + ",ciclo=" + ciclo);
+            }
+            else {
+            	String[] strSplit = str.split(";");
+            	int i1 = 0;
+            	int i2 = 1;
+            	// algumas linhas estão com um elemento string a mais
+            	if (strSplit.length==3) { 
+            		i1 = 1; 
+            		i2 = 2;
+            	}
+            	long tempoDeExecucao = Long.valueOf(strSplit[i1].trim());
+            	double valor = Double.valueOf(strSplit[i2].trim());
+
+            	Instancia instancia = new Instancia();
+            	instancia.setCiclo(ciclo);
+            	instancia.setAplicacao(aplicacao);
+            	instancia.setDistribuicao(distribuicao);
+            	instancia.setValor(valor);
+            	instancia.setTempoDeExecucao(tempoDeExecucao);
+            	instancia.setNumeroDeRestart(-1);
+            	
+            	if(instanciasPorTipo.get(aplicacao)==null) {
+            		instanciasPorTipo.put(aplicacao, new HashMap<DistribuicaoDosDados, List<Instancia>>());
+            	}
+            	if(instanciasPorTipo.get(aplicacao).get(distribuicao)==null) {
+            		instanciasPorTipo.get(aplicacao).put(distribuicao, new ArrayList<Instancia>());
+            	}
+            	instanciasPorTipo.get(aplicacao).get(distribuicao).add(instancia);
+            }
+		}
+		return instanciasPorTipo;
+	}
 	
 }
