@@ -9,26 +9,28 @@ import br.uniriotec.ese.constantes.Aplicacao;
 import br.uniriotec.ese.constantes.DistribuicaoDosDados;
 
 public class GeraInformacoesEstatisticas {
+	
 	/**
-	 * @param args
-	 * @throws Exception 
+	 * Gera os arquivos de entrada para leitura do script R
 	 */
-	public static void main(String[] args) throws Exception {
-		File f = new File(".");
+	public static void geraArquivosEntrada(String nomeTabelaMQ, String nomeTabelaEVM, String nomeTabelaEvolutionMQ) throws Exception {
+		
 		File arquivoMQ   = new File(ParserSimpl.CAMINHO+"saida_rr_mq_2000.txt");
 		File arquivoEVM   = new File(ParserSimpl.CAMINHO+"saida_rr_evm_2000.txt");
-		
-		String nomeTabelaMQ = "TabelaMQ";
-		
-		String nomeTabelaEVM = "TabelaEVM";
-		
 		Map<Aplicacao,Map<DistribuicaoDosDados,List<Instancia>>> instanciasMQ = ParserSimpl.retornaInstancias(arquivoMQ);
-		
 		Map<Aplicacao,Map<DistribuicaoDosDados,List<Instancia>>> instanciasEVM = ParserSimpl.retornaInstancias(arquivoEVM);
-		
 		ParserSimpl.montaTabelaR(nomeTabelaMQ, instanciasMQ);
-		
 		ParserSimpl.montaTabelaR(nomeTabelaEVM, instanciasEVM);
+
+		File arquivoEvolutionMQ   = new File(ParserSimpl.CAMINHO+"saida rr mq 2000 details.txt");
+		Map<Aplicacao,Map<DistribuicaoDosDados,List<Instancia>>> instanciasEvolutionMQ = ParserSimpl.retornaInstanciasEvolution(arquivoEvolutionMQ);
+		ParserSimpl.montaTabelaR(nomeTabelaEvolutionMQ, instanciasEvolutionMQ);
+	}
+	
+	/**
+	 * Gera o script R
+	 */
+	public static void geraScriptR(String nomeTabelaMQ, String nomeTabelaEVM, String nomeTabelaEvolutionMQ) throws Exception {
 		
 		File arquivoSaidaPacotes = new File(ParserSimpl.CAMINHO+"Tabelas"+".r");
 		FileWriter fileWriterPacotes = new FileWriter(arquivoSaidaPacotes);		
@@ -112,11 +114,21 @@ public class GeraInformacoesEstatisticas {
 			fileWriterPacotes.append("write.csv2(resultadosET"+informacao+", file = \"resultadoTempoExecucao"+informacao+".csv\")\r\n");
 		}
 		
-		
-		
-		
-		
-		
 		fileWriterPacotes.close();
+	}
+
+	/**
+	 * @param args
+	 * @throws Exception 
+	 */
+	public static void main(String[] args) throws Exception {
+		
+		String nomeTabelaMQ = "TabelaMQ";
+		String nomeTabelaEVM = "TabelaEVM";
+		String nomeTabelaEvolutionMQ = "TabelaEvolutionMQ";
+		
+		geraArquivosEntrada(nomeTabelaMQ, nomeTabelaEVM, nomeTabelaEvolutionMQ);
+		geraScriptR(nomeTabelaMQ, nomeTabelaEVM, nomeTabelaEvolutionMQ);
+		
 	}
 }
