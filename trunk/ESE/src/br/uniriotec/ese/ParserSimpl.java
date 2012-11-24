@@ -81,6 +81,8 @@ public class ParserSimpl {
 		
 		// desconsidera as linhas com maior tempo de execução
 		long MAX_TEMPO_EXECUCAO = 20000000;
+		int contador  = 0;
+		int intervalo = 10;
 		//Aplicacao[] aplicacoesValidas = { Aplicacao.SEEMP, Aplicacao.DOM4J, Aplicacao.XMLDOM };
 		
 		BufferedReader in  = new BufferedReader(new FileReader(arquivo));
@@ -108,6 +110,7 @@ public class ParserSimpl {
             		ciclo++;
             	aplicacaoAnterior = aplicacao;
             	cabecalho = false;
+            	contador = 0;
             	
             	if (Aplicacao.isAplicacaoParaGrafico(aplicacao)) {
             		descartaAplicacao = false;
@@ -131,6 +134,13 @@ public class ParserSimpl {
             	// desconsidera tempos maiores que 2000
             	if (tempoDeExecucao>MAX_TEMPO_EXECUCAO)
             		continue;
+            	
+            	// considera somente no intervalo
+            	contador++;
+            	if(contador != intervalo) {
+            		continue;
+            	}
+            	contador = 0;
 
             	Instancia instancia = new Instancia();
             	instancia.setCiclo(ciclo);
