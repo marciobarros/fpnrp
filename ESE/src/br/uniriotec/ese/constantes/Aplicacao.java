@@ -14,5 +14,12 @@ public enum Aplicacao {
 	JAVACC,
 	XMLAPI,
 	JMETAL,
-	DOM4J
+	DOM4J;
+	
+	public static boolean isAplicacaoParaGrafico(Aplicacao aplicacao) {
+		if (aplicacao==Aplicacao.DOM4J)  return true;
+		if (aplicacao==Aplicacao.XMLDOM) return true;
+		if (aplicacao==Aplicacao.SEEMP)  return true;
+		return false;
+	}
 }
