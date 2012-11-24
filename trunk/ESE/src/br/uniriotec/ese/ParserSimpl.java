@@ -23,8 +23,9 @@ public class ParserSimpl {
 	public static final String CABECALHO_VALOR = "VALOR";
 	public static final String CABECALHO_TEMPO_DE_EXECUCAO = "TEMPOEXECUCAO";
 	public static final String CABECALHO_NUMEROS_DE_RESTART = "NUMEROSDERESTART";
-	public static final String CAMINHO = "D://Google Drive//Mestrado//Engenharia de Software Experimental//Trabalho Experimentacao ES//";
-	//public static final String CAMINHO = ".\\resources\\";
+	//public static final String CAMINHO = "D://Google Drive//Mestrado//Engenharia de Software Experimental//Trabalho Experimentacao ES//";
+	public static final String CAMINHO = ".\\resources\\";
+	//public static final String CAMINHO = "C://Documents and Settings//Alexandre//Meus documentos//Projetos//workspace_clustering//ESE//Resources//";
 
 	public static Map<Aplicacao,Map<DistribuicaoDosDados,List<Instancia>>> retornaInstancias (File arquivo) throws IOException {
 		Map<Aplicacao,Map<DistribuicaoDosDados,List<Instancia>>> instanciasPorTipo = new HashMap<Aplicacao, Map<DistribuicaoDosDados,List<Instancia>>>();
