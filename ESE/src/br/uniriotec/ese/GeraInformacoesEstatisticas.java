@@ -105,10 +105,11 @@ public class GeraInformacoesEstatisticas {
 			fileWriterPacotes.append("}\r\n");
 			fileWriterPacotes.append("resultados"+informacao+"<-data.frame(valores"+informacao+"Sobol,minimos"+informacao+"Pseudo,media"+informacao+"Pseudo,desvioPadrao"+informacao+"Pseudo,maximos"+informacao+"Pseudo,wilcox"+informacao+"Values,effectSize"+informacao+"Values)\r\n");
 			fileWriterPacotes.append("resultados"+informacao+"\r\n");
+			fileWriterPacotes.append("write.csv2(resultados"+informacao+",file = \"resultado"+informacao+".csv\")\r\n");
 			
 			
 			fileWriterPacotes.append("resultadosET"+informacao+"<-data.frame(valoresET"+informacao+"Sobol,mediaET"+informacao+"Pseudo,desvioPadraoET"+informacao+"Pseudo,wilcoxET"+informacao+"Values,effectSizeET"+informacao+"Values,RR"+informacao+"Sobol,mediaRR"+informacao+"Pseudo,desvioPadraoET"+informacao+"Pseudo)\r\n");
-			fileWriterPacotes.append("resultadosET"+informacao+"\r\n");
+			fileWriterPacotes.append("write.csv2(resultadosET"+informacao+", file = \"resultadoTempoExecucao"+informacao+".csv\")\r\n");
 		}
 		
 		
