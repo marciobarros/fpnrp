@@ -52,6 +52,17 @@ public class GeraInformacoesEstatisticas {
 			fileWriterPacotes.append("valores"+informacao+"Sobol <- NULL\r\n");
 			fileWriterPacotes.append("wilcox"+informacao+"Values <- NULL\r\n");
 			fileWriterPacotes.append("effectSize"+informacao+"Values <- NULL\r\n");
+			
+			
+			fileWriterPacotes.append("desvioPadraoET"+informacao+"Pseudo <- NULL\r\n");
+			fileWriterPacotes.append("mediaET"+informacao+"Pseudo <- NULL\r\n");
+			fileWriterPacotes.append("valoresET"+informacao+"Sobol <- NULL\r\n");
+			fileWriterPacotes.append("wilcoxET"+informacao+"Values <- NULL\r\n");
+			fileWriterPacotes.append("effectSizeET"+informacao+"Values <- NULL\r\n");
+			fileWriterPacotes.append("mediaRR"+informacao+"Pseudo <- NULL\r\n");
+			fileWriterPacotes.append("desvioPadraoRR"+informacao+"Pseudo <- NULL\r\n");
+			fileWriterPacotes.append("RR"+informacao+"Sobol <- NULL\r\n");
+			
 			fileWriterPacotes.append("i<-1\r\n");
 
 			fileWriterPacotes.append("tabela"+informacao+"PSEUDO<-subset(tabela"+informacao+",tabela"+informacao+"$"+ParserSimpl.CABECALHO_DISTRIBUICAO+"=='"+DistribuicaoDosDados.PSEUD.name()+"')\r\n");
@@ -64,20 +75,40 @@ public class GeraInformacoesEstatisticas {
 			fileWriterPacotes.append("	tabela"+informacao+"SOBOLProj<-subset(tabela"+informacao+"SOBOL,tabela"+informacao+"SOBOL$"+ParserSimpl.CABECALHO_APLICACAO+"==proj)\r\n");	
 			fileWriterPacotes.append("	tamanho<-nrow(tabela"+informacao+"SOBOLProj)\r\n");	
 			fileWriterPacotes.append("	tamanhoPSEUD<-nrow(tabela"+informacao+"PSEUDOProj)\r\n");	
-			fileWriterPacotes.append("	minimos"+informacao+"Pseudo[proj]<-min(tabela"+informacao+"PSEUDOProj$"+ParserSimpl.CABECALHO_VALOR+")\r\n");
-			fileWriterPacotes.append("	maximos"+informacao+"Pseudo[proj]<-max(tabela"+informacao+"PSEUDOProj$"+ParserSimpl.CABECALHO_VALOR+")\r\n");
-			fileWriterPacotes.append("	media"+informacao+"Pseudo[proj]<-mean(tabela"+informacao+"PSEUDOProj$"+ParserSimpl.CABECALHO_VALOR+")\r\n");
-			fileWriterPacotes.append("	desvioPadrao"+informacao+"Pseudo[proj]<-sd(tabela"+informacao+"PSEUDOProj$"+ParserSimpl.CABECALHO_VALOR+")\r\n");
-			fileWriterPacotes.append("	wilcox"+informacao+"Values[proj]<-wilcox.test(tabela"+informacao+"PSEUDOProj$"+ParserSimpl.CABECALHO_VALOR+",tabela"+informacao+"SOBOLProj$"+ParserSimpl.CABECALHO_VALOR+")$p.value\r\n");
-			fileWriterPacotes.append("	valores"+informacao+"Sobol[proj]<-tabela"+informacao+"SOBOLProj$"+ParserSimpl.CABECALHO_VALOR+"[1]\r\n");
-			
+			// Primeira tabela - 
+			fileWriterPacotes.append("	minimos"+informacao+"Pseudo[proj]<-round(min(tabela"+informacao+"PSEUDOProj$"+ParserSimpl.CABECALHO_VALOR+"),2)\r\n");
+			fileWriterPacotes.append("	maximos"+informacao+"Pseudo[proj]<-round(max(tabela"+informacao+"PSEUDOProj$"+ParserSimpl.CABECALHO_VALOR+"),2)\r\n");
+			fileWriterPacotes.append("	media"+informacao+"Pseudo[proj]<-round(mean(tabela"+informacao+"PSEUDOProj$"+ParserSimpl.CABECALHO_VALOR+"),2)\r\n");
+			fileWriterPacotes.append("	desvioPadrao"+informacao+"Pseudo[proj]<-round(sd(tabela"+informacao+"PSEUDOProj$"+ParserSimpl.CABECALHO_VALOR+"),2)\r\n");
+			fileWriterPacotes.append("	wilcox"+informacao+"Values[proj]<-round(wilcox.test(tabela"+informacao+"PSEUDOProj$"+ParserSimpl.CABECALHO_VALOR+",tabela"+informacao+"SOBOLProj$"+ParserSimpl.CABECALHO_VALOR+")$p.value,2)\r\n");
+			fileWriterPacotes.append("	valores"+informacao+"Sobol[proj]<-round(tabela"+informacao+"SOBOLProj$"+ParserSimpl.CABECALHO_VALOR+"[1],2)\r\n");
 			fileWriterPacotes.append("	rx <- sum(rank(c(tabela"+informacao+"PSEUDOProj$"+ParserSimpl.CABECALHO_VALOR+", tabela"+informacao+"SOBOLProj$"+ParserSimpl.CABECALHO_VALOR+"))[seq_along(tabela"+informacao+"PSEUDOProj$"+ParserSimpl.CABECALHO_VALOR+")])\r\n");
+			fileWriterPacotes.append("	effectSize"+informacao+"Values[proj]<-round(((rx / tamanhoPSEUD - (tamanhoPSEUD + 1) / 2) / tamanho),2) \r\n");
 			
-			fileWriterPacotes.append("	effectSize"+informacao+"Values[proj]<-((rx / tamanhoPSEUD - (tamanhoPSEUD + 1) / 2) / tamanho) \r\n");
+			// Segunda tabela - Execution Time
+			
+			
+			fileWriterPacotes.append("	mediaET"+informacao+"Pseudo[proj]<-round(mean(tabela"+informacao+"PSEUDOProj$"+ParserSimpl.CABECALHO_TEMPO_DE_EXECUCAO+"),2)\r\n");
+			fileWriterPacotes.append("	desvioPadraoET"+informacao+"Pseudo[proj]<-round(sd(tabela"+informacao+"PSEUDOProj$"+ParserSimpl.CABECALHO_TEMPO_DE_EXECUCAO+"),2)\r\n");
+			fileWriterPacotes.append("	wilcoxET"+informacao+"Values[proj]<-round(wilcox.test(tabela"+informacao+"PSEUDOProj$"+ParserSimpl.CABECALHO_TEMPO_DE_EXECUCAO+",tabela"+informacao+"SOBOLProj$"+ParserSimpl.CABECALHO_TEMPO_DE_EXECUCAO+")$p.value,2)\r\n");
+			fileWriterPacotes.append("	valoresET"+informacao+"Sobol[proj]<-round(tabela"+informacao+"SOBOLProj$"+ParserSimpl.CABECALHO_TEMPO_DE_EXECUCAO+"[1],2)\r\n");
+			fileWriterPacotes.append("	rxET <- sum(rank(c(tabela"+informacao+"PSEUDOProj$"+ParserSimpl.CABECALHO_TEMPO_DE_EXECUCAO+", tabela"+informacao+"SOBOLProj$"+ParserSimpl.CABECALHO_TEMPO_DE_EXECUCAO+"))[seq_along(tabela"+informacao+"PSEUDOProj$"+ParserSimpl.CABECALHO_TEMPO_DE_EXECUCAO+")])\r\n");
+			fileWriterPacotes.append("	effectSizeET"+informacao+"Values[proj]<-round(((rxET / tamanhoPSEUD - (tamanhoPSEUD + 1) / 2) / tamanho),2) \r\n");
+			
+			
+			
+			fileWriterPacotes.append("mediaRR"+informacao+"Pseudo <- round(mean(tabela"+informacao+"PSEUDOProj$"+ParserSimpl.CABECALHO_NUMEROS_DE_RESTART+"),2)\r\n");
+			fileWriterPacotes.append("desvioPadraoRR"+informacao+"Pseudo <- round(sd(tabela"+informacao+"PSEUDOProj$"+ParserSimpl.CABECALHO_NUMEROS_DE_RESTART+"),2)\r\n");
+			fileWriterPacotes.append("RR"+informacao+"Sobol <- round(tabela"+informacao+"SOBOLProj$"+ParserSimpl.CABECALHO_NUMEROS_DE_RESTART+"[1],2)\r\n");
+			
 			fileWriterPacotes.append("	i<-i+1\r\n");
 			fileWriterPacotes.append("}\r\n");
 			fileWriterPacotes.append("resultados"+informacao+"<-data.frame(valores"+informacao+"Sobol,minimos"+informacao+"Pseudo,media"+informacao+"Pseudo,desvioPadrao"+informacao+"Pseudo,maximos"+informacao+"Pseudo,wilcox"+informacao+"Values,effectSize"+informacao+"Values)\r\n");
 			fileWriterPacotes.append("resultados"+informacao+"\r\n");
+			
+			
+			fileWriterPacotes.append("resultadosET"+informacao+"<-data.frame(valoresET"+informacao+"Sobol,mediaET"+informacao+"Pseudo,desvioPadraoET"+informacao+"Pseudo,wilcoxET"+informacao+"Values,effectSizeET"+informacao+"Values,RR"+informacao+"Sobol,mediaRR"+informacao+"Pseudo,desvioPadraoET"+informacao+"Pseudo)\r\n");
+			fileWriterPacotes.append("resultadosET"+informacao+"\r\n");
 		}
 		
 		
