@@ -23,8 +23,8 @@ public class ParserSimpl {
 	public static final String CABECALHO_VALOR = "VALOR";
 	public static final String CABECALHO_TEMPO_DE_EXECUCAO = "TEMPOEXECUCAO";
 	public static final String CABECALHO_NUMEROS_DE_RESTART = "NUMEROSDERESTART";
-	//public static final String CAMINHO = "D://Google Drive//Mestrado//Engenharia de Software Experimental//Trabalho Experimentacao ES//";
-	public static final String CAMINHO = ".\\resources\\";
+	public static final String CAMINHO = "D://Google Drive//Mestrado//Engenharia de Software Experimental//Trabalho Experimentacao ES//";
+	//public static final String CAMINHO = ".\\resources\\";
 
 	public static Map<Aplicacao,Map<DistribuicaoDosDados,List<Instancia>>> retornaInstancias (File arquivo) throws IOException {
 		Map<Aplicacao,Map<DistribuicaoDosDados,List<Instancia>>> instanciasPorTipo = new HashMap<Aplicacao, Map<DistribuicaoDosDados,List<Instancia>>>();
@@ -70,8 +70,7 @@ public class ParserSimpl {
 			for(DistribuicaoDosDados distribuicao:instancias.get(aplicacao).keySet()){
 				for(Instancia instancia:instancias.get(aplicacao).get(distribuicao)) {
 					fileWriterPacotes.append("\r\n");
-					BigDecimal valor = new BigDecimal(instancia.getValor());
-					fileWriterPacotes.append(aplicacao.name()+";"+distribuicao.name()+";"+instancia.getTempoDeExecucao()+";"+valor.setScale(2, RoundingMode.HALF_UP)+";"+instancia.getCiclo()+";"+instancia.getNumeroDeRestart());
+					fileWriterPacotes.append(aplicacao.name()+";"+distribuicao.name()+";"+(Double.valueOf(instancia.getTempoDeExecucao())/1000)+";"+instancia.getValor()+";"+instancia.getCiclo()+";"+instancia.getNumeroDeRestart());
 				}
 			}
 		}
