@@ -97,9 +97,9 @@ public class GeraInformacoesEstatisticas {
 			
 			
 			
-			fileWriterPacotes.append("mediaRR"+informacao+"Pseudo <- round(mean(tabela"+informacao+"PSEUDOProj$"+ParserSimpl.CABECALHO_NUMEROS_DE_RESTART+"),2)\r\n");
-			fileWriterPacotes.append("desvioPadraoRR"+informacao+"Pseudo <- round(sd(tabela"+informacao+"PSEUDOProj$"+ParserSimpl.CABECALHO_NUMEROS_DE_RESTART+"),2)\r\n");
-			fileWriterPacotes.append("RR"+informacao+"Sobol <- round(tabela"+informacao+"SOBOLProj$"+ParserSimpl.CABECALHO_NUMEROS_DE_RESTART+"[1],2)\r\n");
+			fileWriterPacotes.append("	mediaRR"+informacao+"Pseudo[proj] <- round(mean(tabela"+informacao+"PSEUDOProj$"+ParserSimpl.CABECALHO_NUMEROS_DE_RESTART+"),2)\r\n");
+			fileWriterPacotes.append("	desvioPadraoRR"+informacao+"Pseudo[proj] <- round(sd(tabela"+informacao+"PSEUDOProj$"+ParserSimpl.CABECALHO_NUMEROS_DE_RESTART+"),2)\r\n");
+			fileWriterPacotes.append("	RR"+informacao+"Sobol[proj] <- round(tabela"+informacao+"SOBOLProj$"+ParserSimpl.CABECALHO_NUMEROS_DE_RESTART+"[1],2)\r\n");
 			
 			fileWriterPacotes.append("	i<-i+1\r\n");
 			fileWriterPacotes.append("}\r\n");
