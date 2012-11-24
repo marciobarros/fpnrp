@@ -79,9 +79,14 @@ public class ParserSimpl {
 	public static Map<Aplicacao,Map<DistribuicaoDosDados,List<Instancia>>> retornaInstanciasEvolution(File arquivo) throws IOException {
 		Map<Aplicacao,Map<DistribuicaoDosDados,List<Instancia>>> instanciasPorTipo = new HashMap<Aplicacao, Map<DistribuicaoDosDados,List<Instancia>>>();
 		
+		// desconsidera as linhas com maior tempo de execução
+		long MAX_TEMPO_EXECUCAO = 20000000;
+		//Aplicacao[] aplicacoesValidas = { Aplicacao.SEEMP, Aplicacao.DOM4J, Aplicacao.XMLDOM };
+		
 		BufferedReader in  = new BufferedReader(new FileReader(arquivo));
 		String str;
 		boolean cabecalho = true;
+		boolean descartaAplicacao = false;
 		DistribuicaoDosDados distribuicao = null;
 		Aplicacao aplicacaoAnterior = null;
 		Aplicacao aplicacao = null;
@@ -103,9 +108,15 @@ public class ParserSimpl {
             		ciclo++;
             	aplicacaoAnterior = aplicacao;
             	cabecalho = false;
-            	//System.out.println("Aplicação=" + aplicacao + ",ciclo=" + ciclo);
+            	
+            	if (Aplicacao.isAplicacaoParaGrafico(aplicacao)) {
+            		descartaAplicacao = false;
+            	}
+            	else {
+            		descartaAplicacao = true;
+            	}
             }
-            else {
+            else if (!descartaAplicacao) {
             	String[] strSplit = str.split(";");
             	int i1 = 0;
             	int i2 = 1;
@@ -116,6 +127,10 @@ public class ParserSimpl {
             	}
             	long tempoDeExecucao = Long.valueOf(strSplit[i1].trim());
             	double valor = Double.valueOf(strSplit[i2].trim());
+            	
+            	// desconsidera tempos maiores que 2000
+            	if (tempoDeExecucao>MAX_TEMPO_EXECUCAO)
+            		continue;
 
             	Instancia instancia = new Instancia();
             	instancia.setCiclo(ciclo);
