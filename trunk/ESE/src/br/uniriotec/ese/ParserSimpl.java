@@ -22,8 +22,8 @@ public class ParserSimpl {
 	public static final String CABECALHO_TEMPO_DE_EXECUCAO = "TEMPOEXECUCAO";
 	public static final String CABECALHO_NUMEROS_DE_RESTART = "NUMEROSDERESTART";
 	//public static final String CAMINHO = "D://Google Drive//Mestrado//Engenharia de Software Experimental//Trabalho Experimentacao ES//";
-	public static final String CAMINHO = ".\\resources\\";
-	//public static final String CAMINHO = "C://Documents and Settings//Alexandre//Meus documentos//Projetos//workspace_clustering//ESE//Resources//";
+	//public static final String CAMINHO = ".\\resources\\";
+	public static final String CAMINHO = "C://Documents and Settings//Alexandre//Meus documentos//Projetos//workspace_clustering//ESE//Resources//";
 
 	public static Map<Aplicacao,Map<DistribuicaoDosDados,List<Instancia>>> retornaInstancias (File arquivo) throws IOException {
 		Map<Aplicacao,Map<DistribuicaoDosDados,List<Instancia>>> instanciasPorTipo = new HashMap<Aplicacao, Map<DistribuicaoDosDados,List<Instancia>>>();
@@ -103,7 +103,7 @@ public class ParserSimpl {
             		ciclo++;
             	aplicacaoAnterior = aplicacao;
             	cabecalho = false;
-            	System.out.println("Aplicação=" + aplicacao + ",ciclo=" + ciclo);
+            	//System.out.println("Aplicação=" + aplicacao + ",ciclo=" + ciclo);
             }
             else {
             	String[] strSplit = str.split(";");
