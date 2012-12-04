@@ -93,7 +93,7 @@ public class GeraInformacoesEstatisticas {
 			fileWriterPacotes.append("	mediaET"+informacao+"Pseudo[proj]<-round(mean(tabela"+informacao+"PSEUDOProj$"+ParserSimpl.CABECALHO_TEMPO_DE_EXECUCAO+"),2)\r\n");
 			fileWriterPacotes.append("	desvioPadraoET"+informacao+"Pseudo[proj]<-round(sd(tabela"+informacao+"PSEUDOProj$"+ParserSimpl.CABECALHO_TEMPO_DE_EXECUCAO+"),2)\r\n");
 			fileWriterPacotes.append("	wilcoxET"+informacao+"Values[proj]<-round(wilcox.test(tabela"+informacao+"PSEUDOProj$"+ParserSimpl.CABECALHO_TEMPO_DE_EXECUCAO+",tabela"+informacao+"SOBOLProj$"+ParserSimpl.CABECALHO_TEMPO_DE_EXECUCAO+")$p.value,2)\r\n");
-			fileWriterPacotes.append("	valoresET"+informacao+"Sobol[proj]<-round(tabela"+informacao+"SOBOLProj$"+ParserSimpl.CABECALHO_TEMPO_DE_EXECUCAO+"[1],2)\r\n");
+			fileWriterPacotes.append("	valoresET"+informacao+"Sobol[proj]<-round(tabela"+informacao+"SOBOLProj$"+ParserSimpl.CABECALHO_TEMPO_DE_EXECUCAO+",2)\r\n");
 			fileWriterPacotes.append("	rxET <- sum(rank(c(tabela"+informacao+"PSEUDOProj$"+ParserSimpl.CABECALHO_TEMPO_DE_EXECUCAO+", tabela"+informacao+"SOBOLProj$"+ParserSimpl.CABECALHO_TEMPO_DE_EXECUCAO+"))[seq_along(tabela"+informacao+"PSEUDOProj$"+ParserSimpl.CABECALHO_TEMPO_DE_EXECUCAO+")])\r\n");
 			fileWriterPacotes.append("	effectSizeET"+informacao+"Values[proj]<-round(((rxET / tamanhoPSEUD - (tamanhoPSEUD + 1) / 2) / tamanho),2) \r\n");
 			
@@ -101,7 +101,7 @@ public class GeraInformacoesEstatisticas {
 			
 			fileWriterPacotes.append("	mediaRR"+informacao+"Pseudo[proj] <- round(mean(tabela"+informacao+"PSEUDOProj$"+ParserSimpl.CABECALHO_NUMEROS_DE_RESTART+"),2)\r\n");
 			fileWriterPacotes.append("	desvioPadraoRR"+informacao+"Pseudo[proj] <- round(sd(tabela"+informacao+"PSEUDOProj$"+ParserSimpl.CABECALHO_NUMEROS_DE_RESTART+"),2)\r\n");
-			fileWriterPacotes.append("	RR"+informacao+"Sobol[proj] <- round(tabela"+informacao+"SOBOLProj$"+ParserSimpl.CABECALHO_NUMEROS_DE_RESTART+"[1],2)\r\n");
+			fileWriterPacotes.append("	RR"+informacao+"Sobol[proj] <- round(tabela"+informacao+"SOBOLProj$"+ParserSimpl.CABECALHO_NUMEROS_DE_RESTART+",2)\r\n");
 			
 			fileWriterPacotes.append("	i<-i+1\r\n");
 			fileWriterPacotes.append("}\r\n");
@@ -110,7 +110,7 @@ public class GeraInformacoesEstatisticas {
 			fileWriterPacotes.append("write.csv2(resultados"+informacao+",file = \"resultado"+informacao+".csv\")\r\n");
 			
 			
-			fileWriterPacotes.append("resultadosET"+informacao+"<-data.frame(valoresET"+informacao+"Sobol,mediaET"+informacao+"Pseudo,desvioPadraoET"+informacao+"Pseudo,wilcoxET"+informacao+"Values,effectSizeET"+informacao+"Values,RR"+informacao+"Sobol,mediaRR"+informacao+"Pseudo,desvioPadraoET"+informacao+"Pseudo)\r\n");
+			fileWriterPacotes.append("resultadosET"+informacao+"<-data.frame(valoresET"+informacao+"Sobol,mediaET"+informacao+"Pseudo,desvioPadraoET"+informacao+"Pseudo,wilcoxET"+informacao+"Values,effectSizeET"+informacao+"Values,RR"+informacao+"Sobol,mediaRR"+informacao+"Pseudo,desvioPadraoRR"+informacao+"Pseudo)\r\n");
 			fileWriterPacotes.append("write.csv2(resultadosET"+informacao+", file = \"resultadoTempoExecucao"+informacao+".csv\")\r\n");
 		}
 		
