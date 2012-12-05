@@ -62,4 +62,17 @@ public enum Aplicacao {
 		}
 	}
 	
+	public static String valores() {
+		StringBuilder sb = new StringBuilder("");
+		for (Aplicacao aplicacao : Aplicacao.values()) {
+			sb.append("'");
+			sb.append(aplicacao.toString());
+			sb.append("'");
+			sb.append(",");
+		}
+		if (sb.length()>0) sb.delete(sb.length()-1,sb.length());
+		return sb.toString();
+	}
+	
+	
 }
