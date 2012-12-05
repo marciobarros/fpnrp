@@ -22,8 +22,9 @@ public class ParserSimpl {
 	public static final String CABECALHO_TEMPO_DE_EXECUCAO = "TEMPOEXECUCAO";
 	public static final String CABECALHO_NUMEROS_DE_RESTART = "NUMEROSDERESTART";
 	//public static final String CAMINHO = "D://Google Drive//Mestrado//Engenharia de Software Experimental//Trabalho Experimentacao ES//";
-	//public static final String CAMINHO = ".\\resources\\";
-	public static final String CAMINHO = "C://Documents and Settings//Alexandre//Meus documentos//Projetos//workspace_clustering//ESE//Resources//";
+	public static final String CAMINHO = ".\\resources\\";
+	//public static final String CAMINHO = "C://Documents and Settings//Alexandre//Meus documentos//Projetos//workspace_clustering//ESE//Resources//";
+	//public static final String CAMINHO = "D://Usuarios//094282050361//Meus documentos//Meus Projetos//workspace_clustering//ESE//resources//";
 
 	public static Map<Aplicacao,Map<DistribuicaoDosDados,List<Instancia>>> retornaInstancias (File arquivo) throws IOException {
 		Map<Aplicacao,Map<DistribuicaoDosDados,List<Instancia>>> instanciasPorTipo = new HashMap<Aplicacao, Map<DistribuicaoDosDados,List<Instancia>>>();
@@ -57,6 +58,7 @@ public class ParserSimpl {
             	instanciasPorTipo.get(aplicacao).get(distribuicao).add(instancia);
             }
 		}
+		in.close();
 		return instanciasPorTipo;
 	}
 	
@@ -79,11 +81,10 @@ public class ParserSimpl {
 	public static Map<Aplicacao,Map<DistribuicaoDosDados,List<Instancia>>> retornaInstanciasEvolution(File arquivo) throws IOException {
 		Map<Aplicacao,Map<DistribuicaoDosDados,List<Instancia>>> instanciasPorTipo = new HashMap<Aplicacao, Map<DistribuicaoDosDados,List<Instancia>>>();
 		
-		// desconsidera as linhas com maior tempo de execução
-		long MAX_TEMPO_EXECUCAO = 20000000;
+		long maxTempoExecucao = 0;
+		int valorDivisao = 0;
 		int contador  = 0;
-		int intervalo = 10;
-		//Aplicacao[] aplicacoesValidas = { Aplicacao.SEEMP, Aplicacao.DOM4J, Aplicacao.XMLDOM };
+		int intervalo = 1;
 		
 		BufferedReader in  = new BufferedReader(new FileReader(arquivo));
 		String str;
@@ -114,6 +115,9 @@ public class ParserSimpl {
             	
             	if (Aplicacao.isAplicacaoParaGrafico(aplicacao)) {
             		descartaAplicacao = false;
+            		intervalo = Aplicacao.getIntervaloDadosGrafico(aplicacao);
+            		maxTempoExecucao = Aplicacao.getValorMaximoDadosGrafico(aplicacao);
+            		valorDivisao = Aplicacao.getValorDivisaoDadosGrafico(aplicacao);
             	}
             	else {
             		descartaAplicacao = true;
@@ -131,9 +135,8 @@ public class ParserSimpl {
             	long tempoDeExecucao = Long.valueOf(strSplit[i1].trim());
             	double valor = Double.valueOf(strSplit[i2].trim());
             	
-            	// desconsidera tempos maiores que 2000
-            	if (tempoDeExecucao>MAX_TEMPO_EXECUCAO)
-            		continue;
+            	// desconsidera tempos maiores para o projeto
+            	if (tempoDeExecucao>maxTempoExecucao) continue;
             	
             	// considera somente no intervalo
             	contador++;
@@ -147,7 +150,10 @@ public class ParserSimpl {
             	instancia.setAplicacao(aplicacao);
             	instancia.setDistribuicao(distribuicao);
             	instancia.setValor(valor);
-            	instancia.setTempoDeExecucao(tempoDeExecucao);
+            	if (valorDivisao==0)
+            		instancia.setTempoDeExecucao(tempoDeExecucao);
+            	else
+            		instancia.setTempoDeExecucao((long)(tempoDeExecucao/(double)valorDivisao));
             	instancia.setNumeroDeRestart(-1);
             	
             	if(instanciasPorTipo.get(aplicacao)==null) {
@@ -159,6 +165,7 @@ public class ParserSimpl {
             	instanciasPorTipo.get(aplicacao).get(distribuicao).add(instancia);
             }
 		}
+		in.close();
 		return instanciasPorTipo;
 	}
 	

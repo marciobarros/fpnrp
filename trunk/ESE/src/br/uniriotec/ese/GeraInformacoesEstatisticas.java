@@ -22,6 +22,7 @@ public class GeraInformacoesEstatisticas {
 		ParserSimpl.montaTabelaR(nomeTabelaMQ, instanciasMQ);
 		ParserSimpl.montaTabelaR(nomeTabelaEVM, instanciasEVM);
 
+		// desconsidera as linhas com maior tempo de execução
 		File arquivoEvolutionMQ   = new File(ParserSimpl.CAMINHO+"saida rr mq 2000 details.txt");
 		Map<Aplicacao,Map<DistribuicaoDosDados,List<Instancia>>> instanciasEvolutionMQ = ParserSimpl.retornaInstanciasEvolution(arquivoEvolutionMQ);
 		ParserSimpl.montaTabelaR(nomeTabelaEvolutionMQ, instanciasEvolutionMQ);
@@ -124,23 +125,21 @@ public class GeraInformacoesEstatisticas {
 			fileWriterPacotes.append("proj=\"" + aplicacao + "\"\r\n");
 			fileWriterPacotes.append("dadosSobol       <- subset(tabelaEvolutionMQ,tabelaEvolutionMQ$APLICACAO==proj & tabelaEvolutionMQ$DISTRIBUICAO==\"SOBOL\")\r\n");
 			fileWriterPacotes.append("dadosPseudo      <- subset(tabelaEvolutionMQ,tabelaEvolutionMQ$APLICACAO==proj & tabelaEvolutionMQ$DISTRIBUICAO==\"PSEUD\")\r\n");
-			fileWriterPacotes.append("temposExecucao   <- names(table(subset(tabelaEvolutionMQ$TEMPOEXECUCAO,tabelaEvolutionMQ$APLICACAO==proj)))\r\n");
-			fileWriterPacotes.append("valoresExecucao  <- data.frame(dadosPseudo$TEMPOEXECUCAO,dadosPseudo$APLICACAO==proj),\r\n");
-			fileWriterPacotes.append("subset(tabelaEvolutionMQ$VALOR,dadosPseudo$APLICACAO==proj),\r\n");
-			fileWriterPacotes.append("subset(tabelaEvolutionMQ$VALOR,tabelaEvolutionMQ$APLICACAO==proj & tabelaEvolutionMQ$DISTRIBUICAO==\"PSEUD\")\r\n");
-			fileWriterPacotes.append("\r\n");
+			fileWriterPacotes.append("temposExecucao   <- as.numeric(names(table(subset(tabelaEvolutionMQ$TEMPOEXECUCAO,tabelaEvolutionMQ$APLICACAO==proj))))\r\n");
 			fileWriterPacotes.append("valoresMin <- NULL\r\n");
 			fileWriterPacotes.append("valoresMax <- NULL\r\n");
 			fileWriterPacotes.append("valoresMed <- NULL\r\n");
+			fileWriterPacotes.append("i <- 1\r\n");
 			fileWriterPacotes.append("for ( tempo in temposExecucao ) {\r\n");
-			fileWriterPacotes.append("	valoresMin[tempo] <- min (subset(dadosPseudo$VALOR,dadosPseudo$TEMPOEXECUCAO==tempo))\r\n");
-			fileWriterPacotes.append("	valoresMax[tempo] <- max (subset(dadosPseudo$VALOR,dadosPseudo$TEMPOEXECUCAO==tempo))\r\n");
-			fileWriterPacotes.append("	valoresMed[tempo] <- mean(subset(dadosPseudo$VALOR,dadosPseudo$TEMPOEXECUCAO==tempo))\r\n");
+			fileWriterPacotes.append("	valoresMin[i] <- min (subset(dadosPseudo$VALOR,dadosPseudo$TEMPOEXECUCAO==tempo))\r\n");
+			fileWriterPacotes.append("	valoresMax[i] <- max (subset(dadosPseudo$VALOR,dadosPseudo$TEMPOEXECUCAO==tempo))\r\n");
+			fileWriterPacotes.append("	valoresMed[i] <- mean(subset(dadosPseudo$VALOR,dadosPseudo$TEMPOEXECUCAO==tempo))\r\n");
+			fileWriterPacotes.append("	i <- i + 1\r\n");
 			fileWriterPacotes.append("}\r\n");
 			fileWriterPacotes.append("\r\n");
 			fileWriterPacotes.append("valoresSobol <- dadosSobol$VALOR\r\n");
-			fileWriterPacotes.append("xrange<-range(temposExecucao)\r\n");
-			fileWriterPacotes.append("yrange<-range(valoresMed,valoresSobol)\r\n");
+			fileWriterPacotes.append("xrange<-range(0,2000)\r\n");
+			fileWriterPacotes.append("yrange<-range(0,valoresSobol)\r\n");
 			fileWriterPacotes.append("\r\n");
 			fileWriterPacotes.append("plot(xrange, yrange, type=\"l\", xlab=\"Time Step\", ylab=\"MQ\")\r\n");
 			fileWriterPacotes.append("title(proj)\r\n");
