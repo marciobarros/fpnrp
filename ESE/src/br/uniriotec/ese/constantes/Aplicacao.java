@@ -28,9 +28,9 @@ public enum Aplicacao {
 			case SEEMP:
 				return 1;
 			case XMLDOM:
-				return 10;
+				return 5;
 			case DOM4J:
-				return 10;
+				return 5;
 			default:
 				return 0;
 		}
@@ -54,9 +54,9 @@ public enum Aplicacao {
 			case SEEMP:
 				return 0;
 			case XMLDOM:
-				return 10;
+				return 15;
 			case DOM4J:
-				return 10;
+				return 40;
 			default:
 				return 0;
 		}
