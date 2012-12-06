@@ -2,7 +2,6 @@ package br.uniriotec.ese;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -117,41 +116,41 @@ public class GeraInformacoesEstatisticas {
 			fileWriterPacotes.append("write.csv2(resultadosET"+informacao+", file = \"resultadoTempoExecucao"+informacao+".csv\")\r\n");
 		}
 		
-		String[] aplicacoesGrafico = { "XMLDOM", "DOM4J", "SEEMP" };
 		fileWriterPacotes.append("#################################\r\n");
 		fileWriterPacotes.append("# Gráficos\r\n");
 		fileWriterPacotes.append("#################################\r\n");
 		fileWriterPacotes.append("tabelaEvolutionMQ<-read.table(\"" + nomeTabelaEvolutionMQ + ".txt\",h=T,sep=\";\")\r\n");
-		for (String aplicacao : aplicacoesGrafico) {
-			fileWriterPacotes.append("\r\n");
-			fileWriterPacotes.append("# =========== GRAFICO PARA APLICACAO " + aplicacao + "\r\n");
-			fileWriterPacotes.append("proj=\"" + aplicacao + "\"\r\n");
-			fileWriterPacotes.append("dadosSobol       <- subset(tabelaEvolutionMQ,tabelaEvolutionMQ$APLICACAO==proj & tabelaEvolutionMQ$DISTRIBUICAO==\"SOBOL\")\r\n");
-			fileWriterPacotes.append("dadosPseudo      <- subset(tabelaEvolutionMQ,tabelaEvolutionMQ$APLICACAO==proj & tabelaEvolutionMQ$DISTRIBUICAO==\"PSEUD\")\r\n");
-			fileWriterPacotes.append("temposExecucao   <- as.numeric(names(table(subset(tabelaEvolutionMQ$TEMPOEXECUCAO,tabelaEvolutionMQ$APLICACAO==proj))))\r\n");
-			fileWriterPacotes.append("valoresMin <- NULL\r\n");
-			fileWriterPacotes.append("valoresMax <- NULL\r\n");
-			fileWriterPacotes.append("valoresMed <- NULL\r\n");
-			fileWriterPacotes.append("i <- 1\r\n");
-			fileWriterPacotes.append("for ( tempo in temposExecucao ) {\r\n");
-			fileWriterPacotes.append("	valoresMin[i] <- min (subset(dadosPseudo$VALOR,dadosPseudo$TEMPOEXECUCAO==tempo))\r\n");
-			fileWriterPacotes.append("	valoresMax[i] <- max (subset(dadosPseudo$VALOR,dadosPseudo$TEMPOEXECUCAO==tempo))\r\n");
-			fileWriterPacotes.append("	valoresMed[i] <- mean(subset(dadosPseudo$VALOR,dadosPseudo$TEMPOEXECUCAO==tempo))\r\n");
-			fileWriterPacotes.append("	i <- i + 1\r\n");
-			fileWriterPacotes.append("}\r\n");
-			fileWriterPacotes.append("\r\n");
-			fileWriterPacotes.append("valoresSobol <- dadosSobol$VALOR\r\n");
-			fileWriterPacotes.append("xrange<-range(0,2000)\r\n");
-			fileWriterPacotes.append("yrange<-range(0,valoresMax)\r\n");
-			fileWriterPacotes.append("\r\n");
-			fileWriterPacotes.append("plot(xrange, yrange, type=\"l\", xlab=\"Time Step\", ylab=\"MQ\")\r\n");
-			fileWriterPacotes.append("title(proj)\r\n");
-			fileWriterPacotes.append("\r\n");
-			fileWriterPacotes.append("lines(temposExecucao, valoresMin  , type=\"l\", lwd=1.5, lty=2, col=\"black\", pch=18)\r\n"); 
-			fileWriterPacotes.append("lines(temposExecucao, valoresMed  , type=\"l\", lwd=1.5, lty=1, col=\"black\", pch=18)\r\n"); 
-			fileWriterPacotes.append("lines(temposExecucao, valoresMax  , type=\"l\", lwd=1.5, lty=4, col=\"black\", pch=18)\r\n");
-			fileWriterPacotes.append("lines(temposExecucao, valoresSobol, type=\"l\", lwd=2.0, lty=1, col=\"black\", pch=18)\r\n");
-		}
+
+		fileWriterPacotes.append("projetosGraficos<-c(\"XMLDOM\",\"DOM4J\",\"SEEMP\")\r\n");
+		fileWriterPacotes.append("for ( proj in projetosGraficos ) {\r\n");
+		fileWriterPacotes.append("\r\n");
+		fileWriterPacotes.append("	dadosSobol       <- subset(tabelaEvolutionMQ,tabelaEvolutionMQ$APLICACAO==proj & tabelaEvolutionMQ$DISTRIBUICAO==\"SOBOL\")\r\n");
+		fileWriterPacotes.append("	dadosPseudo      <- subset(tabelaEvolutionMQ,tabelaEvolutionMQ$APLICACAO==proj & tabelaEvolutionMQ$DISTRIBUICAO==\"PSEUD\")\r\n");
+		fileWriterPacotes.append("	temposExecucao   <- as.numeric(names(table(subset(tabelaEvolutionMQ$TEMPOEXECUCAO,tabelaEvolutionMQ$APLICACAO==proj))))\r\n");
+		fileWriterPacotes.append("	valoresMin <- NULL\r\n");
+		fileWriterPacotes.append("	valoresMax <- NULL\r\n");
+		fileWriterPacotes.append("	valoresMed <- NULL\r\n");
+		fileWriterPacotes.append("	i <- 1\r\n");
+		fileWriterPacotes.append("	for ( tempo in temposExecucao ) {\r\n");
+		fileWriterPacotes.append("		valoresMin[i] <- min (subset(dadosPseudo$VALOR,dadosPseudo$TEMPOEXECUCAO==tempo))\r\n");
+		fileWriterPacotes.append("		valoresMax[i] <- max (subset(dadosPseudo$VALOR,dadosPseudo$TEMPOEXECUCAO==tempo))\r\n");
+		fileWriterPacotes.append("		valoresMed[i] <- mean(subset(dadosPseudo$VALOR,dadosPseudo$TEMPOEXECUCAO==tempo))\r\n");
+		fileWriterPacotes.append("		i <- i + 1\r\n");
+		fileWriterPacotes.append("	}\r\n");
+		fileWriterPacotes.append("valoresSobol <- dadosSobol$VALOR\r\n");
+		fileWriterPacotes.append("xrange<-range(0,2000)\r\n");
+		fileWriterPacotes.append("yrange<-range(0,valoresMax)\r\n");
+		fileWriterPacotes.append("\r\n");
+		fileWriterPacotes.append("bmp(filename=paste(proj,\".bmp\"))\r\n");
+		fileWriterPacotes.append("plot(xrange, yrange, type=\"l\", xlab=\"Time Step\", ylab=\"MQ\")\r\n");
+		fileWriterPacotes.append("title(proj)\r\n");
+		fileWriterPacotes.append("\r\n");
+		fileWriterPacotes.append("lines(temposExecucao, valoresMin  , type=\"l\", lwd=1.5, lty=2, col=\"black\", pch=18)\r\n"); 
+		fileWriterPacotes.append("lines(temposExecucao, valoresMed  , type=\"l\", lwd=1.5, lty=1, col=\"black\", pch=18)\r\n"); 
+		fileWriterPacotes.append("lines(temposExecucao, valoresMax  , type=\"l\", lwd=1.5, lty=4, col=\"black\", pch=18)\r\n");
+		fileWriterPacotes.append("lines(temposExecucao, valoresSobol, type=\"l\", lwd=2.0, lty=1, col=\"black\", pch=18)\r\n");
+		fileWriterPacotes.append("dev.off()\r\n");
+		fileWriterPacotes.append("}\r\n");
 		
 		fileWriterPacotes.close();
 	}
