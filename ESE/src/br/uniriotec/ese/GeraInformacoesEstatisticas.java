@@ -142,7 +142,7 @@ public class GeraInformacoesEstatisticas {
 		fileWriterPacotes.append("yrange<-range(0,valoresMax)\r\n");
 		fileWriterPacotes.append("\r\n");
 		fileWriterPacotes.append("bmp(filename=paste(proj,\".bmp\"))\r\n");
-		fileWriterPacotes.append("plot(xrange, yrange, type=\"l\", xlab=\"Time Step\", ylab=\"MQ\")\r\n");
+		fileWriterPacotes.append("plot(xrange, yrange, type=\"n\", xlab=\"Time Step\", ylab=\"MQ\")\r\n");
 		fileWriterPacotes.append("title(proj)\r\n");
 		fileWriterPacotes.append("\r\n");
 		fileWriterPacotes.append("lines(temposExecucao, valoresMin  , type=\"l\", lwd=1.5, lty=2, col=\"black\", pch=18)\r\n"); 
