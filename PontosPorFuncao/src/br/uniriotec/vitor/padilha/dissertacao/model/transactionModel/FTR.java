@@ -11,7 +11,7 @@ import br.uniriotec.vitor.padilha.dissertacao.ElementValidator;
 import br.uniriotec.vitor.padilha.dissertacao.XmlFunctionPointElementWithParent;
 import br.uniriotec.vitor.padilha.dissertacao.exception.ElementException;
 import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.DataModelElement;
-import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.Subset;
+import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.RET;
 
 @XmlType(name="ftr")
 public class FTR extends XmlFunctionPointElementWithParent<Transaction> implements ElementValidator{
@@ -19,10 +19,10 @@ public class FTR extends XmlFunctionPointElementWithParent<Transaction> implemen
 	private List<FTRField> fields;
 	
 	private String name;  
-	private String subset; 
+	private String ret; 
 	private String dataModelElement;
-	private Boolean useAllFields;
-	private Subset subsetRef;
+	private Boolean useAllDets;
+	private RET retRef;
 
 	@XmlAttribute
 	public String getName() {
@@ -33,12 +33,12 @@ public class FTR extends XmlFunctionPointElementWithParent<Transaction> implemen
 		this.name = name;
 	}
 	@XmlAttribute
-	public String getSubset() {
-		return subset;
+	public String getRet() {
+		return ret;
 	}
 
-	public void setSubset(String subset) {
-		this.subset = subset;
+	public void setRet(String ret) {
+		this.ret = ret;
 	}
 	@XmlAttribute
 	public String getDataModelElement() {
@@ -49,15 +49,15 @@ public class FTR extends XmlFunctionPointElementWithParent<Transaction> implemen
 		this.dataModelElement = dataModelElement;
 	}
 	@XmlAttribute
-	public Boolean getUseAllFields() {
-		return useAllFields;
+	public Boolean getUseAllDets() {
+		return useAllDets;
 	}
 
-	public void setUseAllFields(Boolean useAllFields) {
-		this.useAllFields = useAllFields;
+	public void setUseAllDets(Boolean useAllFields) {
+		this.useAllDets = useAllFields;
 	}
 
-	@XmlElement(name="field")
+	@XmlElement(name="det")
 	public List<FTRField> getFields() {
 		return fields;
 	}
@@ -67,12 +67,12 @@ public class FTR extends XmlFunctionPointElementWithParent<Transaction> implemen
 	}
 
 	@XmlTransient
-	public Subset getSubsetRef() {
-		return subsetRef;
+	public RET getRetRef() {
+		return retRef;
 	}
 
-	public void setSubsetRef(Subset subsetRef) {
-		this.subsetRef = subsetRef;
+	public void setSubsetRef(RET subsetRef) {
+		this.retRef = subsetRef;
 	}
 
 	@Override
@@ -81,12 +81,12 @@ public class FTR extends XmlFunctionPointElementWithParent<Transaction> implemen
 		{
 			throw new ElementException("Nome obrigatório",this);
 		}		
-		if(this.subsetRef==null) {
-			throw new ElementException("Elemento: "+getDataModelElement()+"."+getSubset()+" não encontrado", this);
+		if(this.retRef==null) {
+			throw new ElementException("Elemento: "+getDataModelElement()+"."+getRet()+" não encontrado", this);
 		}
 		
-		if(getFields()==null && (getUseAllFields()==null || !getUseAllFields())){
-			throw new ElementException("FTR sem campos: "+getDataModelElement()+"."+getSubset()+"", this);
+		if(getFields()==null && (getUseAllDets()==null || !getUseAllDets())){
+			throw new ElementException("FTR sem campos: "+getDataModelElement()+"."+getRet()+"", this);
 		}
 		return true;
 	}
@@ -94,21 +94,21 @@ public class FTR extends XmlFunctionPointElementWithParent<Transaction> implemen
 	@Override
 	public void charge() {
 		String referencia = getName();
-		if(getSubset()!=null && !getSubset().equals("")) {
-			referencia=getSubset();
+		if(getRet()!=null && !getRet().equals("")) {
+			referencia=getRet();
 		}
 		
-		if(getSubset()==null || getSubset().equals("")){
-			setSubset(getName());
+		if(getRet()==null || getRet().equals("")){
+			setRet(getName());
 		}
 		if(getDataModelElement()==null || getDataModelElement().equals("")){
 			setDataModelElement(getName());
 		}
 		for(DataModelElement modelElement:getParent().getParent().getParent().getDataModel().getDataModelElements()){
 			if(modelElement.getName()!=null && modelElement.getName().equals(getDataModelElement())) {
-				for(Subset subset:modelElement.getSubsets()){
+				for(RET subset:modelElement.getRets()){
 					if(subset.getName().equals(referencia)) {
-						this.subsetRef = subset;
+						this.retRef = subset;
 					}
 				}
 			}

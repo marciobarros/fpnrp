@@ -10,21 +10,21 @@ import br.uniriotec.vitor.padilha.dissertacao.ElementValidator;
 import br.uniriotec.vitor.padilha.dissertacao.XmlFunctionPointElementWithParent;
 import br.uniriotec.vitor.padilha.dissertacao.exception.ElementException;
 
-@XmlType(name="subset")
-public class Subset extends XmlFunctionPointElementWithParent<DataModelElement> implements ElementValidator{
-	private List<Field> fields;
+@XmlType(name="ret")
+public class RET extends XmlFunctionPointElementWithParent<DataModelElement> implements ElementValidator{
+	private List<DET> dets;
 	
 	private String name;
 	
 	private String extendsRet;
 
-	@XmlElement(required=false,name="field")	
-	public List<Field> getFields() {
-		return fields;
+	@XmlElement(required=false,name="det")	
+	public List<DET> getDets() {
+		return dets;
 	}
 
-	public void setFields(List<Field> fields) {
-		this.fields = fields;
+	public void setDets(List<DET> dets) {
+		this.dets = dets;
 	}
 
 	@XmlAttribute(required=true)
@@ -40,13 +40,17 @@ public class Subset extends XmlFunctionPointElementWithParent<DataModelElement> 
 	public boolean validate() throws ElementException {
 		if(this.getName()==null || this.getName().equals(""))
 			throw new ElementException("Nome obrigatório",this);
-		for(Field field:getFields()) {
+		for(DET field:getDets()) {
 			if(!field.validate())
 				return false;
 		}
 		return true;
 	}
 
+	/**
+	 * Verifica se o RET faz parte de um único conjunto. Empregado, Estagiário, Requisitado seriam todo um Contrato, portanto seria preenchido Contrato.
+	 * @return
+	 */
 	public String getExtendsRet() {
 		return extendsRet;
 	}
@@ -57,7 +61,7 @@ public class Subset extends XmlFunctionPointElementWithParent<DataModelElement> 
 
 	@Override
 	public void charge() {
-		for(Field field:getFields()) {
+		for(DET field:getDets()) {
 			field.charge();
 		}
 	}

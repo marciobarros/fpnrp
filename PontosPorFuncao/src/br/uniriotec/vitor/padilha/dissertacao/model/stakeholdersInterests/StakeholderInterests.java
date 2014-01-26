@@ -1,10 +1,12 @@
 package br.uniriotec.vitor.padilha.dissertacao.model.stakeholdersInterests;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 import br.uniriotec.vitor.padilha.dissertacao.XmlFunctionPointElement;
 import br.uniriotec.vitor.padilha.dissertacao.exception.ElementException;
@@ -32,6 +34,16 @@ public class StakeholderInterests extends XmlFunctionPointElement {
 	}
 	public void setInterests(List<Interest> interests) {
 		this.interests = interests;
+	}
+	
+	//@XmlTransient
+	public List<Interest> getInterests(Transaction transaction) {
+		List<Interest> interests = new ArrayList<Interest>();
+		for(Interest interest:getInterests()){
+			if(interest.getTransaction().getName().equals(transaction.getName()))
+				interests.add(interest);
+		}
+		return interests;
 	}
 
 	public void validade(FunctionPointSystem functionPointSystem, boolean validate) throws ElementException {

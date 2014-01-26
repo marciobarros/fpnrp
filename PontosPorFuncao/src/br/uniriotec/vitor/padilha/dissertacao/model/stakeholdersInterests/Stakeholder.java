@@ -8,6 +8,8 @@ import br.uniriotec.vitor.padilha.dissertacao.XmlFunctionPointElementWithParent;
 @XmlType(name="stakeholder")
 public class Stakeholder extends XmlFunctionPointElementWithParent<StakeholderInterests>{
 	private String name;
+	
+	private Integer weight;
 
 	@XmlAttribute(name="name")
 	public String getName() {
@@ -16,5 +18,14 @@ public class Stakeholder extends XmlFunctionPointElementWithParent<StakeholderIn
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	@XmlAttribute(name="weight")
+	public Integer getWeight() {
+		return weight;
+	}
+
+	public void setWeight(Integer weight) {
+		this.weight = weight;
 	}
 }

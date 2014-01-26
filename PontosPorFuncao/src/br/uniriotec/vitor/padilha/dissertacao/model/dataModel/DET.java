@@ -8,8 +8,8 @@ import br.uniriotec.vitor.padilha.dissertacao.ElementValidator;
 import br.uniriotec.vitor.padilha.dissertacao.XmlFunctionPointElementWithParent;
 import br.uniriotec.vitor.padilha.dissertacao.exception.ElementException;
 
-@XmlType(name="field")
-public class Field extends XmlFunctionPointElementWithParent<Subset> implements ElementValidator{
+@XmlType(name="det")
+public class DET extends XmlFunctionPointElementWithParent<RET> implements ElementValidator{
 
 	private String name;
 	
@@ -18,12 +18,16 @@ public class Field extends XmlFunctionPointElementWithParent<Subset> implements 
 	private String description;
 	
 	private Boolean primaryKey;
+	
+	private Boolean hasSemanticMeaning;
 
 	private String dataModelElement;
 	
-	private Subset subsetRef;
+	private RET retRef;
 	
 	private Boolean flagcanBeDetInTransation;
+	
+	private boolean implementada;
 	
 	@XmlAttribute(required=true)
 	public String getName() {
@@ -59,7 +63,7 @@ public class Field extends XmlFunctionPointElementWithParent<Subset> implements 
 			throw new ElementException("Nome obrigatório",this);
 		}
 		if(getRef()!=null && !getRef().equals("")) {
-			if(getSubsetRef()==null) {
+			if(getRetRef()==null) {
 				throw new ElementException("Elemento: "+getDataModelElement()+"."+getRef()+" não encontrado", this);
 			}
 		}
@@ -86,12 +90,12 @@ public class Field extends XmlFunctionPointElementWithParent<Subset> implements 
 	}
 
 	@XmlTransient
-	public Subset getSubsetRef() {
-		return subsetRef;
+	public RET getRetRef() {
+		return retRef;
 	}
 
-	public void setSubsetRef(Subset subsetRef) {
-		this.subsetRef = subsetRef;
+	public void setRetRef(RET retRef) {
+		this.retRef = retRef;
 	}
 
 	@XmlTransient
@@ -102,6 +106,15 @@ public class Field extends XmlFunctionPointElementWithParent<Subset> implements 
 	public void setFlagcanBeDetInTransation(Boolean flagcanBeDetInTransation) {
 		this.flagcanBeDetInTransation = flagcanBeDetInTransation;
 	}
+	
+	@XmlTransient
+	public boolean isImplementada() {
+		return implementada;
+	}
+
+	public void setImplementada(boolean implementada) {
+		this.implementada = implementada;
+	}
 
 	@Override
 	public void charge() {
@@ -111,13 +124,22 @@ public class Field extends XmlFunctionPointElementWithParent<Subset> implements 
 			}
 			for(DataModelElement modelElement:getParent().getParent().getParent().getDataModelElements()){
 				if(modelElement.getName()!=null && modelElement.getName().equals(getDataModelElement())) {
-					for(Subset subset:modelElement.getSubsets()){
-						if(subset.getName().equals(getRef())) {
-							setSubsetRef(subset);
+					for(RET ret:modelElement.getRets()){
+						if(ret.getName().equals(getRef())) {
+							setRetRef(ret);
 						}
 					}
 				}
 			}
 		}		
+	}
+
+	@XmlAttribute(required=false)
+	public Boolean getHasSemanticMeaning() {
+		return hasSemanticMeaning;
+	}
+
+	public void setHasSemanticMeaning(Boolean hasSemanticMeaning) {
+		this.hasSemanticMeaning = hasSemanticMeaning;
 	}
 }

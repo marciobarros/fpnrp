@@ -19,7 +19,7 @@ import br.uniriotec.vitor.padilha.dissertacao.Complexity;
 import br.uniriotec.vitor.padilha.dissertacao.model.FunctionPointSystem;
 import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.DataModel;
 import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.DataModelElement;
-import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.Field;
+import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.DET;
 import br.uniriotec.vitor.padilha.dissertacao.model.transactionModel.Transaction;
 import br.uniriotec.vitor.padilha.dissertacao.model.transactionModel.TransactionModel;
 
@@ -34,6 +34,8 @@ public class WebFunctionPointView extends GenericFunctionPointView {
 	private Map<FunctionPointSystem, TransactionModelValue> transactionModelValues;
 	
 	private Map<FunctionPointSystem, Double> satisfactionPercent;
+	
+	private Map<FunctionPointSystem, Long> satisfaction;
 	
 	private File file;
 	@Override
@@ -53,15 +55,22 @@ public class WebFunctionPointView extends GenericFunctionPointView {
 		satisfactionPercent.put(functionPointSystem, percent);
 	}
 	
-	public WebFunctionPointView() throws IOException {
+	public WebFunctionPointView(int cycleNumber, FunctionPointSystem functionPointSystem) throws IOException {
 		super();
 		transactions = new LinkedHashMap<FunctionPointSystem, List<TransactionValues>>();
 		dataElements = new LinkedHashMap<FunctionPointSystem, List<DataElementValues>>();
 		dataModelValues = new LinkedHashMap<FunctionPointSystem, DataModelValue>();
 		transactionModelValues = new LinkedHashMap<FunctionPointSystem, TransactionModelValue>();
 		satisfactionPercent = new LinkedHashMap<FunctionPointSystem, Double>();
-		deletar("resultado.html");
-		criarArquivo("resultado.html");
+		satisfaction = new LinkedHashMap<FunctionPointSystem, Long>();
+		if(functionPointSystem!=null) {
+			deletar(functionPointSystem.getName()+"\\resultado-"+cycleNumber+".html");
+			criarArquivo(functionPointSystem.getName()+"resultado-"+cycleNumber+".html");
+		}
+		else {
+			deletar("resultado-"+cycleNumber+".html");
+			criarArquivo("resultado-"+cycleNumber+".html");
+		}
 	}
 	
 	private void criarArquivo(String nomeArquivo) throws IOException {
@@ -108,13 +117,15 @@ public class WebFunctionPointView extends GenericFunctionPointView {
 		f  = new File("C:\\Users\\PADILHA\\Desktop\\resultadoAlgoritmo\\"+nomeArquivo);
 		
 		if(f.exists()) {
+			FileWriter wr = new FileWriter(f);
+			wr.write("");
 			f.delete();
 		}
 	}
 
 	@Override
 	public void addTransactionValue(Transaction transaction, String[] ftrs,
-			String[] dets, Complexity complexity, int totalFunctionsPoint) {
+			String[] dets, Complexity complexity, int totalFunctionsPoint, int releaseNumber) {
 			if(this.transactions.get(transaction.getParent().getParent())==null){
 				this.transactions.put(transaction.getParent().getParent(), new ArrayList<WebFunctionPointView.TransactionValues>());
 			}
@@ -124,6 +135,7 @@ public class WebFunctionPointView extends GenericFunctionPointView {
 			transactionValues.setFtrs(ftrs);
 			transactionValues.setFunctionsPointValue(totalFunctionsPoint);
 			transactionValues.setComplexity(complexity);
+			transactionValues.setReleaseNumber(releaseNumber);
 			this.transactions.get(transaction.getParent().getParent()).add(transactionValues);
 	}
 
@@ -141,7 +153,7 @@ public class WebFunctionPointView extends GenericFunctionPointView {
 
 	@Override
 	public void addDataModelElementValue(DataModelElement dataModelElement,
-			List<String[]> rets, String[] dets, Complexity complexity, int totalFunctionsPoint) {
+			List<String[]> rets, String[] dets, Complexity complexity, int totalFunctionsPoint, Map<Integer,Integer> adjustmentsFactors) {
 			//adicionaLinha("### "+dataModelElement.getType().name()+" - "+dataModelElement.getName()+" (DETs: "+dets.length+", RETs: "+rets.size()+"). Pontos por Função: "+totalFunctionsPoint);
 			if(this.dataElements.get(dataModelElement.getParent().getParent())==null){
 				this.dataElements.put(dataModelElement.getParent().getParent(), new ArrayList<WebFunctionPointView.DataElementValues>());
@@ -149,6 +161,7 @@ public class WebFunctionPointView extends GenericFunctionPointView {
 			DataElementValues dataElementValues = new DataElementValues();
 			dataElementValues.setDataModelElement(dataModelElement);
 			dataElementValues.setDets(dets);
+			dataElementValues.setAdjustmentsFactors(adjustmentsFactors);
 			dataElementValues.setRets(rets);
 			dataElementValues.setFunctionsPointValue(totalFunctionsPoint);
 			dataElementValues.setComplexity(complexity);
@@ -164,7 +177,7 @@ public class WebFunctionPointView extends GenericFunctionPointView {
 	}
 
 	@Override
-	public void renderNoUsedField(Field field) {
+	public void renderNoUsedField(DET field) {
 //		adicionaLinha("Campo removido = "+field.getParent().getName()+"/"+field.getName());		
 	}
 	
@@ -174,7 +187,14 @@ public class WebFunctionPointView extends GenericFunctionPointView {
 		private String[] dets;
 		private Complexity complexity;
 		private Integer functionsPointValue;
+		private Map<Integer,Integer> adjustmentsFactors;
 		
+		public Map<Integer, Integer> getAdjustmentsFactors() {
+			return adjustmentsFactors;
+		}
+		public void setAdjustmentsFactors(Map<Integer, Integer> adjustmentsFactors) {
+			this.adjustmentsFactors = adjustmentsFactors;
+		}
 		public Complexity getComplexity() {
 			return complexity;
 		}
@@ -258,7 +278,14 @@ public class WebFunctionPointView extends GenericFunctionPointView {
 		private String[] dets;
 		private Complexity complexity;
 		private Integer functionsPointValue;
+		private Integer releaseNumber;
 		
+		public Integer getReleaseNumber() {
+			return releaseNumber;
+		}
+		public void setReleaseNumber(Integer releaseNumber) {
+			this.releaseNumber = releaseNumber;
+		}
 		public Complexity getComplexity() {
 			return complexity;
 		}
@@ -326,28 +353,43 @@ public class WebFunctionPointView extends GenericFunctionPointView {
 		List<String> ordenadedDataElementNames = new ArrayList<String>(dataElementNames);
 		Collections.sort(ordenadedDataElementNames);
 		for(String nameDataElement:ordenadedDataElementNames){
-			html += "<tr><td>"+nameDataElement+"</td>";
+			html += "<tr><td>"+nameDataElement;
+			html += "</td>";
 			for(FunctionPointSystem functionPointSystem:this.dataElements.keySet()){
 				boolean find= false;
-				for(DataElementValues dataElementValues:this.dataElements.get(functionPointSystem)){
-					String rets = "";
-					String dets = "";
-					for(String[] ret: dataElementValues.getRets()){
-						rets+="<p>";
-						for(int i=0;i<ret.length;i++){
-							rets+=""+ret[i]+";&nbsp;";
-						}
-						rets+="</p>";
-					}
-					for(int i=0;i<dataElementValues.getDets().length;i++){
-						dets+="<p>"+dataElementValues.getDets()[i]+"</p>";
-					}
+				for(DataElementValues dataElementValues:this.dataElements.get(functionPointSystem)){					
 					if(dataElementValues.getDataModelElement().getName().equals(nameDataElement)){
+						String rets = "";
+						String dets = "";
+						for(String[] ret: dataElementValues.getRets()){
+							rets+="<p>";
+							for(int i=0;i<ret.length;i++){
+								rets+=""+ret[i]+";&nbsp;";
+							}
+							rets+="</p>";
+						}
+						for(int i=0;i<dataElementValues.getDets().length;i++){
+							dets+="<p>"+dataElementValues.getDets()[i]+"</p>";
+						}
+						
+						
 						html += "<td>"+dataElementValues.getDataModelElement().getType().name()+"</td>" +
 								"<td><a href=\"javascript:void(0);\" onmouseover=\"return overlib('"+rets+"');\" onmouseout=\"return nd();\">"+dataElementValues.getRets().size()+"</a></td>" +
 								"<td><a href=\"javascript:void(0);\" onmouseover=\"return overlib('"+dets+"');\" onmouseout=\"return nd();\">"+dataElementValues.getDets().length+"</a></td>" +
 								"<td>"+dataElementValues.getComplexity().name()+"</td>" +
-								"<td>"+dataElementValues.getFunctionsPointValue()+"</td>";
+								"<td>"+dataElementValues.getFunctionsPointValue();
+						if(dataElementValues.getAdjustmentsFactors()!=null) {
+							html += "(";
+							int countFactors = 0;
+							for (Integer adjustmentFactor : dataElementValues.getAdjustmentsFactors().values()) {
+								if(countFactors>0)
+									html+=", ";
+								html += adjustmentFactor;
+								countFactors++;
+							}
+							html += ")";
+						}
+						html+="</td>";
 						find = true;
 					}
 				}
@@ -365,7 +407,7 @@ public class WebFunctionPointView extends GenericFunctionPointView {
 		
 		
 		html += "<h2>Transações</h2><table id='transactionModel' border='1'>";
-		html += "<tr><th>&nbsp;</th>";
+		html += "<tr><th>&nbsp;</th><th>&nbsp;</th>";
 		Set<String> transactionElementNames = new HashSet<String>();
 		cont = 0;
 		for(FunctionPointSystem functionPointSystem:this.transactions.keySet()){
@@ -379,15 +421,17 @@ public class WebFunctionPointView extends GenericFunctionPointView {
 			}
 		}
 		html += "</tr>";
-		html += "<tr><th>&nbsp;</th>";
+		html += "<tr><th>&nbsp;</th><th>&nbsp;</th>";
 		for(int i =0;i<this.transactions.keySet().size();i++){
 			html += "<th>Tipo</th><th>FTRs</th><th>DETs</th><th>Complexidade</th><th>P.F.</th>";
 		}
 		html += "</tr>";
 		List<String> ordenadedTransactionsNames = new ArrayList<String>(transactionElementNames);
 		Collections.sort(ordenadedTransactionsNames);
+		int countTransactions=0;
 		for(String nameTransaction:ordenadedTransactionsNames){
-			html += "<tr><td>"+nameTransaction+"</td>";
+			countTransactions++;
+			html += "<tr><td>"+countTransactions+"</td><td>"+nameTransaction+"</td>";
 			for(FunctionPointSystem functionPointSystem:this.transactions.keySet()){
 				boolean find= false;
 				for(TransactionValues transactionValues:this.transactions.get(functionPointSystem)){
@@ -399,6 +443,9 @@ public class WebFunctionPointView extends GenericFunctionPointView {
 						}
 						for(int i=0;i<transactionValues.getDets().length;i++){
 							dets+="<p>"+transactionValues.getDets()[i]+"</p>";
+						}
+						if(transactionValues.getComplexity()==null) {
+							System.out.print(transactionValues.getTransaction().getName());
 						}
 						html += "<td>"+transactionValues.getTransaction().getType().name()+"</td>" +
 								"<td><a href=\"javascript:void(0);\" onmouseover=\"return overlib('"+ftrs+"');\" onmouseout=\"return nd();\">"+transactionValues.getFtrs().length+"</a></td>" +
@@ -413,7 +460,7 @@ public class WebFunctionPointView extends GenericFunctionPointView {
 			}
 			html += "</tr>";
 		}
-		html += "<tr class='footer'><th>&nbsp;</th>";
+		html += "<tr class='footer'><th>&nbsp;</th><th>&nbsp;</th>";
 		
 		for(FunctionPointSystem functionPointSystem:this.transactionModelValues.keySet()){
 			html += "<td  colspan='4'>"+this.transactionModelValues.get(functionPointSystem).getTransactions()+"</td><td>"+this.transactionModelValues.get(functionPointSystem).getFunctionsPointValue()+"</td>";
@@ -433,8 +480,13 @@ public class WebFunctionPointView extends GenericFunctionPointView {
 		for(FunctionPointSystem functionPointSystem:this.transactionModelValues.keySet()){
 			html += "<td>"+(this.transactionModelValues.get(functionPointSystem).getFunctionsPointValue()+this.dataModelValues.get(functionPointSystem).getFunctionsPointValue())+"</td>";
 		}
-		html += "</tr>";	
-		html += "<tr><th>Satisfação</th><td>&nbsp;</td>";
+		html += "</tr>";
+		html += "<tr><th>Satisfação</th>";
+		for(FunctionPointSystem functionPointSystem:this.satisfaction.keySet()){
+			html += "<td>"+(this.satisfaction.get(functionPointSystem))+"</td>";
+		}
+		html += "</tr>";
+		html += "<tr><th>Satisfação(%)</th><td>&nbsp;</td>";
 		for(FunctionPointSystem functionPointSystem:this.satisfactionPercent.keySet()){
 			html += "<td>"+(this.satisfactionPercent.get(functionPointSystem))+"%</td>";
 		}
@@ -443,5 +495,12 @@ public class WebFunctionPointView extends GenericFunctionPointView {
 		html += "</div></body>";
 		html+="</html>";
 		adicionaLinha(html);
+	}
+
+	@Override
+	public void addSatisfactionForFunctionPoint(
+			FunctionPointSystem functionPointSystem, long percent) {
+		this.satisfaction.put(functionPointSystem, percent);
+		
 	}
 }

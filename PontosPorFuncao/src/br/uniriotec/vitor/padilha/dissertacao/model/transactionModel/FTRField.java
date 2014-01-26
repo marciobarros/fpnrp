@@ -8,15 +8,15 @@ import br.uniriotec.vitor.padilha.dissertacao.ElementValidator;
 import br.uniriotec.vitor.padilha.dissertacao.XmlFunctionPointElementWithParent;
 import br.uniriotec.vitor.padilha.dissertacao.exception.ElementException;
 import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.DataModelElement;
-import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.Field;
-import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.Subset;
+import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.DET;
+import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.RET;
 
 @XmlType(name="FTRfield")
 public class FTRField extends XmlFunctionPointElementWithParent<FTR> implements ElementValidator{
 
 	private String name;
 	
-	private Field field;
+	private DET field;
 
 	@XmlAttribute(required=true)
 	public String getName() {
@@ -27,11 +27,11 @@ public class FTRField extends XmlFunctionPointElementWithParent<FTR> implements 
 		this.name = name;
 	}
 	@XmlTransient
-	public Field getField() {
+	public DET getField() {
 		return field;
 	}
 
-	public void setField(Field field) {
+	public void setField(DET field) {
 		this.field = field;
 	}
 
@@ -52,9 +52,9 @@ public class FTRField extends XmlFunctionPointElementWithParent<FTR> implements 
 	public void charge() {
 		for(DataModelElement dataModelElement:getParent().getParent().getParent().getParent().getDataModel().getDataModelElements()){
 			if(dataModelElement.getName().equals(getParent().getDataModelElement())) {
-				for(Subset subset:dataModelElement.getSubsets()){
-					if(subset.getName().equals(getParent().getSubset())){
-						for(Field field:subset.getFields()){
+				for(RET ret:dataModelElement.getRets()){
+					if(ret.getName().equals(getParent().getRet())){
+						for(DET field:ret.getDets()){
 							if(field.getName().equals(getName())) {
 								setField(field);
 							}
