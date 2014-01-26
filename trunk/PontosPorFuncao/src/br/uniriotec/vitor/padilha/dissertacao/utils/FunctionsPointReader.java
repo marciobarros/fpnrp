@@ -52,6 +52,7 @@ public class FunctionsPointReader {
 			stakeholderInterests.validade(functionPointSystem,true);
 			functionPointSystem.setStakeholderInterests(stakeholderInterests);
 		}
+		functionPointSystem.clear();
 		return functionPointSystem;
 	}
 	public static FunctionPointSystem clone(FunctionPointSystem functionPointSystem) throws CloneException {

@@ -1,4 +1,4 @@
-package br.uniriotec.vitor.padilha.dissertacao.model.transactionModel;
+package br.uniriotec.vitor.padilha.dissertacao.model.constants;
 
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlEnumValue;

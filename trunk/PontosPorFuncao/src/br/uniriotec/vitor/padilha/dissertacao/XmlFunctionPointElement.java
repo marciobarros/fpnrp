@@ -10,6 +10,7 @@ import java.util.Map;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRefs;
+import javax.xml.bind.annotation.XmlTransient;
 
 import org.xml.sax.Locator;
 
@@ -47,10 +48,8 @@ public class XmlFunctionPointElement  implements Cloneable {
 										metodo.isAnnotationPresent(XmlElement.class)
 										|| metodo.isAnnotationPresent(XmlAttribute.class)
 										|| metodo.isAnnotationPresent(XmlElementRefs.class)
-										
-										)
-								
-								
+										//|| metodo.isAnnotationPresent(XmlTransient.class)
+										)								
 								) {
 							String metodoSet = "set"+metodo.getName().substring(3,metodo.getName().length());
 							if(metodosDaClasse.containsKey(metodoSet)){

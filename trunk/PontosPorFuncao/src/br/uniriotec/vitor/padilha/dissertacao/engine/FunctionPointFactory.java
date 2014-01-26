@@ -1,10 +1,8 @@
 package br.uniriotec.vitor.padilha.dissertacao.engine;
 
-import java.util.ArrayList;
-import java.util.BitSet;
 import java.util.HashMap;
-import java.util.List;
 
+import jmetal.base.variable.Binary;
 import br.uniriotec.vitor.padilha.dissertacao.XmlFunctionPointElement;
 import br.uniriotec.vitor.padilha.dissertacao.exception.CloneException;
 import br.uniriotec.vitor.padilha.dissertacao.exception.ElementException;
@@ -13,8 +11,22 @@ import br.uniriotec.vitor.padilha.dissertacao.model.transactionModel.Transaction
 
 public class FunctionPointFactory {
 
-	@SuppressWarnings("unused")
-	public static FunctionPointSystem getFunctionPointSystem(BitSet bitset, FunctionPointSystem functionPointSystemReference) {
+	
+	
+	public static FunctionPointSystem getFunctionPointSystem(Boolean[] representBinary, FunctionPointSystem functionPointSystemReference) {
+		Binary binary = new Binary(representBinary.length);
+		for(int i=0;i<representBinary.length;i++){
+			binary.bits_.set(i, representBinary[i]);
+		}
+		return FunctionPointFactory.getFunctionPointSystem(binary, functionPointSystemReference);
+	}
+	/**
+	 * Retorna uma contagem de pontos de função a partir de um BitSet (ex: 010010100111111001)
+	 * @param bitset
+	 * @param functionPointSystemReference
+	 * @return
+	 */
+	public static FunctionPointSystem getFunctionPointSystem(Binary binary, FunctionPointSystem functionPointSystemReference) {
 		//FunctionPointSystem functionPointSystem = new FunctionPointSystem();
 //		functionPointSystem.setTransactionModel(new TransactionModel());
 //		functionPointSystem.setDataModel(new DataModel());
@@ -44,13 +56,18 @@ public class FunctionPointFactory {
 			//functionPointSystem = FunctionsPointReader.clone(functionPointSystemReference);
 			XmlFunctionPointElement.clones = new HashMap<Object, Object>();
 			functionPointSystem = (FunctionPointSystem) functionPointSystemReference.cloneElement();
-			Transaction[] transactionsInArray = new Transaction[functionPointSystem.getTransactionModel().getTransactions().size()];
+			Transaction[] transactionsInArray = new Transaction[binary.getNumberOfBits()];
+			int cont = 0;
 			for (int a = 0; a < functionPointSystem.getTransactionModel().getTransactions().size(); a++) {
-				transactionsInArray[a] = functionPointSystem.getTransactionModel().getTransactions().get(a);
+				Transaction transaction = functionPointSystem.getTransactionModel().getTransactions().get(a);
+				if(transaction.getReleaseImplementation()==0) {
+					transactionsInArray[cont] = functionPointSystem.getTransactionModel().getTransactions().get(a);
+					cont++;
+				}
 			}
 			functionPointSystem.charge();
 			for (int a = 0; a < transactionsInArray.length; a++) {
-				if(!bitset.get(a) && transactionsInArray[a]!=null) {
+				if(!binary.bits_.get(a) && transactionsInArray[a]!=null) {
 					Transaction transaction = (Transaction) transactionsInArray[a];
 					transaction.eliminateDependendyTransactions(transactionsInArray);
 					functionPointSystem.getTransactionModel().getTransactions().remove(transaction);	

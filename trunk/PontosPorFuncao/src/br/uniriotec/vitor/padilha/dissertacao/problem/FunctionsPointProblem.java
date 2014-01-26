@@ -2,48 +2,49 @@ package br.uniriotec.vitor.padilha.dissertacao.problem;
 
 import jmetal.base.Problem;
 import jmetal.base.Solution;
-import jmetal.base.solutionType.BinarySolutionType;
 import jmetal.base.variable.Binary;
-import br.uniriotec.vitor.padilha.dissertacao.engine.FunctionPointCalculator;
+import br.uniriotec.vitor.padilha.dissertacao.calculator.FunctionPointCalculator;
 import br.uniriotec.vitor.padilha.dissertacao.engine.FunctionPointFactory;
 import br.uniriotec.vitor.padilha.dissertacao.model.FunctionPointSystem;
 
-public class FunctionsPointProblem extends Problem{
+public abstract class FunctionsPointProblem extends Problem {
 
 	/**
 	 * 
 	 */
-	private static final double INFINITO = 100000000000.0;
+	protected static final double INFINITO = 100000000000.0;
+	protected static final int INFINITO_INTEIRO = 1000000000;
 	private static final long serialVersionUID = 8765690254936090478L;
 	private FunctionPointSystem functionPointSystem;
 	private FunctionPointCalculator calculator;
-	private Integer numeroMaximoDePontosPorFuncao;
-	public FunctionsPointProblem(FunctionPointSystem functionPointSystem, FunctionPointCalculator calculator, Integer numeroMaximoDePontosPorFuncao) throws ClassNotFoundException {
+	protected Integer numeroMaximoDePontosPorFuncao;
+	private Long baseSatisfaction;
+	//private int pontosPorFuncaoAnterior = 0;
+	public FunctionsPointProblem(FunctionPointSystem functionPointSystem, FunctionPointCalculator calculator, Integer numeroMaximoDePontosPorFuncao, Integer numeroDeTransacoes, Long baseSatisfaction) throws ClassNotFoundException {
 		this.calculator =calculator;
 		this.functionPointSystem = functionPointSystem;
 		this.numeroMaximoDePontosPorFuncao = numeroMaximoDePontosPorFuncao;
-		numberOfObjectives_ = 1;
-		numberOfVariables_ = 1;
-		solutionType_ = new BinarySolutionType(this);
-		length_ = new int[numberOfVariables_];
-		length_[0] = functionPointSystem.getTransactionModel().getTransactions().size();
+		this.baseSatisfaction = baseSatisfaction;
+		//this.pontosPorFuncaoAnterior = pontosPorFuncaoAnterior;
 	}
 	@Override
 	public void evaluate(Solution solution) {
 		Binary conjuntoTestes = (Binary) solution.getDecisionVariables()[0];
 		FunctionPointSystem pontosPorFuncao=null;
 		
-		pontosPorFuncao = FunctionPointFactory.getFunctionPointSystem(conjuntoTestes.bits_, this.functionPointSystem);
+		pontosPorFuncao = FunctionPointFactory.getFunctionPointSystem(conjuntoTestes, this.functionPointSystem);
 		
-		Integer totalDePontosPorFuncao = calculator.calculate(pontosPorFuncao);
+		//contador++;
+		//if(contador%2000==0)
+			//System.out.println("Validacao"+contador);
+		Integer totalDePontosPorFuncao = calculator.calculate(pontosPorFuncao, 0 ,null);
 		//Compara com o tempo máximo informado pelo usuário. Ex: 200,300 e 400
-		if (totalDePontosPorFuncao.intValue() <= numeroMaximoDePontosPorFuncao)
-		{
-			double coverage = calculator.calculateUserSatisfaction(pontosPorFuncao);
-			solution.setObjective(0, -coverage);
-		}	
-		else
-			solution.setObjective(0, INFINITO);		
+		double coverage = calculator.calculateUserSatisfactionPercent(pontosPorFuncao, baseSatisfaction);
+		
+		adicionaObjetivos(solution, totalDePontosPorFuncao, coverage);
+		
 	}
+	
+	protected abstract void adicionaObjetivos(Solution solution, Integer numeroDePontosDeFuncao, double satisfacaoTotal);
 
 }

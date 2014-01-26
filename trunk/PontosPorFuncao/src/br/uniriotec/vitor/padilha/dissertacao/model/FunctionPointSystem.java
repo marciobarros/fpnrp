@@ -12,32 +12,43 @@ import javax.xml.bind.annotation.XmlTransient;
 import br.uniriotec.vitor.padilha.dissertacao.ElementValidator;
 import br.uniriotec.vitor.padilha.dissertacao.XmlFunctionPointElement;
 import br.uniriotec.vitor.padilha.dissertacao.exception.ElementException;
+import br.uniriotec.vitor.padilha.dissertacao.model.constants.DataModelElementType;
+import br.uniriotec.vitor.padilha.dissertacao.model.constants.TransactionType;
 import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.DataModel;
 import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.DataModelElement;
-import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.DataModelElementType;
-import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.Field;
-import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.Subset;
+import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.DET;
+import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.RET;
 import br.uniriotec.vitor.padilha.dissertacao.model.stakeholdersInterests.StakeholderInterests;
 import br.uniriotec.vitor.padilha.dissertacao.model.transactionModel.FTR;
 import br.uniriotec.vitor.padilha.dissertacao.model.transactionModel.FTRField;
 import br.uniriotec.vitor.padilha.dissertacao.model.transactionModel.Transaction;
 import br.uniriotec.vitor.padilha.dissertacao.model.transactionModel.TransactionModel;
-import br.uniriotec.vitor.padilha.dissertacao.model.transactionModel.TransactionType;
 
 @XmlRootElement(name="system")
 public class FunctionPointSystem extends XmlFunctionPointElement implements ElementValidator{
 
+	private String name;
+	
 	private DataModel dataModel;
 	
 	private TransactionModel transactionModel;
 	
 	private StakeholderInterests stakeholderInterests;
 	
+	@XmlElement(required=true,name="name")
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	@XmlElement(required=true,name="data-model")
 	public DataModel getDataModel() {
 		return dataModel;
 	}
-
+	
 	public void setDataModel(DataModel dataModel) {
 		this.dataModel = dataModel;
 	}
@@ -75,7 +86,7 @@ public class FunctionPointSystem extends XmlFunctionPointElement implements Elem
 				for(Transaction transaction:this.transactionModel.getTransactions()) {
 					if(transaction.getType().equals(TransactionType.EI)) {
 						for(FTR ftr:transaction.getFtrList()) {
-							ilfsInInputTransactions.add(ftr.getSubsetRef().getParent().getName());
+							ilfsInInputTransactions.add(ftr.getRetRef().getParent().getName());
 						}
 					}
 				}
@@ -92,14 +103,14 @@ public class FunctionPointSystem extends XmlFunctionPointElement implements Elem
 		List<DataModelElement> dataModelElements = new ArrayList<DataModelElement>(this.dataModel.getDataModelElements());
 		
 		for(DataModelElement dataModelElement:this.dataModel.getDataModelElements()) {
-			List<Subset> rets = new ArrayList<Subset>(dataModelElement.getSubsets());
-			for(Subset ret:dataModelElement.getSubsets()) {
-				if(ret.getFields().isEmpty()) {
+			List<RET> rets = new ArrayList<RET>(dataModelElement.getRets());
+			for(RET ret:dataModelElement.getRets()) {
+				if(ret.getDets().isEmpty()) {
 					//System.out.println("RET removido = "+ret.getParent().getName()+"/"+ret.getName());
 					rets.remove(ret);
 				}
 			}
-			dataModelElement.setSubsets(rets);
+			dataModelElement.setRets(rets);
 			if(rets.isEmpty()) {
 				//System.out.println("ILF removido = "+ilf.getName());
 				dataModelElements.remove(dataModelElement);
@@ -110,12 +121,12 @@ public class FunctionPointSystem extends XmlFunctionPointElement implements Elem
 	}
 
 	protected void clearNoUsedFields() {
-		Set<Field> utilsFields = new HashSet<Field>();
+		Set<DET> utilsFields = new HashSet<DET>();
 		for(Transaction transaction:transactionModel.getTransactions()){
 			for(FTR ftr:transaction.getFtrList()) {
-				if(ftr.getUseAllFields()!=null && ftr.getUseAllFields()){
-					if(ftr.getSubsetRef().getFields()!=null) {
-						for(Field field:ftr.getSubsetRef().getFields()) {
+				if(ftr.getUseAllDets()!=null && ftr.getUseAllDets()){
+					if(ftr.getRetRef().getDets()!=null) {
+						for(DET field:ftr.getRetRef().getDets()) {
 							utilsFields.add(field);
 						}
 					}
@@ -128,15 +139,15 @@ public class FunctionPointSystem extends XmlFunctionPointElement implements Elem
 			}
 		}
 		for(DataModelElement dataModelElement:dataModel.getDataModelElements()) {
-			for(Subset subset:dataModelElement.getSubsets()) {
-				List<Field> fields = new ArrayList<Field>(subset.getFields());
-				for(Field field:subset.getFields()) {
-					if(!utilsFields.contains(field)) {
+			for(RET subset:dataModelElement.getRets()) {
+				List<DET> dets = new ArrayList<DET>(subset.getDets());
+				for(DET det:subset.getDets()) {
+					if(!utilsFields.contains(det)) {
 						//System.out.println("Campo removido = "+field.getParent().getName()+"/"+field.getName());
-						fields.remove(field);
+						dets.remove(det);
 					}
 				}
-				subset.setFields(fields);
+				subset.setDets(dets);
 			}
 		}
 		
