@@ -1,4 +1,4 @@
-package br.uniriotec.vitor.padilha.dissertacao.exception;
+package br.uniriotec.vitor.padilha.dissertacao.engine;
 
 public class CloneException extends Exception{
 

@@ -1,4 +1,4 @@
-package br.uniriotec.vitor.padilha.dissertacao.model.constants;
+package br.uniriotec.vitor.padilha.dissertacao.model.transactionModel;
 
 import lombok.Getter;
 

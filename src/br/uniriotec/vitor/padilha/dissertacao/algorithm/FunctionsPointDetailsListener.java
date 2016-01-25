@@ -1,4 +1,4 @@
-package br.uniriotec.vitor.padilha.dissertacao.experiment;
+package br.uniriotec.vitor.padilha.dissertacao.algorithm;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -15,21 +15,16 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 
 import jmetal.base.Solution;
 import jmetal.base.variable.Binary;
 import unirio.experiments.monoobjective.execution.StreamMonoExperimentListener;
-import br.uniriotec.vitor.padilha.dissertacao.algorithm.Algorithms;
-import br.uniriotec.vitor.padilha.dissertacao.calculator.FunctionPointCalculator;
+import br.uniriotec.vitor.padilha.dissertacao.engine.FunctionPointCalculator;
 import br.uniriotec.vitor.padilha.dissertacao.model.FunctionPointSystem;
 import br.uniriotec.vitor.padilha.dissertacao.utils.NumberUtils;
-import br.uniriotec.vitor.padilha.dissertacao.view.IFunctionPointView;
-import br.uniriotec.vitor.padilha.dissertacao.view.WebFunctionPointView;
 
 public class FunctionsPointDetailsListener extends StreamMonoExperimentListener
 {

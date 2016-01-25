@@ -1,10 +1,10 @@
-package br.uniriotec.vitor.padilha.dissertacao.problem;
+package br.uniriotec.vitor.padilha.dissertacao.algorithm;
 
 import jmetal.base.Problem;
 import jmetal.base.Solution;
 import jmetal.base.solutionType.BinarySolutionType;
 import jmetal.base.variable.Binary;
-import br.uniriotec.vitor.padilha.dissertacao.calculator.FunctionPointCalculator;
+import br.uniriotec.vitor.padilha.dissertacao.engine.FunctionPointCalculator;
 import br.uniriotec.vitor.padilha.dissertacao.engine.FunctionPointFactory;
 import br.uniriotec.vitor.padilha.dissertacao.model.FunctionPointSystem;
 

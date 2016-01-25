@@ -3,9 +3,6 @@ package br.uniriotec.vitor.padilha.dissertacao.engine;
 import java.util.HashMap;
 
 import jmetal.base.variable.Binary;
-import br.uniriotec.vitor.padilha.dissertacao.XmlFunctionPointElement;
-import br.uniriotec.vitor.padilha.dissertacao.exception.CloneException;
-import br.uniriotec.vitor.padilha.dissertacao.exception.ElementException;
 import br.uniriotec.vitor.padilha.dissertacao.model.FunctionPointSystem;
 import br.uniriotec.vitor.padilha.dissertacao.model.transactionModel.Transaction;
 

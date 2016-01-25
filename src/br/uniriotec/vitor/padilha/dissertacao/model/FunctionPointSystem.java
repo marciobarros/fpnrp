@@ -1,149 +1,119 @@
 package br.uniriotec.vitor.padilha.dissertacao.model;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 import lombok.Getter;
 import lombok.Setter;
-import br.uniriotec.vitor.padilha.dissertacao.model.constants.DataModelElementType;
-import br.uniriotec.vitor.padilha.dissertacao.model.constants.TransactionType;
-import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.DET;
+import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.DataElement;
 import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.DataModel;
 import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.DataModelElement;
-import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.RET;
+import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.RecordType;
 import br.uniriotec.vitor.padilha.dissertacao.model.stakeholdersInterests.StakeholderInterests;
-import br.uniriotec.vitor.padilha.dissertacao.model.transactionModel.FTR;
-import br.uniriotec.vitor.padilha.dissertacao.model.transactionModel.FTRField;
+import br.uniriotec.vitor.padilha.dissertacao.model.transactionModel.FileReference;
+import br.uniriotec.vitor.padilha.dissertacao.model.transactionModel.FileReferenceField;
 import br.uniriotec.vitor.padilha.dissertacao.model.transactionModel.Transaction;
 import br.uniriotec.vitor.padilha.dissertacao.model.transactionModel.TransactionModel;
 
 public class FunctionPointSystem
 {
 	private @Getter @Setter String name;
-	private @Getter	@Setter	DataModel dataModel;
-	private @Getter @Setter TransactionModel transactionModel;
-	private @Getter @Setter StakeholderInterests stakeholderInterests;
-
-	public boolean validate() throws Exception
+	private @Getter	DataModel dataModel;
+	private @Getter TransactionModel transactionModel;
+	private @Getter StakeholderInterests stakeholderInterests;
+	
+	public FunctionPointSystem()
 	{
-		if (this.getDataModel().validate() && this.getTransactionModel().validate())
-			return true;
-
-		return false;
+		this.name = "";
+		this.dataModel = new DataModel();
+		this.transactionModel = new TransactionModel();
+		this.stakeholderInterests = new StakeholderInterests();
 	}
 
-	public void charge()
-	{
-		this.getDataModel().charge();
-		this.getTransactionModel().charge();
-	}
+//	public boolean validate() throws Exception
+//	{
+//		if (this.getDataModel().validate() && this.getTransactionModel().validate())
+//			return true;
+//
+//		return false;
+//	}
+
+//	public void charge()
+//	{
+//		this.getDataModel().charge();
+//		this.getTransactionModel().charge();
+//	}
 
 	public void clear()
 	{
-		clearNoUsedFields();
-		clearNoUsedRets();
-		transformILFInEIF();
+		clearUnusedFields();
+		clearUnusedRecordTypes();
 	}
 
-	private void transformILFInEIF()
+	/**
+	 * Removes all unused record types from the model
+	 */
+	private void clearUnusedRecordTypes()
 	{
-		List<String> ilfsInInputTransactions = new ArrayList<String>();
-		if (this.transactionModel != null)
+		for (int i = dataModel.countElements()-1; i >= 0; i--)
 		{
-			if (this.transactionModel.getTransactions() != null)
+			DataModelElement dataModelElement = dataModel.getElementIndex(i);
+			
+			for (int j = dataModelElement.countRecordTypes()-1; j >= 0; j--)
 			{
-				for (Transaction transaction : this.transactionModel.getTransactions())
-				{
-					if (transaction.getType().equals(TransactionType.EI))
-					{
-						for (FTR ftr : transaction.getFtrList())
-						{
-							ilfsInInputTransactions.add(ftr.getRetRef().getParent().getName());
-						}
-					}
-				}
+				RecordType ret = dataModelElement.getRecordTypeIndex(j);
+				
+				if (ret.countDataElements() == 0)
+					dataModelElement.removeRecordType(j);
 			}
-		}
-		if (this.getDataModel() != null)
-		{
-			for (DataModelElement ilf : this.getDataModel().getDataModelElements())
-			{
-				if (!ilfsInInputTransactions.contains(ilf.getName()))
-					ilf.setType(DataModelElementType.EIF);
-			}
+			
+			if (dataModelElement.countRecordTypes() == 0)
+				dataModel.removeElement(i);
 		}
 	}
 
-	private void clearNoUsedRets()
+	/**
+	 * Removes all unused fields from record types in the model
+	 */
+	private void clearUnusedFields()
 	{
-		List<DataModelElement> dataModelElements = new ArrayList<DataModelElement>(this.dataModel.getDataModelElements());
-
-		for (DataModelElement dataModelElement : this.dataModel.getDataModelElements())
+		List<DataElement> usedFields = new ArrayList<DataElement>();
+		
+		for (int i = transactionModel.countTransactions()-1; i >= 0; i--)
 		{
-			List<RET> rets = new ArrayList<RET>(dataModelElement.getRecordTypes());
-			for (RET ret : dataModelElement.getRecordTypes())
+			Transaction transaction = transactionModel.getTransactionIndex(i);
+			
+			for (int j = transaction.countFileReferences()-1; j >= 0; j--)
 			{
-				if (ret.getDets().isEmpty())
+				FileReference fileReference = transaction.getFileReferenceIndex(j);
+				
+				if (fileReference.isUseAllDets())
 				{
-					// System.out.println("RET removido = "+ret.getParent().getName()+"/"+ret.getName());
-					rets.remove(ret);
-				}
-			}
-			dataModelElement.setRets(rets);
-			if (rets.isEmpty())
-			{
-				// System.out.println("ILF removido = "+ilf.getName());
-				dataModelElements.remove(dataModelElement);
-			}
-		}
-
-		this.dataModel.setDataModelElements(dataModelElements);
-	}
-
-	protected void clearNoUsedFields()
-	{
-		Set<DET> utilsFields = new HashSet<DET>();
-		for (Transaction transaction : transactionModel.getTransactions())
-		{
-			for (FTR ftr : transaction.getFtrList())
-			{
-				if (ftr.getUseAllDets() != null && ftr.getUseAllDets())
-				{
-					if (ftr.getRetRef().getDets() != null)
+					if (fileReference.getRetRef().getDataElements() != null)
 					{
-						for (DET field : ftr.getRetRef().getDets())
-						{
-							utilsFields.add(field);
-						}
+						for (DataElement field : fileReference.getRetRef().getDataElements())
+							usedFields.add(field);
 					}
-				} else
+				} 
+				else
 				{
-					for (FTRField field : ftr.getFields())
-					{
-						utilsFields.add(field.getField());
-					}
+					for (FileReferenceField field : fileReference.getFields())
+						usedFields.add(field.getField());
 				}
 			}
 		}
-		for (DataModelElement dataModelElement : dataModel.getDataModelElements())
+		
+		for (DataModelElement dataModelElement : dataModel.getElements())
 		{
-			for (RET subset : dataModelElement.getRecordTypes())
+			for (RecordType recordType : dataModelElement.getRecordTypes())
 			{
-				List<DET> dets = new ArrayList<DET>(subset.getDets());
-				for (DET det : subset.getDets())
+				for (int i = recordType.countDataElements()-1; i >= 0; i--)
 				{
-					if (!utilsFields.contains(det))
-					{
-						// System.out.println("Campo removido = "+field.getParent().getName()+"/"+field.getName());
-						dets.remove(det);
-					}
+					DataElement dataElement = recordType.getDataElementIndex(i);
+					
+					if (!usedFields.contains(dataElement))
+						recordType.removeDataElement(i);
 				}
-				subset.setDets(dets);
 			}
 		}
 
@@ -152,11 +122,11 @@ public class FunctionPointSystem
 	public String doDot(FunctionPointSystem baseFunctionPointSystem, boolean showDataModel)
 	{
 		String returnValue = "digraph teste {\n";
-		if (showDataModel)
-		{
-			returnValue += this.dataModel.doDot(baseFunctionPointSystem.getDataModel().getDataModelElements());
-		}
-		returnValue += this.transactionModel.doDot(baseFunctionPointSystem.getTransactionModel().getTransactions(), showDataModel);
+		
+//		if (showDataModel)
+//			returnValue += this.dataModel.doDot(baseFunctionPointSystem.getDataModel().getElements());
+//
+//		returnValue += this.transactionModel.doDot(baseFunctionPointSystem.getTransactionModel().getTransactions(), showDataModel);
 
 		returnValue += "}";
 		return returnValue;

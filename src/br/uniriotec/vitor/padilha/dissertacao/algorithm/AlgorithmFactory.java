@@ -1,4 +1,4 @@
-package br.uniriotec.vitor.padilha.dissertacao.factory;
+package br.uniriotec.vitor.padilha.dissertacao.algorithm;
 
 import jmetal.base.Algorithm;
 import jmetal.base.Operator;
@@ -6,13 +6,8 @@ import jmetal.base.Problem;
 import jmetal.base.operator.crossover.SinglePointCrossover;
 import jmetal.base.operator.mutation.BitFlipMutation;
 import jmetal.base.operator.selection.BinaryTournament;
-import jmetal.base.visitor.neighborhood.BinaryNeighborVisitor;
-import jmetal.base.visitor.neighborhood.NeighborVisitor;
-import jmetal.metaheuristics.randomSearch.HillClimbing;
-import jmetal.metaheuristics.randomSearch.RandomSearch;
 import jmetal.metaheuristics.singleObjective.geneticAlgorithm.gGA;
 import jmetal.util.JMException;
-import br.uniriotec.vitor.padilha.dissertacao.algorithm.Algorithms;
 
 public class AlgorithmFactory
 {
@@ -32,20 +27,6 @@ public class AlgorithmFactory
 			algorithm.addOperator("crossover", crossover);
 			algorithm.addOperator("mutation", mutation);
 			algorithm.addOperator("selection", new BinaryTournament());
-			return algorithm;
-		}
-		
-		if (algorithmEnum == Algorithms.HILL_CLIMBING)
-		{
-			NeighborVisitor neighborVisitor = new BinaryNeighborVisitor(problem);
-			HillClimbing algorithm = new HillClimbing(problem, neighborVisitor, maxEvaluations);
-			return algorithm;
-		} 
-		
-		if (algorithmEnum == Algorithms.RANDOM)
-		{
-			RandomSearch algorithm = new RandomSearch(problem);
-			algorithm.setInputParameter("maxEvaluations", maxEvaluations);
 			return algorithm;
 		}
 

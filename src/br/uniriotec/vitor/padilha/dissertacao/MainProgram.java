@@ -1,14 +1,14 @@
-package br.uniriotec.vitor.padilha.dissertacao.main;
+package br.uniriotec.vitor.padilha.dissertacao;
 
 import java.util.Scanner;
 import java.util.Vector;
 
 import br.uniriotec.vitor.padilha.dissertacao.algorithm.Algorithms;
-import br.uniriotec.vitor.padilha.dissertacao.calculator.FunctionPointCalculator;
+import br.uniriotec.vitor.padilha.dissertacao.algorithm.FunctionsPointDetailsListener;
+import br.uniriotec.vitor.padilha.dissertacao.engine.FunctionPointCalculator;
+import br.uniriotec.vitor.padilha.dissertacao.engine.FunctionsPointReader;
 import br.uniriotec.vitor.padilha.dissertacao.engine.GenerateReleasesInstancesForExperiment;
-import br.uniriotec.vitor.padilha.dissertacao.experiment.FunctionsPointDetailsListener;
 import br.uniriotec.vitor.padilha.dissertacao.model.FunctionPointSystem;
-import br.uniriotec.vitor.padilha.dissertacao.utils.FunctionsPointReader;
 
 public class MainProgram
 {

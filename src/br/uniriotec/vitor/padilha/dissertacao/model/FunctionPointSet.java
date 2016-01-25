@@ -7,7 +7,7 @@ import br.uniriotec.vitor.padilha.dissertacao.model.transactionModel.Transaction
 
 public class FunctionPointSet
 {
-	Set<Transaction> transactions;
+	private Set<Transaction> transactions;
 
 	public FunctionPointSet()
 	{

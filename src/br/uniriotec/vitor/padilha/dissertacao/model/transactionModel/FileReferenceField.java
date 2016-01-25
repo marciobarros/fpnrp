@@ -1,26 +1,31 @@
 package br.uniriotec.vitor.padilha.dissertacao.model.transactionModel;
 
 import lombok.Data;
-import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.DET;
+import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.DataElement;
 
-public @Data class FTRField
+/**
+ * Class that represents a field in a file referenced by a transaction
+ * 
+ * @author Marcio
+ */
+public @Data class FileReferenceField
 {
 	private String name;
-	private DET field;
+	private DataElement field;
 
-	public boolean validate() throws Exception
-	{
-		if (getName() == null || getName().equals(""))
-			throw new Exception("Nome obrigatório");
-
+//	public boolean validate() throws Exception
+//	{
+//		if (getName() == null || getName().equals(""))
+//			throw new Exception("Nome obrigatório");
+//
 //		if (getField() == null)
 //			throw new Exception("Campo não encontrado: " + getParent().getName() + " - " + getName());
+//
+//		return true;
+//	}
 
-		return true;
-	}
-
-	public void charge()
-	{
+//	public void charge()
+//	{
 //		for (DataModelElement dataModelElement : getParent().getParent().getParent().getParent().getDataModel().getDataModelElements())
 //		{
 //			if (dataModelElement.getName().equals(getParent().getDataModelElement()))
@@ -40,5 +45,5 @@ public @Data class FTRField
 //				}
 //			}
 //		}
-	}
+//	}
 }

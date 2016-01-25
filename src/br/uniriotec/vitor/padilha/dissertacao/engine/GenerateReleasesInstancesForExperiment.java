@@ -11,14 +11,12 @@ import jmetal.base.Solution;
 import jmetal.base.variable.Binary;
 import unirio.experiments.monoobjective.execution.StreamMonoExperimentListener;
 import br.uniriotec.vitor.padilha.dissertacao.algorithm.Algorithms;
-import br.uniriotec.vitor.padilha.dissertacao.calculator.FunctionPointCalculator;
-import br.uniriotec.vitor.padilha.dissertacao.experiment.FunctionsPointDetailsListener;
-import br.uniriotec.vitor.padilha.dissertacao.experiment.FunctionsPointMonoObjectiveExperiment;
-import br.uniriotec.vitor.padilha.dissertacao.experiment.IFunctionsPointExperiment;
+import br.uniriotec.vitor.padilha.dissertacao.algorithm.FunctionsPointDetailsListener;
+import br.uniriotec.vitor.padilha.dissertacao.algorithm.FunctionsPointMonoObjectiveExperiment;
 import br.uniriotec.vitor.padilha.dissertacao.model.FunctionPointSystem;
-import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.DET;
+import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.DataElement;
 import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.DataModelElement;
-import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.RET;
+import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.RecordType;
 import br.uniriotec.vitor.padilha.dissertacao.model.transactionModel.Transaction;
 
 public class GenerateReleasesInstancesForExperiment
@@ -31,7 +29,7 @@ public class GenerateReleasesInstancesForExperiment
 
 	private Map<String, Transaction> transactionsNamesOfReference;
 
-	private Map<String, DET> detsNamesOfReference;
+	private Map<String, DataElement> detsNamesOfReference;
 
 	protected FunctionsPointDetailsListener listerner;
 
@@ -140,12 +138,12 @@ public class GenerateReleasesInstancesForExperiment
 		{
 			transactionsNamesOfReference.put(transaction.getName(), transaction);
 		}
-		detsNamesOfReference = new HashMap<String, DET>();
-		for (DataModelElement dataModelElement : functionPointSystemReference.getDataModel().getDataModelElements())
+		detsNamesOfReference = new HashMap<String, DataElement>();
+		for (DataModelElement dataModelElement : functionPointSystemReference.getDataModel().getElements())
 		{
-			for (RET ret : dataModelElement.getRecordTypes())
+			for (RecordType ret : dataModelElement.getRecordTypes())
 			{
-				for (DET det : ret.getDets())
+				for (DataElement det : ret.getDataElements())
 				{
 					detsNamesOfReference.put(dataModelElement.getName() + "." + ret.getName() + "." + det.getName(), det);
 				}
@@ -183,12 +181,12 @@ public class GenerateReleasesInstancesForExperiment
 		{
 			selectedTransaction.setReleaseImplementation(0);
 		}
-		for (DataModelElement dataModelElement : this.functionPointSystemReference.getDataModel().getDataModelElements())
+		for (DataModelElement dataModelElement : this.functionPointSystemReference.getDataModel().getElements())
 		{
 			dataModelElement.setFunctionsPointValue(0);
-			for (RET ret : dataModelElement.getRecordTypes())
+			for (RecordType ret : dataModelElement.getRecordTypes())
 			{
-				for (DET det : ret.getDets())
+				for (DataElement det : ret.getDataElements())
 				{
 					det.setImplementada(false);
 				}
@@ -198,9 +196,7 @@ public class GenerateReleasesInstancesForExperiment
 
 	private void publishSolution(int instanceNumber, int cycleNumber, int releaseNumber, int solutionNumber, FunctionPointSystem pontosPorFuncao, FunctionPointSystem pontosPorFuncaoReferencia, int functionsPointValue, Binary binary) throws IOException, FileNotFoundException
 	{
-
 		listerner.publishSolution(instanceNumber, cycleNumber, releaseNumber, solutionNumber, pontosPorFuncao, pontosPorFuncaoReferencia, functionsPointValue, binary);
-
 	}
 
 	public FunctionsPointDetailsListener getListerner()
@@ -212,5 +208,4 @@ public class GenerateReleasesInstancesForExperiment
 	{
 		this.listerner = listerner;
 	}
-
 }

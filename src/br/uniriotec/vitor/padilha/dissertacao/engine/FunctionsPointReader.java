@@ -1,4 +1,4 @@
-package br.uniriotec.vitor.padilha.dissertacao.utils;
+package br.uniriotec.vitor.padilha.dissertacao.engine;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -12,7 +12,6 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
-import br.uniriotec.vitor.padilha.dissertacao.exception.CloneException;
 import br.uniriotec.vitor.padilha.dissertacao.jaxb.MyValidationEventHandler;
 import br.uniriotec.vitor.padilha.dissertacao.model.FunctionPointSystem;
 import br.uniriotec.vitor.padilha.dissertacao.model.stakeholdersInterests.StakeholderInterests;

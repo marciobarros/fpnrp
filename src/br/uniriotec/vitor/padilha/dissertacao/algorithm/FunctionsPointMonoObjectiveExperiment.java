@@ -1,4 +1,4 @@
-package br.uniriotec.vitor.padilha.dissertacao.experiment;
+package br.uniriotec.vitor.padilha.dissertacao.algorithm;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,12 +8,8 @@ import jmetal.base.Algorithm;
 import jmetal.base.Solution;
 import jmetal.util.JMException;
 import unirio.experiments.monoobjective.execution.MonoExperiment;
-import br.uniriotec.vitor.padilha.dissertacao.algorithm.Algorithms;
-import br.uniriotec.vitor.padilha.dissertacao.calculator.FunctionPointCalculator;
-import br.uniriotec.vitor.padilha.dissertacao.factory.AlgorithmFactory;
+import br.uniriotec.vitor.padilha.dissertacao.engine.FunctionPointCalculator;
 import br.uniriotec.vitor.padilha.dissertacao.model.FunctionPointSystem;
-import br.uniriotec.vitor.padilha.dissertacao.problem.FunctionsPointProblem;
-import br.uniriotec.vitor.padilha.dissertacao.problem.multiobjective.FunctionsPointMultiProblem;
 
 public class FunctionsPointMonoObjectiveExperiment extends MonoExperiment<FunctionPointSystem>
 {
