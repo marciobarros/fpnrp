@@ -198,7 +198,7 @@ public class FunctionsPointDetailsListener extends StreamMonoExperimentListener
 		this.functionPointCalculator=functionPointCalculator;
 		this.functionPointSystem=functionPointSystem;
 		
-		baseSatisfaction = functionPointCalculator.calculateUserSatisfaction(functionPointSystem);
+		baseSatisfaction = functionPointCalculator.calculateSatisfaction(functionPointSystem);
 		baseFunctionsPointValue = functionPointCalculator.calculate(functionPointSystem, 0, null);
 
 		releasesInfo = new HashMap<Integer, Map<Integer,List<SolutionData>>>();
@@ -313,7 +313,7 @@ public class FunctionsPointDetailsListener extends StreamMonoExperimentListener
 		
 		println("Número de Pontos por função: "+ functionsPointValue);
 		
-		Long satisfaction = getFunctionPointCalculator().calculateUserSatisfaction(pontosPorFuncao);
+		Long satisfaction = getFunctionPointCalculator().calculateSatisfaction(pontosPorFuncao);
 		//System.out.println();
 		//System.out.println(releaseNumber+";"+functionsPointValue+";"+satisfaction+";"+ NumberUtils.formatNumber(((satisfaction.doubleValue()/baseSatisfaction)*100),2));
 		if(!releasesInfo.containsKey(instanceNumber)){

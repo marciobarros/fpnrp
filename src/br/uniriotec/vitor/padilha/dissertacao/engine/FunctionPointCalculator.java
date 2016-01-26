@@ -20,365 +20,333 @@ import br.uniriotec.vitor.padilha.dissertacao.model.transactionModel.Transaction
 import br.uniriotec.vitor.padilha.dissertacao.model.transactionModel.TransactionModel;
 import br.uniriotec.vitor.padilha.dissertacao.model.transactionModel.TransactionType;
 
-public class FunctionPointCalculator {
-	// private static double FATOR_AJUSTE_SISP = 0.75;
-
-	public int calculate(FunctionPointSystem functionPointSystem,
-			int releaseNumber) {
-		int totalPontosPorFuncaoNaoAjustada = 0;
-		if (functionPointSystem.getDataModel() != null) {
-			totalPontosPorFuncaoNaoAjustada += calculateDataModel(
-					functionPointSystem.getDataModel(), releaseNumber);
-		}
-		if (functionPointSystem.getTransactionModel() != null) {
-			totalPontosPorFuncaoNaoAjustada += calculateTransactionModel(
-					functionPointSystem.getTransactionModel(), releaseNumber);
-		}
-
-		return totalPontosPorFuncaoNaoAjustada;
+public class FunctionPointCalculator
+{
+	/**
+	 * Calculates the number of function points for a system
+	 */
+	public int calculate(FunctionPointSystem functionPointSystem, int releaseNumber)
+	{
+		int fp = calculateDataModel(functionPointSystem.getDataModel(), releaseNumber);
+		fp += calculateTransactionModel(functionPointSystem.getTransactionModel(), releaseNumber);
+		return fp;
 	}
 
-	private int calculateDataModel(DataModel dataModel, int releaseNumber) {
-		int totalFunctionPoint = 0;
+	/**
+	 * Calculates the number of function points for a data model
+	 */
+	private int calculateDataModel(DataModel dataModel, int releaseNumber)
+	{
+		int functionPoints = 0;
 
-		for (DataModelElement dataModelElement : dataModel.getElements()) {
-			int totalFunctionPointRet = calculateDataModelElementValue(
-					dataModelElement, releaseNumber);
-			totalFunctionPoint += totalFunctionPointRet;
-		}
+		for (DataModelElement dataModelElement : dataModel.getElements())
+			functionPoints += calculateDataModelElement(dataModelElement, releaseNumber);
 
-		return totalFunctionPoint;
+		return functionPoints;
 	}
 
-	public int calculateDataModelElementValue(
-			DataModelElement dataModelElement, int releaseNumber) {
-		int totalDet = 0;
-		int totalRet = 0;
+	public int calculateDataModelElement(DataModelElement dataModelElement, int releaseNumber)
+	{
+		int detCount = 0;
+		int retCount = 0;
 		Set<String> dets = new HashSet<String>();
 		Map<String, List<String>> rets = new HashMap<String, List<String>>();
 		rets.put("", new ArrayList<String>());
-		Set<String> jaExtendidos = new HashSet<String>();
-		for (RecordType ret : dataModelElement.getRecordTypes()) {
-			totalRet++;
-			if (ret.getExtendsRet() != null) {
-				if (jaExtendidos.contains(ret.getExtendsRet())) {
-					totalRet--;
-				} else {
-					jaExtendidos.add(ret.getExtendsRet());
+		Set<String> retsExtendidos = new HashSet<String>();
+		
+		for (RecordType ret : dataModelElement.getRecordTypes())
+		{
+			retCount++;
+			
+			if (ret.getExtendsRet() != null)
+			{
+				if (retsExtendidos.contains(ret.getExtendsRet()))
+				{
+					retCount--;
+				} 
+				else
+				{
+					retsExtendidos.add(ret.getExtendsRet());
 					rets.put(ret.getExtendsRet(), new ArrayList<String>());
 				}
+				
 				rets.get(ret.getExtendsRet()).add(ret.getName());
-			} else {
+			} 
+			else
+			{
 				rets.get("").add(ret.getName());
 			}
-			for (DataElement det : ret.getDataElements()) {
-				// if(!det.isImplementada()) {
-				totalDet++;
-				// }
-				det.setFlagcanBeDetInTransation(true);
 
-				if (!det.isHasSemanticMeaning()) {
-					totalDet--;
+			for (DataElement det : ret.getDataElements())
+			{
+				det.setFlagCanBeDetInTransation(true);
+
+				if (!det.isHasSemanticMeaning())
 					continue;
-				}
 
-				if (det.getRetRef() != null) {
-					if (det.getRetRef().getParent().getName()
-							.equals(ret.getParent().getName())) {
-						if (!det.isHasSemanticMeaning()) {
-							totalDet--;
-							continue;
-						}
-					} else if (det.isPrimaryKey()) {
-						det.setFlagcanBeDetInTransation(false);
-						// if(!det.isImplementada()) {
-						totalDet--;
-						// }
+				detCount++;
+
+				if (det.getRetRef() != null)
+				{
+					if (!det.getRetRef().getParent().getName().equals(ret.getParent().getName()) && det.isPrimaryKey())
+					{
+						det.setFlagCanBeDetInTransation(false);
+						detCount--;
 						continue;
 					}
 				}
-				// if(det.isImplementada())
-				// hasDETImplemented = true;
-				// else
-				// hasDETNotImplemented = true;
+
 				dets.add(det.getParent().getName() + "." + det.getName());
 			}
 		}
+
 		List<String[]> retsNorm = new ArrayList<String[]>();
-		for (String chave : rets.keySet()) {
-			if (chave.equals("")) {
-				for (String ret : rets.get(chave)) {
+		
+		for (String chave : rets.keySet())
+		{
+			if (chave.equals(""))
+			{
+				for (String ret : rets.get(chave))
+				{
 					String[] retGroup = new String[1];
 					retGroup[0] = ret;
 					retsNorm.add(retGroup);
 				}
-			} else {
+			} 
+			else
+			{
 				String[] retGroup = new String[rets.get(chave).size()];
 				int cont = 0;
-				for (String ret : rets.get(chave)) {
+		
+				for (String ret : rets.get(chave))
+				{
 					retGroup[cont] = ret;
 					cont++;
 				}
+				
 				retsNorm.add(retGroup);
 			}
-
 		}
-		String[] detsNorm = new String[dets.size()];
-		int cont = 0;
-		for (String det : dets) {
-			detsNorm[cont] = det;
-			cont++;
-		}
-		Complexity complexity = calculateDataModelElementComplexity(totalRet,
-				totalDet);
-		int totalFunctionPointRet = calculateFunctionPointDataModelElement(
-				complexity, dataModelElement.getType());
-		// int adjustementFactor = 0;
 
-		// if(hasDETImplemented && hasDETNotImplemented)
-		// adjustementFactor =
-		// Double.valueOf(FATOR_AJUSTE_SISP*totalFunctionPointRet).intValue();
-		// if(dataModelElement.getAdjustmentsFactors()==null &&
-		// adjustementFactor>0) {
-		// dataModelElement.setAdjustmentsFactors(new HashMap<Integer,
-		// Integer>());
-		// }
-		// if(adjustementFactor>0) {
-		// dataModelElement.getAdjustmentsFactors().put(releaseNumber,
-		// adjustementFactor);
-		// }
-
-		// if(dataModelElement.getAdjustmentsFactors()!=null) {
-		// for (Integer adjustementFactor2 :
-		// dataModelElement.getAdjustmentsFactors().values()) {
-		// totalFunctionPointRet+=adjustementFactor2;
-		// }
-		// }
-		//
-		// int diferenca =
-		// totalFunctionPointRet-dataModelElement.getFunctionsPointValue().intValue();
-		// return diferenca<0?0:diferenca;
-		return totalFunctionPointRet;
+		Complexity complexity = calculateDataModelElementComplexity(retCount, detCount);
+		return calculateFunctionPoints(complexity, dataModelElement.getType());
 	}
 
-	private int calculateTransactionModel(TransactionModel transactionModel,
-			int releaseNumber) {
-		int totalFunctionPoint = 0;
-		for (Transaction transaction : transactionModel.getTransactions()) {
-			if (transaction.getReleaseImplementation() == 0) {
-				int totalTransactionFunctionsPoint = calculateTransactionValue(
-						transaction, releaseNumber);
-				totalFunctionPoint += totalTransactionFunctionsPoint;
-			}
-		}
+	/**
+	 * Calculates the number of function points for a transaction model
+	 */
+	private int calculateTransactionModel(TransactionModel transactionModel, int releaseNumber)
+	{
+		int functionPoints = 0;
+		
+		for (Transaction transaction : transactionModel.getTransactions())
+			if (transaction.getReleaseImplementation() == 0)
+				functionPoints += calculateTransactionValue(transaction, releaseNumber);
 
-		return totalFunctionPoint;
+		return functionPoints;
 	}
 
-	public int calculateTransactionValue(Transaction transaction,
-			int releaseNumber) {
-		// int totalFtr = 0;
-		// int totalDet = 0;
+	public int calculateTransactionValue(Transaction transaction, int releaseNumber)
+	{
+		 int ftrCount = 0;
+		 int detCount = 0;
 
-		Set<String> arquivosLidos = new HashSet<String>();
+		Set<String> referencedFiles = new HashSet<String>();
 		List<String> fields = new ArrayList<String>();
 		Map<String, String> refFields = new HashMap<String, String>();
-		for (FileReference ftr : transaction.getFileReferences()) {
-			if (!arquivosLidos.contains(ftr.getDataModelElement())) {
-				arquivosLidos.add(ftr.getDataModelElement());
-				// totalFtr++;
+		
+		for (FileReference ftr : transaction.getFileReferences())
+		{
+			if (!referencedFiles.contains(ftr.getDataModelElement()))
+			{
+				referencedFiles.add(ftr.getDataModelElement());
+				ftrCount++;
 			}
 
-			if (ftr.getFields() != null && (!ftr.isUseAllDets())) {
-				for (FileReferenceField field : ftr.getFields()) {
-					if (field.getField() != null
-							&& canBeDetForTransaction(field.getField())) {
-						if (!fields.contains(field.getParent().getName() + "."
-								+ field.getField().getName())) {
-							// totalDet++;
-							fields.add(field.getParent().getName() + "."
-									+ field.getField().getName());
+			if (!ftr.isUseAllDets())
+			{
+				for (FileReferenceField field : ftr.getFields())
+				{
+					if (field.getField() != null && field.getField().canBeDetForTransaction())
+					{
+						String fullName = field.getParent().getName() + "." + field.getField().getName();
+						
+						if (!fields.contains(fullName))
+						{
+							fields.add(fullName);
+							detCount++;
 						}
 					}
 				}
-			} else if (ftr.isUseAllDets()) {
-				for (DataElement field : ftr.getRetRef().getDataElements()) {
-					if (canBeDetForTransaction(field)) {
+			} 
+			else
+			{
+				for (DataElement field : ftr.getRetRef().getDataElements())
+				{
+					if (field.canBeDetForTransaction())
+					{
 						String fieldName = "";
-						if (field.getRetRef() != null) {
-							if (!refFields.containsKey(field.getRetRef()
-									.getParent().getName())) {
-								refFields.put(field.getRetRef().getParent()
-										.getName(), field.getParent().getName()
-										+ "."
-										+ field.getName()
-										+ "("
-										+ field.getRetRef().getParent()
-												.getName() + ")");
+						
+						if (field.getRetRef() != null)
+						{
+							if (!refFields.containsKey(field.getRetRef().getParent().getName()))
+							{
+								refFields.put(field.getRetRef().getParent().getName(), field.getParent().getName() + "." + field.getName() + "(" + field.getRetRef().getParent().getName() + ")");
 							}
-						} else {
-							fieldName = field.getParent().getName() + "."
-									+ field.getName();
-							if (!fields.contains(fieldName)) {
+						} 
+						else
+						{
+							fieldName = field.getParent().getName() + "." + field.getName();
+						
+							if (!fields.contains(fieldName))
+							{
 								fields.add(fieldName);
-								// totalDet++;
+								detCount++;
 							}
 						}
-
 					}
 				}
 			}
-
 		}
-		for (String ftr : refFields.keySet()) {
-			if (!arquivosLidos.contains(ftr)) {
-				fields.add(refFields.get(ftr));
-				// totalDet++;
-				arquivosLidos.add(ftr);
-				// totalFtr++;
+		
+		for (String ftr : refFields.keySet())
+		{
+			if (!referencedFiles.contains(ftr))
+			{
+				referencedFiles.add(ftr);
+				detCount++;
+				ftrCount++;
 			}
 		}
-		if (transaction.isErrorMsg()) {
-			// totalDet++;
-			fields.add("Mensagens em geral");
-		}
-		String[] ftrs = new String[arquivosLidos.size()];
-		int cont = 0;
-		for (String ftr1 : arquivosLidos) {
-			ftrs[cont] = ftr1;
-			cont++;
-		}
-
-		String[] dets;
-		cont = 0;
-		if (transaction.getExtraDET() > 0) {
-			dets = new String[fields.size() + transaction.getExtraDET()];
-			for (int i = 0; i < transaction.getExtraDET(); i++) {
-				dets[cont] = "ExtraDet" + (i + 1);
-				cont++;
-			}
-		} else {
-			dets = new String[fields.size()];
-		}
-		for (String det1 : fields) {
-			dets[cont] = det1;
-			cont++;
-		}
-		Complexity complexity = calculateTransactionComplexity(ftrs.length,
-				dets.length, transaction.getType());
-		int totalTransactionFunctionsPoint = calculateFunctionPointTransactionModelElement(
-				complexity, transaction.getType());
-
-		return totalTransactionFunctionsPoint;
+		
+		if (transaction.isErrorMsg())
+			detCount++;
+		
+		detCount += transaction.getExtraDET();
+		
+		Complexity complexity = calculateTransactionComplexity(ftrCount, detCount, transaction.getType());
+		return calculateFunctionPoints(complexity, transaction.getType());
 	}
 
-	private boolean canBeDetForTransaction(DataElement field) {
-		return field.isFlagcanBeDetInTransation()
-				&& (!field.isPrimaryKey() || (field.isHasSemanticMeaning()));
+	/**
+	 * Calculates the complexity of a data model element
+	 */
+	private Complexity calculateDataModelElementComplexity(int ret, int det)
+	{
+		if ((ret >= 6 && det >= 20) || (ret <= 5 && ret >= 2 && det >= 51))
+			return Complexity.HIGH;
+
+		if (ret >= 6 || (ret <= 5 && ret >= 2 && det >= 20 && det <= 50) || (ret == 1 && det >= 51))
+			return Complexity.MEDIUM;
+		
+		return Complexity.LOW;
 	}
 
-	private int calculateFunctionPointDataModelElement(Complexity complexity,
-			DataModelElementType dataModelElementType) {
-
-		if ((complexity == Complexity.LOW && dataModelElementType
-				.equals(DataModelElementType.ILF))
-				|| (complexity == Complexity.MEDIUM && dataModelElementType
-						.equals(DataModelElementType.EIF)))
-			return 7;
-		else if ((complexity == Complexity.MEDIUM && dataModelElementType
-				.equals(DataModelElementType.ILF))
-				|| (complexity == Complexity.HIGH && dataModelElementType
-						.equals(DataModelElementType.EIF)))
-			return 10;
-		else if (complexity == Complexity.LOW
-				&& dataModelElementType.equals(DataModelElementType.EIF))
-			return 5;
-		else if (complexity == Complexity.HIGH
-				&& dataModelElementType.equals(DataModelElementType.ILF))
+	/**
+	 * Calculates the number of function points assigned to a data model element
+	 */
+	private int calculateFunctionPoints(Complexity complexity, DataModelElementType type)
+	{
+		if (type == DataModelElementType.ILF)
+		{
+			if (complexity == Complexity.LOW)
+				return 7;
+			
+			if (complexity == Complexity.MEDIUM)
+				return 10;
+			
 			return 15;
-		else
-			return 0;
-	}
-
-	private Complexity calculateDataModelElementComplexity(int ret, int det) {
-		Complexity complexity = null;
-		if ((ret >= 6 && det >= 20) || (ret <= 5 && ret >= 2 && det >= 51)) {
-			complexity = Complexity.HIGH;
-		} else if (ret >= 6 || (ret <= 5 && ret >= 2 && det >= 20 && det <= 50)
-				|| (ret == 1 && det >= 51)) {
-			complexity = Complexity.MEDIUM;
-		} else if ((ret == 1 && det <= 50)
-				|| (ret <= 5 && ret >= 2 && det < 20)) {
-			complexity = Complexity.LOW;
 		}
-		return complexity;
+		else
+		{
+			if (complexity == Complexity.LOW)
+				return 5;
+			
+			if (complexity == Complexity.MEDIUM)
+				return 7;
+			
+			return 10;
+		}
 	}
 
-	private int calculateFunctionPointTransactionModelElement(
-			Complexity complexity, TransactionType transactionType) {
+	/**
+	 * Calculates the complexity of a transaction
+	 */
+	private Complexity calculateTransactionComplexity(int ftrs, int dets, TransactionType type)
+	{
+		if (type == TransactionType.EO || type == TransactionType.EQ)
+		{
+			if ((ftrs >= 4 && dets >= 6) || (ftrs >= 2 && ftrs <= 3 && dets >= 20))
+				return Complexity.HIGH;
 
-		if ((complexity == Complexity.LOW && transactionType
-				.equals(TransactionType.EO))
-				|| (complexity == Complexity.MEDIUM && (transactionType
-						.equals(TransactionType.EI) || transactionType
-						.equals(TransactionType.EQ))))
+			if ((ftrs >= 4 && dets <= 5) || (ftrs >= 2 && ftrs <= 3 && dets >= 6 && dets <= 19) || (ftrs <= 1 && dets >= 20))
+				return Complexity.MEDIUM;
+			
+			return Complexity.LOW;
+		}
+		else
+		{
+			if ((ftrs >= 3 && dets >= 5) || (ftrs == 2 && dets >= 16))
+				return Complexity.HIGH;
+			
+			if ((ftrs >= 3 && dets <= 4) || (ftrs == 2 && dets >= 5 && dets <= 15) || (ftrs <= 1 && dets >= 16))
+				return Complexity.MEDIUM;
+			
+			return Complexity.LOW;
+		}
+	}
 
-			return 4;
-		else if ((complexity == Complexity.MEDIUM && transactionType
-				.equals(TransactionType.EO)))
-			return 5;
-		else if (complexity == Complexity.HIGH
-				&& transactionType.equals(TransactionType.EO))
-			return 7;
-		else if (complexity == Complexity.LOW
-				&& (transactionType.equals(TransactionType.EI) || transactionType
-						.equals(TransactionType.EQ)))
-			return 3;
-		else if (complexity == Complexity.HIGH
-				&& (transactionType.equals(TransactionType.EI) || transactionType
-						.equals(TransactionType.EQ)))
+	/**
+	 * Calculates the number of function points assigned to a transaction
+	 */
+	private int calculateFunctionPoints(Complexity complexity, TransactionType type)
+	{
+		if (type == TransactionType.EI || type == TransactionType.EQ)
+		{
+			if (complexity == Complexity.LOW)
+				return 3;
+			
+			if (complexity == Complexity.MEDIUM)
+				return 4;
+			
 			return 6;
+		}
 		else
-			return 0;
+		{
+			if (complexity == Complexity.LOW)
+				return 4;
+			
+			if (complexity == Complexity.MEDIUM)
+				return 5;
+			
+			return 7;
+		}
 	}
 
-	private Complexity calculateTransactionComplexity(int ftrs, int dets, TransactionType transactionType) 
+	/**
+	 * Calculates stakeholder's satisfaction for a system
+	 */
+	public long calculateSatisfaction(FunctionPointSystem system)
 	{
-		Complexity complexity = null;
-	
-		if ((((ftrs >= 3 && dets >= 5) || (ftrs == 2 && dets >= 16)) && transactionType == TransactionType.EI) || (((ftrs >= 4 && dets >= 6) || (ftrs >= 2 && ftrs <= 3 && dets >= 20)) && (transactionType == TransactionType.EO) || transactionType == TransactionType.EQ)) 
+		long total = 0L;
+
+		for (Interest interest : system.getStakeholderInterests().getInterests())
 		{
-			complexity = Complexity.HIGH;
-		} 
-		else if ((((ftrs >= 3 && dets <= 4) || (ftrs == 2 && dets >= 5 && dets <= 15) || (ftrs <= 1 && dets >= 16)) && transactionType == TransactionType.EI) || (((ftrs >= 4 && dets <= 5) || (ftrs >= 2 && ftrs <= 3 && dets >= 6 && dets <= 19) || (ftrs <= 1 && dets >= 20)) && (transactionType == TransactionType.EO || transactionType == TransactionType.EQ))) 
-		{
-			complexity = Complexity.MEDIUM;
-		} 
-		else if ((((ftrs <= 1 && dets <= 15) || (ftrs == 2 && dets <= 4)) && transactionType == TransactionType.EI) || (((ftrs <= 1 && dets <= 19) || (ftrs <= 3 && ftrs >= 2 && dets <= 5)) && (transactionType == TransactionType.EO) || transactionType == TransactionType.EQ)) 
-		{
-			complexity = Complexity.LOW;
+			for (Transaction transaction : system.getTransactionModel().getTransactions())
+			{
+				if (transaction.getName().compareTo(interest.getTransaction().getName()) == 0)
+					total += interest.getInterest() * interest.getStakeholder().getWeight();
+			}
 		}
 		
-		return complexity;
+		return total;
 	}
 
-	public long calculateUserSatisfaction(FunctionPointSystem system) 
+	/**
+	 * Calculate stakeholder's gain from a baseline
+	 */
+	public double calculateUserSatisfactionPercent(FunctionPointSystem system, long baseline)
 	{
-		long interesseTotal = 0L;
-		List<String> transactionsNames = new ArrayList<String>();
-		
-		for (Transaction transaction : system .getTransactionModel().getTransactions()) 
-			transactionsNames.add(transaction.getName());
-		
-		for (Interest interest : system.getStakeholderInterests().getInterests()) 
-			if (transactionsNames.contains(interest.getTransaction().getName()))
-				interesseTotal += (interest.getInterest() * interest.getStakeholder().getWeight());
-
-		return interesseTotal;
-	}
-
-	public double calculateUserSatisfactionPercent(FunctionPointSystem system, long baseSatisfaction) 
-	{
-		return (calculateUserSatisfaction(system) / baseSatisfaction) * 100;
+		return (calculateSatisfaction(system) * 100.0) / baseline;
 	}
 }

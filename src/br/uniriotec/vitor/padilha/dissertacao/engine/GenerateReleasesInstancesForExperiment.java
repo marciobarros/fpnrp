@@ -52,7 +52,7 @@ public class GenerateReleasesInstancesForExperiment
 		configureElementsNames();
 		int numeroTransacoes = instance.getTransactionModel().getTransactions().size();
 		int numeroTransacoesFaltantes = numeroTransacoes;
-		Long baseSatisfaction = functionPointCalculator.calculateUserSatisfaction(instance);
+		Long baseSatisfaction = functionPointCalculator.calculateSatisfaction(instance);
 		int releaseNumber = 1;
 		Binary conjuntoTestesN = new Binary(numeroTransacoes);
 		for (int i = 0; i < numeroTransacoes; i++)

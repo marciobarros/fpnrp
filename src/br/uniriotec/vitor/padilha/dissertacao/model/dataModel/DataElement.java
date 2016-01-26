@@ -17,8 +17,13 @@ public class DataElement
 	private @Getter @Setter boolean hasSemanticMeaning;
 	private @Getter @Setter String dataModelElement;
 	private @Getter @Setter RecordType retRef;
-	private @Getter @Setter boolean flagcanBeDetInTransation;
+	private @Getter @Setter boolean flagCanBeDetInTransation;
 	private @Getter @Setter boolean implementada;
+
+	public boolean canBeDetForTransaction()
+	{
+		return isFlagCanBeDetInTransation() && (!isPrimaryKey() || isHasSemanticMeaning());
+	}
 
 //	public boolean validate() throws Exception
 //	{
