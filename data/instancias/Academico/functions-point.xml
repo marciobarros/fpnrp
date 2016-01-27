@@ -119,7 +119,6 @@
 				<det name="programa_externo"/>
 			</ret>
 		</ilf>
-		
 		<ilf name="Turma">
 			<ret name="Turma">
 				<det primaryKey="true" name="idTurma"/>

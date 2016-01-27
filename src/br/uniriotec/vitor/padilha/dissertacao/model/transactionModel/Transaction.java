@@ -13,9 +13,9 @@ import lombok.Setter;
  */
 public class Transaction
 {
-	private @Getter @Setter String name;
-	private @Getter @Setter boolean errorMsg;
-	private @Getter @Setter TransactionType type;
+	private @Getter String name;
+	private @Getter boolean errorMsg;
+	private @Getter TransactionType type;
 	private List<Dependency> dependencies;
 	private List<FileReference> fileReferences;
 	private @Getter @Setter int extraDET;
@@ -24,11 +24,11 @@ public class Transaction
 	/**
 	 * Initializes a transaction
 	 */
-	public Transaction()
+	public Transaction(String name, boolean errorMsg, TransactionType type)
 	{
-		this.name = "";
-		this.errorMsg = false;
-		this.type = null;
+		this.name = name;
+		this.errorMsg = errorMsg;
+		this.type = type;
 		this.dependencies = new ArrayList<Dependency>();
 		this.fileReferences = new ArrayList<FileReference>();
 		this.extraDET = 0;

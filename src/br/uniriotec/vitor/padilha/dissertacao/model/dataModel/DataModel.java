@@ -1,5 +1,6 @@
 package br.uniriotec.vitor.padilha.dissertacao.model.dataModel;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,14 +15,22 @@ public class DataModel
 	/**
 	 * Elements comprising the data model
 	 */
-	private List<DataModelElement> dataModelElements;
+	private List<DataModelElement> elements;
+	
+	/**
+	 * Initializes the data model
+	 */
+	public DataModel()
+	{
+		this.elements = new ArrayList<DataModelElement>();
+	}
 	
 	/**
 	 * Counts the number of elements in the model
 	 */
 	public int countElements()
 	{
-		return dataModelElements.size();
+		return elements.size();
 	}
 
 	/**
@@ -29,7 +38,19 @@ public class DataModel
 	 */
 	public DataModelElement getElementIndex(int index) 
 	{
-		return dataModelElements.get(index);
+		return elements.get(index);
+	}
+
+	/**
+	 * Returns a data model element, given its name
+	 */
+	public DataModelElement getDataModelElementName(String name) 
+	{
+		for (DataModelElement element : elements)
+			if (element.getName().compareToIgnoreCase(name) == 0)
+				return element;
+		
+		return null;
 	}
 	
 	/**
@@ -37,7 +58,7 @@ public class DataModel
 	 */
 	public void addElement(DataModelElement element)
 	{
-		dataModelElements.add(element);
+		elements.add(element);
 	}
 	
 	/**
@@ -45,7 +66,7 @@ public class DataModel
 	 */
 	public void removeElement(int index)
 	{
-		dataModelElements.remove(index);
+		elements.remove(index);
 	}
 
 	/**
@@ -53,29 +74,8 @@ public class DataModel
 	 */
 	public Iterable<DataModelElement> getElements()
 	{
-		return dataModelElements;
+		return elements;
 	}
-
-	/**
-	 * Validates the data model (?)
-	 */
-//	public boolean validate() throws Exception
-//	{
-//		for (DataModelElement dataModelElement : getElements())
-//			if (!dataModelElement.validate())
-//				return false;
-//
-//		return true;
-//	}
-
-	/**
-	 * Charges (?) the data model
-	 */
-//	public void charge()
-//	{
-//		for (DataModelElement dataModelElement : getElements())
-//			dataModelElement.charge();
-//	}
 
 	/**
 	 * Creates the DOT representation for the data model

@@ -38,6 +38,18 @@ public class TransactionModel
 	{
 		return transactions.get(index);
 	}
+
+	/**
+	 * Returns a transaction, given its name
+	 */
+	public Transaction getTransactionName(String name) 
+	{
+		for (Transaction transaction : transactions)
+			if (transaction.getName().compareToIgnoreCase(name) == 0)
+				return transaction;
+		
+		return null;
+	}
 	
 	/**
 	 * Adds a transaction to the model

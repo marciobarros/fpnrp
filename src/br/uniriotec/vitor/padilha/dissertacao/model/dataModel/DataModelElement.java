@@ -4,14 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lombok.Getter;
-import lombok.Setter;
 
 /**
  * Class that represents an element in a data model
  * 
  * @author Marcio
  */
-public abstract class DataModelElement
+public class DataModelElement
 {
 	/**
 	 * List of record types for the data model element
@@ -21,17 +20,27 @@ public abstract class DataModelElement
 	/**
 	 * Element name
 	 */
-	private @Getter @Setter String name;
+	private @Getter String name;
 
 	/**
 	 * Element type
 	 */
-	private @Getter @Setter DataModelElementType type;
+	private @Getter DataModelElementType type;
 
 	/**
 	 * Value in function points (?)
 	 */
-	private @Getter @Setter int functionsPointValue = 0;
+//	private @Getter @Setter int functionsPointValue = 0;
+	
+	/**
+	 * Initializes the data model element
+	 */
+	public DataModelElement(String name, DataModelElementType type)
+	{
+		this.name = name;
+		this.type = type;
+		this.rets = new ArrayList<RecordType>();
+	}
 	
 	/**
 	 * Initializes the data model element
@@ -55,6 +64,18 @@ public abstract class DataModelElement
 	public RecordType getRecordTypeIndex(int index) 
 	{
 		return rets.get(index);
+	}
+
+	/**
+	 * Returns a record type, given its name
+	 */
+	public RecordType getRecordTypeName(String name) 
+	{
+		for (RecordType ret : rets)
+			if (ret.getName().compareToIgnoreCase(name) == 0)
+				return ret;
+		
+		return null;
 	}
 	
 	/**

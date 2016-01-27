@@ -10,19 +10,29 @@ import lombok.Setter;
  */
 public class DataElement
 {
-	private @Getter @Setter String name;
-	private @Getter @Setter String ref;
-	private @Getter @Setter String description;
-	private @Getter @Setter boolean primaryKey;
-	private @Getter @Setter boolean hasSemanticMeaning;
-	private @Getter @Setter String dataModelElement;
+	private @Getter String name;
+	private @Getter String description;
+	private @Getter boolean primaryKey;
+	private @Getter String referencedRecordType;
+	private @Getter String referencedDataModelElement;		// ref
+	private @Getter boolean semanticMeaning;
 	private @Getter @Setter RecordType retRef;
 	private @Getter @Setter boolean flagCanBeDetInTransation;
 	private @Getter @Setter boolean implementada;
 
+	public DataElement(String name, String description, boolean primaryKey, String referencedRecordType, String referencedDataModelElement, boolean semanticMeaning) 
+	{
+		this.name = name;
+		this.description = description;
+		this.primaryKey = primaryKey;
+		this.referencedRecordType = referencedRecordType;
+		this.referencedDataModelElement = referencedDataModelElement;
+		this.semanticMeaning = semanticMeaning;
+	}
+
 	public boolean canBeDetForTransaction()
 	{
-		return isFlagCanBeDetInTransation() && (!isPrimaryKey() || isHasSemanticMeaning());
+		return flagCanBeDetInTransation && (!primaryKey || semanticMeaning);
 	}
 
 //	public boolean validate() throws Exception

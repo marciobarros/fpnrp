@@ -21,18 +21,22 @@ public class RecordType
 	/**
 	 * Name of the record type
 	 */
-	private @Getter @Setter String name;
+	private @Getter String name;
 
 	/**
 	 * ???
 	 */
 	private @Getter @Setter String extendsRet;
 
-	public RecordType()
+	/**
+	 * Initializes the record type
+	 */
+	public RecordType(String name)
 	{
+		this.name = name;
 		this.dets = new ArrayList<DataElement>();
 	}
-	
+
 	/**
 	 * Counts the number of fields in the record type
 	 */
@@ -47,6 +51,18 @@ public class RecordType
 	public DataElement getDataElementIndex(int index) 
 	{
 		return dets.get(index);
+	}
+
+	/**
+	 * Returns a field, given its name
+	 */
+	public DataElement getDataElementName(String name) 
+	{
+		for (DataElement det : dets)
+			if (det.getName().compareToIgnoreCase(name) == 0)
+				return det;
+		
+		return null;
 	}
 	
 	/**
