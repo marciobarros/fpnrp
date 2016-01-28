@@ -1,4 +1,4 @@
-package br.uniriotec.vitor.padilha.dissertacao.model;
+package br.uniriotec.vitor.padilha.dissertacao.engine;
 
 import java.util.HashSet;
 import java.util.Set;

@@ -9,9 +9,9 @@ import jmetal.base.Solution;
 import jmetal.util.JMException;
 import unirio.experiments.monoobjective.execution.MonoExperiment;
 import br.uniriotec.vitor.padilha.dissertacao.engine.FunctionPointCalculator;
-import br.uniriotec.vitor.padilha.dissertacao.model.FunctionPointSystem;
+import br.uniriotec.vitor.padilha.dissertacao.model.SoftwareSystem;
 
-public class FunctionsPointMonoObjectiveExperiment extends MonoExperiment<FunctionPointSystem>
+public class FunctionsPointMonoObjectiveExperiment extends MonoExperiment<SoftwareSystem>
 {
 	private FunctionPointCalculator functionPointCalculator;
 	private Integer numeroTransacoesFaltantes;
@@ -31,7 +31,7 @@ public class FunctionsPointMonoObjectiveExperiment extends MonoExperiment<Functi
 	}
 
 	@Override
-	public Solution runCycle(FunctionPointSystem instance, int instanceNumber) throws ClassNotFoundException, JMException
+	public Solution runCycle(SoftwareSystem instance, int instanceNumber) throws ClassNotFoundException, JMException
 	{
 		FunctionsPointProblem problem = createProblem(numeroTransacoesFaltantes, instance, functionPointCalculator, numeroMaximoDePontosDeFuncao, this.baseSatisfaction);
 		Algorithm algorithm = AlgorithmFactory.getAlgorithm(algoritmo, problem, numeroTransacoesFaltantes);
@@ -49,7 +49,7 @@ public class FunctionsPointMonoObjectiveExperiment extends MonoExperiment<Functi
 		solutions.get(instanceNumber).get(cycleNumber).add(cycleSolution);
 	}
 
-	protected FunctionsPointProblem createProblem(int numeroDeTransacoes, FunctionPointSystem functionPointSystem, FunctionPointCalculator functionPointCalculator, int numeroMaximoDePontosDeFuncao, Long baseSatisfaction) throws ClassNotFoundException
+	protected FunctionsPointProblem createProblem(int numeroDeTransacoes, SoftwareSystem functionPointSystem, FunctionPointCalculator functionPointCalculator, int numeroMaximoDePontosDeFuncao, Long baseSatisfaction) throws ClassNotFoundException
 	{
 		return new FunctionsPointMultiProblem(functionPointSystem, functionPointCalculator, numeroMaximoDePontosDeFuncao, numeroDeTransacoes, baseSatisfaction);
 	}

@@ -23,14 +23,14 @@ import jmetal.base.Solution;
 import jmetal.base.variable.Binary;
 import unirio.experiments.monoobjective.execution.StreamMonoExperimentListener;
 import br.uniriotec.vitor.padilha.dissertacao.engine.FunctionPointCalculator;
-import br.uniriotec.vitor.padilha.dissertacao.model.FunctionPointSystem;
+import br.uniriotec.vitor.padilha.dissertacao.model.SoftwareSystem;
 import br.uniriotec.vitor.padilha.dissertacao.utils.NumberUtils;
 
 public class FunctionsPointDetailsListener extends StreamMonoExperimentListener
 {
 	private FunctionPointCalculator functionPointCalculator;
 	
-	private FunctionPointSystem functionPointSystem;
+	private SoftwareSystem functionPointSystem;
 	
 	private Long baseSatisfaction;
 	
@@ -73,7 +73,7 @@ public class FunctionsPointDetailsListener extends StreamMonoExperimentListener
 		return "";
 	}
 	
-	public FunctionsPointDetailsListener(String filename, FunctionPointCalculator functionPointCalculator, FunctionPointSystem functionPointSystem, int totalCycles, Algorithms algorithm) throws IOException
+	public FunctionsPointDetailsListener(String filename, FunctionPointCalculator functionPointCalculator, SoftwareSystem functionPointSystem, int totalCycles, Algorithms algorithm) throws IOException
 	{
 		this(filename, false,functionPointCalculator,functionPointSystem, totalCycles, algorithm);
 		
@@ -192,7 +192,7 @@ public class FunctionsPointDetailsListener extends StreamMonoExperimentListener
 	 * @param filename		Nome do arquivo que será usado como resultado
 	 * @throws IOException 
 	 */
-	public FunctionsPointDetailsListener(String filename, boolean details, FunctionPointCalculator functionPointCalculator, FunctionPointSystem functionPointSystem, int totalCycles, Algorithms algorithm) throws IOException
+	public FunctionsPointDetailsListener(String filename, boolean details, FunctionPointCalculator functionPointCalculator, SoftwareSystem functionPointSystem, int totalCycles, Algorithms algorithm) throws IOException
 	{
 		super(new OutputStreamWriter(new FileOutputStream(filename)), details);
 		this.functionPointCalculator=functionPointCalculator;
@@ -308,7 +308,7 @@ public class FunctionsPointDetailsListener extends StreamMonoExperimentListener
 	
 	
 	public void publishSolution(int instanceNumber, int cycleNumber, int releaseNumber, int solutionNumber,
-			FunctionPointSystem pontosPorFuncao, FunctionPointSystem pontosPorFuncaoReferencia, int functionsPointValue, Binary binary)
+			SoftwareSystem pontosPorFuncao, SoftwareSystem pontosPorFuncaoReferencia, int functionsPointValue, Binary binary)
 			throws IOException, FileNotFoundException {
 		
 		println("Número de Pontos por função: "+ functionsPointValue);
@@ -352,11 +352,11 @@ public class FunctionsPointDetailsListener extends StreamMonoExperimentListener
 		this.functionPointCalculator = functionPointCalculator;
 	}
 
-	public FunctionPointSystem getFunctionPointSystem() {
+	public SoftwareSystem getFunctionPointSystem() {
 		return functionPointSystem;
 	}
 
-	public void setFunctionPointSystem(FunctionPointSystem functionPointSystem) {
+	public void setFunctionPointSystem(SoftwareSystem functionPointSystem) {
 		this.functionPointSystem = functionPointSystem;
 	}
 	

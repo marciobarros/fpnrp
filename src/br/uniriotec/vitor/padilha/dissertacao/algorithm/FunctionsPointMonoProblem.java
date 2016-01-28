@@ -6,18 +6,18 @@ import jmetal.base.solutionType.BinarySolutionType;
 import jmetal.base.variable.Binary;
 import br.uniriotec.vitor.padilha.dissertacao.engine.FunctionPointCalculator;
 import br.uniriotec.vitor.padilha.dissertacao.engine.FunctionPointFactory;
-import br.uniriotec.vitor.padilha.dissertacao.model.FunctionPointSystem;
+import br.uniriotec.vitor.padilha.dissertacao.model.SoftwareSystem;
 
 public class FunctionsPointMonoProblem extends Problem
 {
 	protected static final double INFINITO = 100000000000.0;
 	protected static final int INFINITO_INTEIRO = 1000000000;
-	private FunctionPointSystem functionPointSystem;
+	private SoftwareSystem functionPointSystem;
 	private FunctionPointCalculator calculator;
 	protected Integer numeroMaximoDePontosPorFuncao;
 	private Long baseSatisfaction;
 
-	public FunctionsPointMonoProblem(FunctionPointSystem functionPointSystem, FunctionPointCalculator calculator, Integer numeroMaximoDePontosPorFuncao, Integer numeroDeTransacoes, Long baseSatisfaction) throws ClassNotFoundException
+	public FunctionsPointMonoProblem(SoftwareSystem functionPointSystem, FunctionPointCalculator calculator, Integer numeroMaximoDePontosPorFuncao, Integer numeroDeTransacoes, Long baseSatisfaction) throws ClassNotFoundException
 	{
 		this.calculator = calculator;
 		this.functionPointSystem = functionPointSystem;
@@ -47,7 +47,7 @@ public class FunctionsPointMonoProblem extends Problem
 	public void evaluate(Solution solution)
 	{
 		Binary conjuntoTestes = (Binary) solution.getDecisionVariables()[0];
-		FunctionPointSystem pontosPorFuncao = null;
+		SoftwareSystem pontosPorFuncao = null;
 
 		pontosPorFuncao = FunctionPointFactory.getFunctionPointSystem(conjuntoTestes, this.functionPointSystem);
 

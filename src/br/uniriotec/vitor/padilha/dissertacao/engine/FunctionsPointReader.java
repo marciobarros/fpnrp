@@ -8,37 +8,45 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import br.uniriotec.vitor.padilha.dissertacao.model.FunctionPointSystem;
+import br.uniriotec.vitor.padilha.dissertacao.model.SoftwareSystem;
 import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.DataElement;
-import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.DataModel;
 import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.DataFunction;
 import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.DataFunctionType;
+import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.DataModel;
 import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.RecordType;
-import br.uniriotec.vitor.padilha.dissertacao.model.transactionModel.TransactionDependency;
+import br.uniriotec.vitor.padilha.dissertacao.model.stakeholderModel.Interest;
+import br.uniriotec.vitor.padilha.dissertacao.model.stakeholderModel.Stakeholder;
+import br.uniriotec.vitor.padilha.dissertacao.model.stakeholderModel.StakeholderModel;
 import br.uniriotec.vitor.padilha.dissertacao.model.transactionModel.FileReference;
 import br.uniriotec.vitor.padilha.dissertacao.model.transactionModel.FileReferenceField;
+import br.uniriotec.vitor.padilha.dissertacao.model.transactionModel.TransactionDependency;
 import br.uniriotec.vitor.padilha.dissertacao.model.transactionModel.TransactionFunction;
-import br.uniriotec.vitor.padilha.dissertacao.model.transactionModel.TransactionModel;
 import br.uniriotec.vitor.padilha.dissertacao.model.transactionModel.TransactionFunctionType;
+import br.uniriotec.vitor.padilha.dissertacao.model.transactionModel.TransactionModel;
 import br.uniriotec.vitor.padilha.dissertacao.utils.XmlUtils;
 
+/**
+ * Classe responsável por carregar arquivos que representam um sistema 
+ * 
+ * @author marcio.barros
+ */
 public class FunctionsPointReader
 {
 	/**
 	 * Loads a system from its XMl representations
 	 */
-	public FunctionPointSystem execute(String functionsPointFileName, String stakeholdersInterestFileName) throws Exception
+	public SoftwareSystem execute(String functionsPointFileName, String stakeholdersInterestFileName) throws Exception
 	{
-		FunctionPointSystem system = new FunctionPointSystem();
+		SoftwareSystem system = new SoftwareSystem();
 		loadFunctionPointSystem(system, functionsPointFileName);
-		loadStakeholderInterests(system, stakeholdersInterestFileName);
+		loadStakeholderModel(system, stakeholdersInterestFileName);
 		return system;
 	}
 
 	/**
 	 * Loads the structure of the system
 	 */
-	private void loadFunctionPointSystem(FunctionPointSystem system, String fileName) throws Exception 
+	private void loadFunctionPointSystem(SoftwareSystem system, String fileName) throws Exception 
 	{
 		File xmlFile = new File(fileName);
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -312,8 +320,78 @@ public class FunctionsPointReader
 		}
 	}
 
-	private void loadStakeholderInterests(FunctionPointSystem system, String fileName) 
+	/**
+	 * Load the stakeholders model
+	 */
+	private void loadStakeholderModel(SoftwareSystem system, String fileName) throws Exception
 	{
-		// TODO Auto-generated method stub
+		File xmlFile = new File(fileName);
+		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+		Document doc = dBuilder.parse(xmlFile);
+		doc.getDocumentElement().normalize();
+		Element root = doc.getDocumentElement();
+
+		Element xmlStakeholders = XmlUtils.getSingleElement(root, "stakeholders");
+		
+		if (xmlStakeholders != null)
+			loadStakeholders(system.getStakeholderModel(), xmlStakeholders);
+
+		Element xmlInterests = XmlUtils.getSingleElement(root, "interests");
+		
+		if (xmlInterests != null)
+			loadInterests(system.getStakeholderModel(), system.getTransactionModel(), xmlInterests);
+	}
+
+	/**
+	 * Loads the stakeholders within a stakeholder model
+	 */
+	private void loadStakeholders(StakeholderModel stakeholderModel, Element xmlStakeholders) throws Exception 
+	{
+		for (Element xmlStakeholder : XmlUtils.getElements(xmlStakeholders, "stakeholder"))
+		{
+			String name = XmlUtils.getStringAttribute(xmlStakeholder, "name", "");
+			
+			if (name.length() == 0)
+				throw new Exception("The name of a stakeholder is empty.");
+			
+			if (stakeholderModel.getStakeholderName(name) == null)
+				throw new Exception("There are at least two stakeholders named '" + name + "'.");
+			
+			int weight = XmlUtils.getIntAttribute(xmlStakeholder, "weight", 0);
+			
+			if (weight <= 0)
+				throw new Exception("The weight of the stakeholder '" + name + "' is invalid.");
+			
+			stakeholderModel.addStakeholder(new Stakeholder(name, weight));			
+		}
+	}
+
+	/**
+	 * Loads the interests of stakeholders
+	 */
+	private void loadInterests(StakeholderModel stakeholderModel, TransactionModel transactionModel, Element xmlInterests) throws Exception
+	{
+		for (Element xmlInterest : XmlUtils.getElements(xmlInterests, "interest"))
+		{
+			String transactionName = XmlUtils.getStringAttribute(xmlInterest, "transactionRef", "");
+			TransactionFunction transaction = transactionModel.getTransactionFunctionName(transactionName);
+			
+			if (transaction == null)
+				throw new Exception("The transaction '" + transactionName + "', referenced by a stakeholder, was not found in the system.");
+			
+			String stakeholderName = XmlUtils.getStringAttribute(xmlInterest, "stakeholder", "");
+			Stakeholder stakeholder = stakeholderModel.getStakeholderName(stakeholderName);
+			
+			if (stakeholder == null)
+				throw new Exception("The stakeholder '" + stakeholderName + "', referenced in an interest, was not found in the system.");
+			
+			int value = XmlUtils.getIntAttribute(xmlInterest, "value", 0);
+			
+			if (value <= 0)
+				throw new Exception("The value of a stakeholder's interest is invalid.");
+			
+			stakeholder.addInterest(new Interest(transaction, value));			
+		}
 	}
 }

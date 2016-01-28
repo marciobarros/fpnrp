@@ -2,7 +2,7 @@ package br.uniriotec.vitor.padilha.dissertacao;
 
 import br.uniriotec.vitor.padilha.dissertacao.engine.FunctionPointCalculator;
 import br.uniriotec.vitor.padilha.dissertacao.engine.FunctionsPointReader;
-import br.uniriotec.vitor.padilha.dissertacao.model.FunctionPointSystem;
+import br.uniriotec.vitor.padilha.dissertacao.model.SoftwareSystem;
 
 public class MainProgram
 {
@@ -18,7 +18,7 @@ public class MainProgram
 		for (String instance : INSTANCES_NAMES)
 		{
 			System.out.print("Processing " + instance + " ... ");
-			FunctionPointSystem system = new FunctionsPointReader().execute(INSTANCE_DIRECTORY + instance + "/functions-point.xml", INSTANCE_DIRECTORY + instance + "/stakeholders-interest.xml");
+			SoftwareSystem system = new FunctionsPointReader().execute(INSTANCE_DIRECTORY + instance + "/functions-point.xml", INSTANCE_DIRECTORY + instance + "/stakeholders-interest.xml");
 			System.out.print(system.getDataModel().countDataFunctions() + " DF ");
 			System.out.print(system.getTransactionModel().countTransactionFunctions() + " TF ");
 			System.out.println(calculator.calculate(system) + " FP");

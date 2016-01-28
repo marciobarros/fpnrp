@@ -1,9 +1,9 @@
 package br.uniriotec.vitor.padilha.dissertacao.engine;
 
-import br.uniriotec.vitor.padilha.dissertacao.model.FunctionPointSystem;
+import br.uniriotec.vitor.padilha.dissertacao.model.SoftwareSystem;
 import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.DataFunction;
 import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.DataModel;
-import br.uniriotec.vitor.padilha.dissertacao.model.stakeholdersInterests.Interest;
+import br.uniriotec.vitor.padilha.dissertacao.model.stakeholderModel.Interest;
 import br.uniriotec.vitor.padilha.dissertacao.model.transactionModel.TransactionFunction;
 import br.uniriotec.vitor.padilha.dissertacao.model.transactionModel.TransactionModel;
 
@@ -12,7 +12,7 @@ public class FunctionPointCalculator
 	/**
 	 * Calculates the number of function points for a system
 	 */
-	public int calculate(FunctionPointSystem system)
+	public int calculate(SoftwareSystem system)
 	{
 		return calculateDataModel(system.getDataModel()) + calculateTransactionModel(system.getTransactionModel());
 	}
@@ -206,7 +206,7 @@ public class FunctionPointCalculator
 	/**
 	 * Calculates stakeholder's satisfaction for a system
 	 */
-	public long calculateSatisfaction(FunctionPointSystem system)
+	public long calculateSatisfaction(SoftwareSystem system)
 	{
 		long total = 0L;
 
@@ -225,7 +225,7 @@ public class FunctionPointCalculator
 	/**
 	 * Calculate stakeholder's gain from a baseline
 	 */
-	public double calculateUserSatisfactionPercent(FunctionPointSystem system, long baseline)
+	public double calculateUserSatisfactionPercent(SoftwareSystem system, long baseline)
 	{
 		return (calculateSatisfaction(system) * 100.0) / baseline;
 	}

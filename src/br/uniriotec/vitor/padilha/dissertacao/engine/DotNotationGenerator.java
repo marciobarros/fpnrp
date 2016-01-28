@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import br.uniriotec.vitor.padilha.dissertacao.model.SoftwareSystem;
 import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.DataModel;
 import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.DataFunction;
 import br.uniriotec.vitor.padilha.dissertacao.model.transactionModel.FileReference;
@@ -14,18 +15,29 @@ import br.uniriotec.vitor.padilha.dissertacao.model.transactionModel.Transaction
 
 public class DotNotationGenerator 
 {
+	public String doDot(SoftwareSystem system, boolean showDataModel)
+	{
+		String returnValue = "digraph teste {\n";
+		
+		if (showDataModel)
+			returnValue += doDot(system.getDataModel());
+
+		returnValue += doDot(system.getTransactionModel(), showDataModel);
+
+		returnValue += "}";
+		return returnValue;
+	}
+
 	/**
 	 * Creates the DOT representation for the data model
 	 */
-	public String doDot(DataModel dataModel, List<DataFunction> baseDataElements)
+	public String doDot(DataModel dataModel)
 	{
 		String result = "";
 		Map<String, DataFunction> baseNames = new HashMap<String, DataFunction>();
 		
-		for (DataFunction dataModelElement : baseDataElements)
-		{
-			baseNames.put(dataModelElement.getName(), dataModelElement);
-		}
+		for (DataFunction dataFunction : dataModel.getDataFunctions())
+			baseNames.put(dataFunction.getName(), dataFunction);
 		
 		for (DataFunction dataModelElement : dataModel.getDataFunctions())
 		{
@@ -47,11 +59,11 @@ public class DotNotationGenerator
 		return result;
 	}
 
-	public String doDot(TransactionModel transactionModel, List<TransactionFunction> baseTransaction, boolean showDataModel)
+	public String doDot(TransactionModel transactionModel, boolean showDataModel)
 	{
 		List<String> baseNames = new ArrayList<String>();
 
-		for (TransactionFunction transaction : baseTransaction)
+		for (TransactionFunction transaction : transactionModel.getTransactionFunctions())
 			baseNames.add(transaction.getName());
 
 		String retorno = "";
