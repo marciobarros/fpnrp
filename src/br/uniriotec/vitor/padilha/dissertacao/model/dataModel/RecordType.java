@@ -28,11 +28,6 @@ public class RecordType
 	private List<DataElement> dataElements;
 
 	/**
-	 * ???
-	 */
-//	private @Getter @Setter String extendsRet;
-
-	/**
 	 * Initializes the record type
 	 */
 	public RecordType(DataFunction dataFunction, String name)
@@ -56,6 +51,14 @@ public class RecordType
 	public DataElement getDataElementIndex(int index) 
 	{
 		return dataElements.get(index);
+	}
+
+	/**
+	 * Returns the index for a data element in the record type
+	 */
+	public int getIndexForDataElement(DataElement dataElement)
+	{
+		return dataElements.indexOf(dataElement);
 	}
 
 	/**

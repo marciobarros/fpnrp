@@ -4,6 +4,6 @@
 	<classpathentry kind="lib" path="lib/JAXB2_20120218.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/jmetal.jar"/>
-	<classpathentry kind="lib" path="C:/Program Files/eclipse/lombok.jar"/>
+	<classpathentry kind="lib" path="/Applications/eclipse/lombok.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -54,6 +54,14 @@ public class DataFunction
 	}
 
 	/**
+	 * Returns the index for a record type in the data function
+	 */
+	public int getIndexForRecordType(RecordType recordType)
+	{
+		return recordTypes.indexOf(recordType);
+	}
+
+	/**
 	 * Returns a record type, given its name
 	 */
 	public RecordType getRecordTypeName(String name) 

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lombok.Getter;
+import br.uniriotec.vitor.padilha.dissertacao.engine.Complexity;
 import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.DataElement;
 import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.DataFunction;
 
@@ -101,7 +102,7 @@ public class TransactionFunction
 	/**
 	 * Counts the data functions referenced by the transaction
 	 */
-	public int countDataFunctions() 
+	public int countReferencedDataFunctions() 
 	{
 		List<DataFunction> dataFunctions = new ArrayList<DataFunction>();
 		
@@ -127,5 +128,23 @@ public class TransactionFunction
 			fileReference.captureDataElements(dataElements);
 		
 		return dataElements.size() + extraDataElements + (errorMessages ? 1 : 0);
+	}
+
+	/**
+	 * Calculates the complexity of the transaction
+	 */
+	public Complexity calculateComplexity()
+	{
+		int ftrCount = countReferencedDataFunctions();
+		int detCount = countDataElements();
+		return Complexity.calculateTransactionComplexity(ftrCount, detCount, type);
+	}
+
+	/**
+	 * Calculates the number of function points associated to the transaction
+	 */
+	public int calculateFunctionPoints()
+	{
+		return calculateComplexity().calculateFunctionPoints(type);
 	}
 }

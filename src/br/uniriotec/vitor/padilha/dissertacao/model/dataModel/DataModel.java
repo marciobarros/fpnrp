@@ -40,6 +40,14 @@ public class DataModel
 	}
 
 	/**
+	 * Returns the index for a data function in the data model
+	 */
+	public int getIndexForDataFunction(DataFunction dataFunction)
+	{
+		return dataFunctions.indexOf(dataFunction);
+	}
+
+	/**
 	 * Returns a data function, given its name
 	 */
 	public DataFunction getDataFunctionName(String name) 

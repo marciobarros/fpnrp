@@ -26,7 +26,7 @@ import br.uniriotec.vitor.padilha.dissertacao.model.transactionModel.Transaction
 import br.uniriotec.vitor.padilha.dissertacao.utils.XmlUtils;
 
 /**
- * Classe responsável por carregar arquivos que representam um sistema 
+ * Classe responsï¿½vel por carregar arquivos que representam um sistema 
  * 
  * @author marcio.barros
  */
@@ -355,7 +355,7 @@ public class FunctionsPointReader
 			if (name.length() == 0)
 				throw new Exception("The name of a stakeholder is empty.");
 			
-			if (stakeholderModel.getStakeholderName(name) == null)
+			if (stakeholderModel.getStakeholderName(name) != null)
 				throw new Exception("There are at least two stakeholders named '" + name + "'.");
 			
 			int weight = XmlUtils.getIntAttribute(xmlStakeholder, "weight", 0);

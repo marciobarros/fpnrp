@@ -199,7 +199,7 @@ public class FunctionPointCalculator
 //		
 //		detCount += transaction.getExtraDET();
 		
-		int ftrCount = transaction.countDataFunctions();
+		int ftrCount = transaction.countReferencedDataFunctions();
 		int detCount = transaction.countDataElements();
 		return Complexity.calculateTransactionComplexity(ftrCount, detCount, transaction.getType());
 	}
