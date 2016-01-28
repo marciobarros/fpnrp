@@ -4,6 +4,7 @@ import br.uniriotec.vitor.padilha.dissertacao.model.SoftwareSystem;
 import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.DataFunction;
 import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.DataModel;
 import br.uniriotec.vitor.padilha.dissertacao.model.stakeholderModel.Interest;
+import br.uniriotec.vitor.padilha.dissertacao.model.stakeholderModel.Stakeholder;
 import br.uniriotec.vitor.padilha.dissertacao.model.transactionModel.TransactionFunction;
 import br.uniriotec.vitor.padilha.dissertacao.model.transactionModel.TransactionModel;
 
@@ -206,16 +207,19 @@ public class FunctionPointCalculator
 	/**
 	 * Calculates stakeholder's satisfaction for a system
 	 */
-	public long calculateSatisfaction(SoftwareSystem system)
+	public double calculateSatisfaction(SoftwareSystem system)
 	{
-		long total = 0L;
+		double total = 0.0;
 
-		for (Interest interest : system.getStakeholderInterests().getInterests())
+		for (Stakeholder stakeholder : system.getStakeholderModel().getStakeholders())
 		{
-			for (TransactionFunction transaction : system.getTransactionModel().getTransactionFunctions())
+			for (Interest interest : stakeholder.getInterests())
 			{
-				if (transaction.getName().compareTo(interest.getTransaction().getName()) == 0)
-					total += interest.getInterest() * interest.getStakeholder().getWeight();
+				for (TransactionFunction transaction : system.getTransactionModel().getTransactionFunctions())
+				{
+					if (transaction == interest.getTransaction())
+						total += interest.getValue() * stakeholder.getWeight();
+				}
 			}
 		}
 		
