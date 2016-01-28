@@ -12,63 +12,29 @@ public class DataElement
 {
 	private @Getter String name;
 	private @Getter String description;
+	private @Getter @Setter RecordType recordType;
 	private @Getter boolean primaryKey;
-	private @Getter String referencedRecordType;
-	private @Getter String referencedDataModelElement;		// ref
+	private @Getter String referencedRecordTypeName;
+	private @Getter String referencedDataModelElementName;
 	private @Getter boolean semanticMeaning;
-	private @Getter @Setter RecordType retRef;
-	private @Getter @Setter boolean flagCanBeDetInTransation;
-	private @Getter @Setter boolean implementada;
+	private @Getter @Setter RecordType referencedRecordType;
+//	private @Getter @Setter boolean flagCanBeDetInTransation;
 
-	public DataElement(String name, String description, boolean primaryKey, String referencedRecordType, String referencedDataModelElement, boolean semanticMeaning) 
+	public DataElement(String name, String description, RecordType recordType, boolean primaryKey, String referencedDataModelElementName, String referencedRecordTypeName, boolean semanticMeaning) 
 	{
 		this.name = name;
 		this.description = description;
+		this.recordType = recordType;
 		this.primaryKey = primaryKey;
-		this.referencedRecordType = referencedRecordType;
-		this.referencedDataModelElement = referencedDataModelElement;
+		this.referencedRecordTypeName = referencedRecordTypeName;
+		this.referencedDataModelElementName = referencedDataModelElementName;
 		this.semanticMeaning = semanticMeaning;
+		this.referencedRecordType = null;
+//		this.flagCanBeDetInTransation = false;
 	}
 
-	public boolean canBeDetForTransaction()
-	{
-		return flagCanBeDetInTransation && (!primaryKey || semanticMeaning);
-	}
-
-//	public boolean validate() throws Exception
+//	public boolean canBeDetForTransaction()
 //	{
-//		if (getName() == null || getName().equals(""))
-//			throw new Exception("Nome obrigatório");
-//		
-//		if (getRef() != null && !getRef().equals(""))
-//			if (getRetRef() == null)
-//				throw new Exception("Elemento: " + getDataModelElement() + "." + getRef() + " não encontrado");
-//
-//		return true;
-//	}
-
-//	public void charge()
-//	{
-//		if (getRef() != null && !getRef().equals(""))
-//		{
-//			if (getDataModelElement() == null || getDataModelElement().equals(""))
-//			{
-//				setDataModelElement(getRef());
-//			}
-//			
-//			for (DataModelElement modelElement : getParent().getParent().getParent().getDataModelElements())
-//			{
-//				if (modelElement.getName() != null && modelElement.getName().equals(getDataModelElement()))
-//				{
-//					for (RET ret : modelElement.getRecordTypes())
-//					{
-//						if (ret.getName().equals(getRef()))
-//						{
-//							setRetRef(ret);
-//						}
-//					}
-//				}
-//			}
-//		}
+//		return flagCanBeDetInTransation && (!primaryKey || semanticMeaning);
 //	}
 }

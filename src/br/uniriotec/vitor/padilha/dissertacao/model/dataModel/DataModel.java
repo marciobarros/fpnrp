@@ -1,9 +1,7 @@
 package br.uniriotec.vitor.padilha.dissertacao.model.dataModel;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Class that represents the data model for a system
@@ -13,100 +11,83 @@ import java.util.Map;
 public class DataModel
 {
 	/**
-	 * Elements comprising the data model
+	 * Data functions comprising the data model
 	 */
-	private List<DataModelElement> elements;
+	private List<DataFunction> dataFunctions;
 	
 	/**
 	 * Initializes the data model
 	 */
 	public DataModel()
 	{
-		this.elements = new ArrayList<DataModelElement>();
+		this.dataFunctions = new ArrayList<DataFunction>();
 	}
 	
 	/**
-	 * Counts the number of elements in the model
+	 * Counts the number of data functions in the model
 	 */
-	public int countElements()
+	public int countDataFunctions()
 	{
-		return elements.size();
+		return dataFunctions.size();
 	}
 
 	/**
-	 * Returns a data model element, given its index
+	 * Returns a data function, given its index
 	 */
-	public DataModelElement getElementIndex(int index) 
+	public DataFunction getDataFunctionIndex(int index) 
 	{
-		return elements.get(index);
+		return dataFunctions.get(index);
 	}
 
 	/**
-	 * Returns a data model element, given its name
+	 * Returns a data function, given its name
 	 */
-	public DataModelElement getDataModelElementName(String name) 
+	public DataFunction getDataFunctionName(String name) 
 	{
-		for (DataModelElement element : elements)
-			if (element.getName().compareToIgnoreCase(name) == 0)
-				return element;
+		for (DataFunction dataFunction : dataFunctions)
+			if (dataFunction.getName().compareToIgnoreCase(name) == 0)
+				return dataFunction;
+		
+		return null;
+	}
+
+	/**
+	 * Returns a record type, given its name
+	 */
+	public RecordType getRecordTypeName(String name) 
+	{
+		for (DataFunction dataFunction : dataFunctions)
+		{
+			RecordType recordType = dataFunction.getRecordTypeName(name);
+
+			if (recordType != null)
+				return recordType;
+		}
 		
 		return null;
 	}
 	
 	/**
-	 * Adds an element to the model
+	 * Adds a data function to the model
 	 */
-	public void addElement(DataModelElement element)
+	public void addDataFunction(DataFunction dataFunction)
 	{
-		elements.add(element);
+		dataFunctions.add(dataFunction);
 	}
 	
 	/**
-	 * Removes an element from the model
+	 * Removes a data function from the model
 	 */
-	public void removeElement(int index)
+	public void removeDataFunction(int index)
 	{
-		elements.remove(index);
+		dataFunctions.remove(index);
 	}
 
 	/**
-	 * Returns an iterator for the data model elements
+	 * Returns an iterator for the data functions comprising the model
 	 */
-	public Iterable<DataModelElement> getElements()
+	public Iterable<DataFunction> getDataFunctions()
 	{
-		return elements;
-	}
-
-	/**
-	 * Creates the DOT representation for the data model
-	 */
-	public String doDot(List<DataModelElement> baseDataElements)
-	{
-		String result = "";
-		Map<String, DataModelElement> baseNames = new HashMap<String, DataModelElement>();
-		
-		for (DataModelElement dataModelElement : baseDataElements)
-		{
-			baseNames.put(dataModelElement.getName(), dataModelElement);
-		}
-		
-		for (DataModelElement dataModelElement : getElements())
-		{
-			result += dataModelElement.getName();
-			result += "[";
-		
-			if (!baseNames.containsKey(dataModelElement.getName()))
-			{
-				result += "color=red fontcolor=red";
-			} 
-			else if (!baseNames.get(dataModelElement.getName()).getType().equals(dataModelElement.getType()))
-			{
-				result += "color=blue fontcolor=blue";
-			}
-			
-			result += " shape=box]\n";
-		}
-		
-		return result;
+		return dataFunctions;
 	}
 }

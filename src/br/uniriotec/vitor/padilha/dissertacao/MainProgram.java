@@ -1,5 +1,6 @@
 package br.uniriotec.vitor.padilha.dissertacao;
 
+import br.uniriotec.vitor.padilha.dissertacao.engine.FunctionPointCalculator;
 import br.uniriotec.vitor.padilha.dissertacao.engine.FunctionsPointReader;
 import br.uniriotec.vitor.padilha.dissertacao.model.FunctionPointSystem;
 
@@ -12,46 +13,20 @@ public class MainProgram
 
 	public static void main(String[] args) throws Exception
 	{
+		FunctionPointCalculator calculator = new FunctionPointCalculator();
+		
 		for (String instance : INSTANCES_NAMES)
 		{
+			System.out.print("Processing " + instance + " ... ");
 			FunctionPointSystem system = new FunctionsPointReader().execute(INSTANCE_DIRECTORY + instance + "/functions-point.xml", INSTANCE_DIRECTORY + instance + "/stakeholders-interest.xml");
-
-//			FunctionPointSystem functionPointSystem = reader.read();
-//			FunctionPointCalculator functionPointCalculator = new FunctionPointCalculator();
-//			// Executa os experimentos com algoritmos genéticos
-//			GenerateReleasesInstancesForExperiment ga = new GenerateReleasesInstancesForExperiment();
-//			Algorithms[] algorithms = new Algorithms[1];
-//			if (ALGORITHMS.length == 0)
-//			{
-//				System.out.println("Informe o algoritmo que deseja utilizar:");
-//				int algorithmNumber = 0;
-//				Scanner in = new Scanner(System.in);
-//				System.out.print("Digite ");
-//				for (int i = 0; i < Algorithms.values().length; i++)
-//				{
-//					System.out.print(" " + (i + 1) + " para " + Algorithms.values()[i] + ", ");
-//				}
-//				System.out.println("");
-//				while (algorithmNumber < 1 || algorithmNumber > Algorithms.values().length)
-//				{
-//					System.out.println("Numero inválido, digite novamente: ");
-//					algorithmNumber = in.nextInt();
-//					System.out.println("");
-//				}
-//				algorithms[0] = Algorithms.values()[algorithmNumber - 1];
-//			} else
-//			{
-//				algorithms = ALGORITHMS;
-//			}
-//			//
-//			for (int i = 0; i < algorithms.length; i++)
-//			{
-//				System.out.println("Processando Algoritmo " + algorithms[i].name() + " para instância " + instance);
-//				ga.setListerner(new FunctionsPointDetailsListener("resources/saida" + algorithms[i].name() + ".txt", true, functionPointCalculator, functionPointSystem, CICLOS, algorithms[i]));
-//				Vector<FunctionPointSystem> instancias = new Vector<FunctionPointSystem>();
-//				instancias.add(functionPointSystem);
-//				ga.run(algorithms[i], instancias, functionPointCalculator, LIMITES_PONTOS_POR_FUNCAO, 1, CICLOS);
-//			}
+			System.out.print(system.getDataModel().countDataFunctions() + " DF ");
+			System.out.print(system.getTransactionModel().countTransactionFunctions() + " TF ");
+			System.out.println(calculator.calculate(system) + " FP");
+			
+			// Expectativa 185 FP, 290 FP, 451 FP (pode ser um pouco diferente), 1131 FP
+			// TODO depurar o cálculo de FP
 		}
+		
+		System.out.println("FINISHED");
 	}
 }

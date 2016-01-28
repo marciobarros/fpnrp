@@ -3,11 +3,11 @@ package br.uniriotec.vitor.padilha.dissertacao.model.transactionModel;
 import lombok.Getter;
 
 /**
- * Enumeration for the types of transaction handled by the program
+ * Enumeration for the types of transaction function
  * 
  * @author marcio.barros
  */
-public enum TransactionType
+public enum TransactionFunctionType
 {
 	EO("EO"),
 	EI("EI"),
@@ -15,14 +15,14 @@ public enum TransactionType
 	
 	private @Getter String code;
 	
-	private TransactionType(String code)
+	private TransactionFunctionType(String code)
 	{
 		this.code = code;
 	}
 	
-	public static TransactionType get(String code)
+	public static TransactionFunctionType get(String code)
 	{
-		for (TransactionType type : values())
+		for (TransactionFunctionType type : values())
 			if (type.getCode().compareTo(code) == 0)
 				return type;
 		

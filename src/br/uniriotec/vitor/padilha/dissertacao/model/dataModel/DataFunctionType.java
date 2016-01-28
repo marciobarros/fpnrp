@@ -7,21 +7,21 @@ import lombok.Getter;
  * 
  * @author marcio.barros
  */
-public enum DataModelElementType
+public enum DataFunctionType
 {
 	EIF("EIF"), 
 	ILF("ILF");
 	
 	private @Getter String code;
 	
-	private DataModelElementType(String code)
+	private DataFunctionType(String code)
 	{
 		this.code = code;
 	}
 	
-	public static DataModelElementType get(String code)
+	public static DataFunctionType get(String code)
 	{
-		for (DataModelElementType type : values())
+		for (DataFunctionType type : values())
 			if (type.getCode().compareTo(code) == 0)
 				return type;
 		

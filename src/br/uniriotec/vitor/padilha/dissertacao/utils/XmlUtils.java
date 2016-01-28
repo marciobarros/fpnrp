@@ -56,6 +56,9 @@ public class XmlUtils
 	 */
 	public static String getStringAttribute(Element element, String name, String _default)
 	{
+		if (!element.hasAttribute(name))
+			return _default;
+		
 		String value = element.getAttribute(name);
 		return (value != null) ? value : _default;
 	}
@@ -63,15 +66,18 @@ public class XmlUtils
 	/**
 	 * Loads an optional integer attribute from a XML element
 	 */
-	public static int getIntAttribute(Element element, String name) 
+	public static int getIntAttribute(Element element, String name, int _default) 
 	{
+		if (!element.hasAttribute(name))
+			return _default;
+		
 		String value = element.getAttribute(name);
 		
 		if (value == null)
-			return 0;
+			return _default;
 		
 		if (value.length() == 0)
-			return 0;
+			return _default;
 		
 		return Integer.parseInt(value);
 	}

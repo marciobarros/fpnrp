@@ -1,6 +1,6 @@
 package br.uniriotec.vitor.padilha.dissertacao.model.transactionModel;
 
-import lombok.Data;
+import lombok.Getter;
 import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.DataElement;
 
 /**
@@ -8,42 +8,17 @@ import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.DataElement;
  * 
  * @author Marcio
  */
-public @Data class FileReferenceField
+public class FileReferenceField
 {
-	private String name;
-	private DataElement field;
-
-//	public boolean validate() throws Exception
-//	{
-//		if (getName() == null || getName().equals(""))
-//			throw new Exception("Nome obrigatório");
-//
-//		if (getField() == null)
-//			throw new Exception("Campo não encontrado: " + getParent().getName() + " - " + getName());
-//
-//		return true;
-//	}
-
-//	public void charge()
-//	{
-//		for (DataModelElement dataModelElement : getParent().getParent().getParent().getParent().getDataModel().getDataModelElements())
-//		{
-//			if (dataModelElement.getName().equals(getParent().getDataModelElement()))
-//			{
-//				for (RET ret : dataModelElement.getRecordTypes())
-//				{
-//					if (ret.getName().equals(getParent().getRet()))
-//					{
-//						for (DET field : ret.getDets())
-//						{
-//							if (field.getName().equals(getName()))
-//							{
-//								setField(field);
-//							}
-//						}
-//					}
-//				}
-//			}
-//		}
-//	}
+	private @Getter FileReference fileReference;
+	private @Getter DataElement field;
+	
+	/**
+	 * Initializes the field reference
+	 */
+	public FileReferenceField(FileReference fileReference, DataElement field)
+	{
+		this.fileReference = fileReference;
+		this.field = field;
+	}
 }

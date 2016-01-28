@@ -4,81 +4,86 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lombok.Getter;
-import lombok.Setter;
 
 /**
- * Class that represents a record type within a data model element
+ * Class that represents a record type within a data function
  * 
  * @author Marcio
  */
 public class RecordType
 {
 	/**
-	 * Fields of the record type 
-	 */
-	private List<DataElement> dets;
-
-	/**
 	 * Name of the record type
 	 */
 	private @Getter String name;
 
 	/**
+	 * The data function containing the record type
+	 */
+	private @Getter DataFunction dataFunction;
+	
+	/**
+	 * Fields of the record type 
+	 */
+	private List<DataElement> dataElements;
+
+	/**
 	 * ???
 	 */
-	private @Getter @Setter String extendsRet;
+//	private @Getter @Setter String extendsRet;
 
 	/**
 	 * Initializes the record type
 	 */
-	public RecordType(String name)
+	public RecordType(DataFunction dataFunction, String name)
 	{
 		this.name = name;
-		this.dets = new ArrayList<DataElement>();
+		this.dataFunction = dataFunction;
+		this.dataElements = new ArrayList<DataElement>();
 	}
 
 	/**
-	 * Counts the number of fields in the record type
+	 * Counts the number of data elements
 	 */
 	public int countDataElements()
 	{
-		return dets.size();
+		return dataElements.size();
 	}
 
 	/**
-	 * Returns a field, given its index
+	 * Returns a data element, given its index
 	 */
 	public DataElement getDataElementIndex(int index) 
 	{
-		return dets.get(index);
+		return dataElements.get(index);
 	}
 
 	/**
-	 * Returns a field, given its name
+	 * Returns a data element, given its name
 	 */
 	public DataElement getDataElementName(String name) 
 	{
-		for (DataElement det : dets)
-			if (det.getName().compareToIgnoreCase(name) == 0)
-				return det;
+		for (DataElement dataElement : dataElements)
+			if (dataElement.getName().compareToIgnoreCase(name) == 0)
+				return dataElement;
 		
 		return null;
 	}
 	
 	/**
-	 * Adds a field to the record type
+	 * Adds a data element to the record type
 	 */
-	public void addDataElement(DataElement field)
+	public void addDataElement(DataElement dataElement)
 	{
-		dets.add(field);
+		dataElements.add(dataElement);
 	}
 	
 	/**
-	 * Removes a field from the record type, given its index
+	 * Removes a data element from the record type, given its index
 	 */
 	public void removeDataElement(int index)
 	{
-		dets.remove(index);
+		dataElements.remove(index);
 	}
 	
 	/**
@@ -86,30 +91,6 @@ public class RecordType
 	 */
 	public Iterable<DataElement> getDataElements()
 	{
-		return dets;
+		return dataElements;
 	}
-
-	/**
-	 * 
-	 */
-//	public boolean validate() throws Exception
-//	{
-//		if (this.getName() == null || this.getName().equals(""))
-//			throw new Exception("Nome obrigatório");
-//
-//		for (DataElement field : getDets())
-//			if (!field.validate())
-//				return false;
-//
-//		return true;
-//	}
-
-	/**
-	 * 
-	 */
-//	public void charge()
-//	{
-//		for (DataElement field : getDets())
-//			field.charge();
-//	}
 }

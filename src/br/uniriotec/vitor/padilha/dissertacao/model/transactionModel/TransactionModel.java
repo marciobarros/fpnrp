@@ -11,40 +11,40 @@ import java.util.List;
 public class TransactionModel
 {
 	/**
-	 * List of transactions contained in the model
+	 * List of transaction functions contained in the model
 	 */
-	private List<Transaction> transactions;
+	private List<TransactionFunction> transactions;
 
 	/**
 	 * Initializes the transaction model
 	 */
 	public TransactionModel()
 	{
-		this.transactions = new ArrayList<Transaction>();
+		this.transactions = new ArrayList<TransactionFunction>();
 	}
 	
 	/**
-	 * Counts the number of transactions in the model
+	 * Counts the number of transaction functions in the model
 	 */
-	public int countTransactions()
+	public int countTransactionFunctions()
 	{
 		return transactions.size();
 	}
 
 	/**
-	 * Returns a transaction, given its index
+	 * Returns a transaction function, given its index
 	 */
-	public Transaction getTransactionIndex(int index) 
+	public TransactionFunction getTransactionFunctionIndex(int index) 
 	{
 		return transactions.get(index);
 	}
 
 	/**
-	 * Returns a transaction, given its name
+	 * Returns a transaction function, given its name
 	 */
-	public Transaction getTransactionName(String name) 
+	public TransactionFunction getTransactionFunctionName(String name) 
 	{
-		for (Transaction transaction : transactions)
+		for (TransactionFunction transaction : transactions)
 			if (transaction.getName().compareToIgnoreCase(name) == 0)
 				return transaction;
 		
@@ -52,76 +52,26 @@ public class TransactionModel
 	}
 	
 	/**
-	 * Adds a transaction to the model
+	 * Adds a transaction function to the model
 	 */
-	public void addTransaction(Transaction transaction)
+	public void addTransactionFunction(TransactionFunction transaction)
 	{
 		this.transactions.add(transaction);
 	}
 	
 	/**
-	 * Removes a transaction from the model
+	 * Removes a transaction function from the model
 	 */
-	public void removeTransaction(int index)
+	public void removeTransactionFunction(int index)
 	{
 		this.transactions.remove(index);
 	}
 	
 	/**
-	 * Returns all transactions in the model
+	 * Returns all transactions functions in the model
 	 */
-	public Iterable<Transaction> getTransactions()
+	public Iterable<TransactionFunction> getTransactionFunctions()
 	{
 		return transactions;
 	}
-
-//	public boolean validate() throws Exception
-//	{
-//		for (Transaction transaction : getTransactions())
-//		{
-//			if (!transaction.validate())
-//			{
-//				return false;
-//			}
-//		}
-//		return true;
-//	}
-
-	public String doDot(List<Transaction> baseTransaction, boolean showDataModel)
-	{
-		List<String> baseNames = new ArrayList<String>();
-		for (Transaction transaction : baseTransaction)
-		{
-			baseNames.add(transaction.getName());
-		}
-		String retorno = "";
-		if (getTransactions() != null)
-		{
-			for (Transaction transaction : this.getTransactions())
-			{
-				boolean present = baseNames.contains(transaction.getName());
-				String dotTransaction = transaction.doDot(present);
-				if (!dotTransaction.equals(""))
-					retorno += dotTransaction;
-				if (showDataModel)
-				{
-					for (FileReference ftr : transaction.getFileReferences())
-					{
-						retorno += transaction.getName() + "->" + ftr.getName() + "[arrowType=none";
-						if (!present)
-							retorno += " color=red";
-						retorno += "]\n";
-					}
-				}
-			}
-		}
-		retorno += "";
-		return retorno;
-	}
-
-//	public void charge()
-//	{
-//		for (Transaction transaction : getTransactions())
-//			transaction.charge();
-//	}
 }

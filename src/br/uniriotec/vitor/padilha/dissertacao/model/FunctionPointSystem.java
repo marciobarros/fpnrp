@@ -7,12 +7,12 @@ import lombok.Getter;
 import lombok.Setter;
 import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.DataElement;
 import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.DataModel;
-import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.DataModelElement;
+import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.DataFunction;
 import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.RecordType;
 import br.uniriotec.vitor.padilha.dissertacao.model.stakeholdersInterests.StakeholderInterests;
 import br.uniriotec.vitor.padilha.dissertacao.model.transactionModel.FileReference;
 import br.uniriotec.vitor.padilha.dissertacao.model.transactionModel.FileReferenceField;
-import br.uniriotec.vitor.padilha.dissertacao.model.transactionModel.Transaction;
+import br.uniriotec.vitor.padilha.dissertacao.model.transactionModel.TransactionFunction;
 import br.uniriotec.vitor.padilha.dissertacao.model.transactionModel.TransactionModel;
 
 public class FunctionPointSystem
@@ -55,9 +55,9 @@ public class FunctionPointSystem
 	 */
 	private void clearUnusedRecordTypes()
 	{
-		for (int i = dataModel.countElements()-1; i >= 0; i--)
+		for (int i = dataModel.countDataFunctions()-1; i >= 0; i--)
 		{
-			DataModelElement dataModelElement = dataModel.getElementIndex(i);
+			DataFunction dataModelElement = dataModel.getDataFunctionIndex(i);
 			
 			for (int j = dataModelElement.countRecordTypes()-1; j >= 0; j--)
 			{
@@ -68,7 +68,7 @@ public class FunctionPointSystem
 			}
 			
 			if (dataModelElement.countRecordTypes() == 0)
-				dataModel.removeElement(i);
+				dataModel.removeDataFunction(i);
 		}
 	}
 
@@ -79,21 +79,18 @@ public class FunctionPointSystem
 	{
 		List<DataElement> usedFields = new ArrayList<DataElement>();
 		
-		for (int i = transactionModel.countTransactions()-1; i >= 0; i--)
+		for (int i = transactionModel.countTransactionFunctions()-1; i >= 0; i--)
 		{
-			Transaction transaction = transactionModel.getTransactionIndex(i);
+			TransactionFunction transaction = transactionModel.getTransactionFunctionIndex(i);
 			
 			for (int j = transaction.countFileReferences()-1; j >= 0; j--)
 			{
 				FileReference fileReference = transaction.getFileReferenceIndex(j);
 				
-				if (fileReference.isUseAllDets())
+				if (fileReference.isUseAllFields())
 				{
-					if (fileReference.getRetRef().getDataElements() != null)
-					{
-						for (DataElement field : fileReference.getRetRef().getDataElements())
-							usedFields.add(field);
-					}
+					for (DataElement field : fileReference.getReferencedRecordType().getDataElements())
+						usedFields.add(field);
 				} 
 				else
 				{
@@ -103,7 +100,7 @@ public class FunctionPointSystem
 			}
 		}
 		
-		for (DataModelElement dataModelElement : dataModel.getElements())
+		for (DataFunction dataModelElement : dataModel.getDataFunctions())
 		{
 			for (RecordType recordType : dataModelElement.getRecordTypes())
 			{
@@ -116,7 +113,6 @@ public class FunctionPointSystem
 				}
 			}
 		}
-
 	}
 
 	public String doDot(FunctionPointSystem baseFunctionPointSystem, boolean showDataModel)

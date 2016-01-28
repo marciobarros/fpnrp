@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.uniriotec.vitor.padilha.dissertacao.model.FunctionPointSystem;
-import br.uniriotec.vitor.padilha.dissertacao.model.transactionModel.Transaction;
+import br.uniriotec.vitor.padilha.dissertacao.model.transactionModel.TransactionFunction;
 
 /**
  * 
@@ -25,7 +25,7 @@ public class StakeholderInterests
 		return interests;
 	}
 
-	public List<Interest> getInterests(Transaction transaction)
+	public List<Interest> getInterests(TransactionFunction transaction)
 	{
 		List<Interest> interests = new ArrayList<Interest>();
 
@@ -39,13 +39,13 @@ public class StakeholderInterests
 
 	public void validade(FunctionPointSystem functionPointSystem, boolean validate) throws Exception
 	{
-		if (interests != null && functionPointSystem.getTransactionModel() != null && functionPointSystem.getTransactionModel().getTransactions() != null)
+		if (interests != null && functionPointSystem.getTransactionModel() != null && functionPointSystem.getTransactionModel().getTransactionFunctions() != null)
 		{
 			boolean findTransaction = false;
 			boolean findInterest = false;
 			for (Interest interest : this.interests)
 			{
-				for (Transaction transaction : functionPointSystem.getTransactionModel().getTransactions())
+				for (TransactionFunction transaction : functionPointSystem.getTransactionModel().getTransactionFunctions())
 				{
 					if (interest.getTransactionXML().equals(transaction.getName()))
 					{

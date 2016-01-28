@@ -5,6 +5,7 @@ import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
+import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.DataElement;
 import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.RecordType;
 
 /**
@@ -14,19 +15,29 @@ import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.RecordType;
  */
 public class FileReference
 {
+	/**
+	 * Record type referenced by the file reference
+	 */
+	private @Getter @Setter RecordType referencedRecordType;
+	
+	/**
+	 * Fields referenced within the record type 
+	 */
 	private List<FileReferenceField> fields;
-	private @Getter @Setter String name;
-	private @Getter @Setter String ret;
-	private @Getter @Setter String dataModelElement;
-	private @Getter @Setter boolean useAllDets;
-	private @Getter @Setter RecordType retRef;
+	
+	/**
+	 * Indicates whether it references all fields 
+	 */
+	private @Getter @Setter boolean useAllFields;
 	
 	/**
 	 * Initializes the reference to a file
 	 */
-	public FileReference()
+	public FileReference(RecordType referencedRecordType, boolean useAllFields)
 	{
 		this.fields = new ArrayList<FileReferenceField>();
+		this.referencedRecordType = referencedRecordType;
+		this.useAllFields = useAllFields;
 	}
 	
 	/**
@@ -53,55 +64,30 @@ public class FileReference
 		return fields;
 	}
 
-//	public boolean validate() throws Exception
-//	{
-//		if (getName() == null || getName().equals(""))
-//			throw new Exception("Nome obrigatório");
-//
-//		if (this.retRef == null)
-//			throw new Exception("Elemento: " + getDataModelElement() + "." + getRet() + " não encontrado");
-//
-//		if (getFields() == null && !isUseAllDets())
-//			throw new Exception("FTR sem campos: " + getDataModelElement() + "." + getRet() + "");
-//
-//		return true;
-//	}
-
-//	public void charge()
-//	{
-//		String referencia = getName();
-//		if (getRet() != null && !getRet().equals(""))
-//		{
-//			referencia = getRet();
-//		}
-//
-//		if (getRet() == null || getRet().equals(""))
-//		{
-//			setRet(getName());
-//		}
-//		if (getDataModelElement() == null || getDataModelElement().equals(""))
-//		{
-//			setDataModelElement(getName());
-//		}
-//		for (DataModelElement modelElement : getParent().getParent().getParent().getDataModel().getDataModelElements())
-//		{
-//			if (modelElement.getName() != null && modelElement.getName().equals(getDataModelElement()))
-//			{
-//				for (RET subset : modelElement.getRecordTypes())
-//				{
-//					if (subset.getName().equals(referencia))
-//					{
-//						this.retRef = subset;
-//					}
-//				}
-//			}
-//		}
-//		if (getFields() != null)
-//		{
-//			for (FTRField ftrField : getFields())
-//			{
-//				ftrField.charge();
-//			}
-//		}
-//	}
+	/**
+	 * Captures all referenced data elements to a list
+	 */
+	public void captureDataElements(List<DataElement> dataElements) 
+	{
+		if (useAllFields)
+		{
+			for (DataElement dataElement : referencedRecordType.getDataElements())
+			{
+				if (!dataElement.isPrimaryKey() || dataElement.isSemanticMeaning())
+					if (!dataElements.contains(dataElement))
+						dataElements.add(dataElement);
+			}
+			
+			return;
+		}
+		
+		for (FileReferenceField field : fields)
+		{
+			DataElement dataElement = field.getField();
+			
+			if (!dataElement.isPrimaryKey() || dataElement.isSemanticMeaning())
+				if (!dataElements.contains(dataElement))
+					dataElements.add(dataElement);
+		}
+	}
 }
