@@ -3,8 +3,6 @@ package br.uniriotec.vitor.padilha.dissertacao.model.stakeholderModel;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.uniriotec.vitor.padilha.dissertacao.model.transactionModel.TransactionFunction;
-
 /**
  * Class that represents a stakeholder model for a system
  * 
@@ -64,24 +62,5 @@ public class StakeholderModel
 	public Iterable<Stakeholder> getStakeholders()
 	{
 		return stakeholders;
-	}
-
-	/**
-	 * List all interests for a transaction function
-	 */
-	public List<Interest> getInterests(TransactionFunction transaction)
-	{
-		List<Interest> interests = new ArrayList<Interest>();
-
-		for (Stakeholder stakeholder : stakeholders)
-		{
-			for (Interest interest : stakeholder.getInterests())
-			{
-				if (interest.getTransaction() == transaction)
-					interests.add(interest);
-			}
-		}
-
-		return interests;
 	}
 }

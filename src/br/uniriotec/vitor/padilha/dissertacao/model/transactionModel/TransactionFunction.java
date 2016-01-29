@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lombok.Getter;
-import br.uniriotec.vitor.padilha.dissertacao.engine.Complexity;
-import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.DataElement;
-import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.DataFunction;
 
 /**
  * Class that represents a transaction
@@ -21,11 +18,12 @@ public class TransactionFunction
 	private @Getter int extraDataElements;
 	private List<TransactionDependency> dependencies;
 	private List<FileReference> fileReferences;
+	private @Getter int index;
 
 	/**
 	 * Initializes a transaction
 	 */
-	public TransactionFunction(String name, TransactionFunctionType type, boolean errorMessages, int extraDataElements)
+	public TransactionFunction(String name, TransactionFunctionType type, boolean errorMessages, int extraDataElements, int index)
 	{
 		this.name = name;
 		this.type = type;
@@ -33,6 +31,7 @@ public class TransactionFunction
 		this.extraDataElements = extraDataElements;
 		this.dependencies = new ArrayList<TransactionDependency>();
 		this.fileReferences = new ArrayList<FileReference>();
+		this.index = index;
 	}
 	
 	/**
@@ -97,54 +96,5 @@ public class TransactionFunction
 	public Iterable<FileReference> getFileReferences()
 	{
 		return fileReferences;
-	}
-
-	/**
-	 * Counts the data functions referenced by the transaction
-	 */
-	public int countReferencedDataFunctions() 
-	{
-		List<DataFunction> dataFunctions = new ArrayList<DataFunction>();
-		
-		for (FileReference fileReference : fileReferences)
-		{
-			DataFunction dataFunction = fileReference.getReferencedRecordType().getDataFunction();
-
-			if (!dataFunctions.contains(dataFunction))
-				dataFunctions.add(dataFunction);
-		}
-		
-		return dataFunctions.size();
-	}
-
-	/**
-	 * Counts the data elements referenced by the transaction
-	 */
-	public int countDataElements() 
-	{
-		List<DataElement> dataElements = new ArrayList<DataElement>();
-		
-		for (FileReference fileReference : fileReferences)
-			fileReference.captureDataElements(dataElements);
-		
-		return dataElements.size() + extraDataElements + (errorMessages ? 1 : 0);
-	}
-
-	/**
-	 * Calculates the complexity of the transaction
-	 */
-	public Complexity calculateComplexity()
-	{
-		int ftrCount = countReferencedDataFunctions();
-		int detCount = countDataElements();
-		return Complexity.calculateTransactionComplexity(ftrCount, detCount, type);
-	}
-
-	/**
-	 * Calculates the number of function points associated to the transaction
-	 */
-	public int calculateFunctionPoints()
-	{
-		return calculateComplexity().calculateFunctionPoints(type);
 	}
 }

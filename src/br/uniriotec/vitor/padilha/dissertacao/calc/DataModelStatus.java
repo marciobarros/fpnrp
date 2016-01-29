@@ -13,12 +13,10 @@ import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.RecordType;
  */
 public class DataModelStatus
 {
-	private DataModel dataModel;
 	private DataFunctionStatus[] dataFunctionStatus;
 	
 	public DataModelStatus(DataModel dataModel)
 	{
-		this.dataModel = dataModel;
 		createStatusForDataFunction(dataModel);
 		clear();
 	}
@@ -44,13 +42,18 @@ public class DataModelStatus
 	public void useDataElement(DataElement det)
 	{
 		DataFunction df = det.getRecordType().getDataFunction();
-		int index = dataModel.getIndexForDataFunction(df);
+		int index = df.getIndex();
 		dataFunctionStatus[index].useDataElement(det);
 	}
 	
 	public DataFunctionStatus getDataFunctionStatus(DataFunction dataFunction)
 	{
-		int index = dataModel.getIndexForDataFunction(dataFunction);
+		int index = dataFunction.getIndex();
+		return dataFunctionStatus[index];
+	}
+	
+	public DataFunctionStatus getDataFunctionStatus(int index)
+	{
 		return dataFunctionStatus[index];
 	}
 }
@@ -62,12 +65,10 @@ public class DataModelStatus
  */
 class DataFunctionStatus
 {
-	private DataFunction dataFunction;
 	private RecordTypeStatus[] recordTypeStatus;
 	
 	public DataFunctionStatus(DataFunction dataFunction)
 	{
-		this.dataFunction = dataFunction;
 		createStatusForRecordTypes(dataFunction);
 		clear();
 	}
@@ -93,7 +94,7 @@ class DataFunctionStatus
 	public void useDataElement(DataElement det)
 	{
 		RecordType recordType = det.getRecordType();
-		int index = dataFunction.getIndexForRecordType(recordType);
+		int index = recordType.getIndex();
 		recordTypeStatus[index].useDataElement(det);
 	}
 	
@@ -126,13 +127,11 @@ class DataFunctionStatus
  */
 class RecordTypeStatus
 {
-	private RecordType recordType;
 	private int usedFieldMask;
 	private @Getter int fieldCounter;
 	
 	public RecordTypeStatus(RecordType recordType)
 	{
-		this.recordType = recordType;
 		clear();
 	}
 	
@@ -142,8 +141,9 @@ class RecordTypeStatus
 		fieldCounter = 0;
 	}
 	
-	public void useDataElement(int index)
+	public void useDataElement(DataElement det)
 	{
+		int index = det.getIndex();
 		int fieldMask = (1 << index);
 		
 		if ((usedFieldMask & fieldMask) == 0)
@@ -151,11 +151,5 @@ class RecordTypeStatus
 			usedFieldMask |= (1 << index);
 			fieldCounter++;
 		}
-	}
-	
-	public void useDataElement(DataElement det)
-	{
-		int index = recordType.getIndexForDataElement(det);
-		useDataElement(index);
 	}
 }

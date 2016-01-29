@@ -10,17 +10,55 @@ import lombok.Setter;
  */
 public class DataElement
 {
+	/**
+	 * Data element name
+	 */
 	private @Getter String name;
+	
+	/**
+	 * A description for the data element
+	 */
 	private @Getter String description;
-	private @Getter @Setter RecordType recordType;
+	
+	/**
+	 * Record type containing the data element
+	 */
+	private @Getter RecordType recordType;
+	
+	/**
+	 * Indicates whether the data element is a primary key
+	 */
 	private @Getter boolean primaryKey;
+	
+	/**
+	 * The name of the record type referenced by the data element (temporary, used while reading the model)
+	 */
 	private @Getter String referencedRecordTypeName;
-	private @Getter String referencedDataModelElementName;
-	private @Getter boolean semanticMeaning;
-	private @Getter @Setter RecordType referencedRecordType;
-//	private @Getter @Setter boolean flagCanBeDetInTransation;
 
-	public DataElement(String name, String description, RecordType recordType, boolean primaryKey, String referencedDataModelElementName, String referencedRecordTypeName, boolean semanticMeaning) 
+	/**
+	 * The name of the data function containing the record type referenced by the data element (temporary, used while reading the model)
+	 */
+	private @Getter String referencedDataModelElementName;
+
+	/**
+	 * The record type referenced by the data element
+	 */
+	private @Getter @Setter RecordType referencedRecordType;
+
+	/**
+	 * Indicates whether the data element has semantic meaning (for primary keys only)
+	 */
+	private @Getter boolean semanticMeaning;
+	
+	/**
+	 * Index of the data element within the record type (to increase calculation speed)
+	 */
+	private @Getter int index;
+
+	/**
+	 * Initializes the data element
+	 */
+	public DataElement(String name, String description, RecordType recordType, boolean primaryKey, String referencedDataModelElementName, String referencedRecordTypeName, boolean semanticMeaning, int index) 
 	{
 		this.name = name;
 		this.description = description;
@@ -30,11 +68,28 @@ public class DataElement
 		this.referencedDataModelElementName = referencedDataModelElementName;
 		this.semanticMeaning = semanticMeaning;
 		this.referencedRecordType = null;
-//		this.flagCanBeDetInTransation = false;
+		this.index = index;
 	}
-
-//	public boolean canBeDetForTransaction()
-//	{
-//		return flagCanBeDetInTransation && (!primaryKey || semanticMeaning);
-//	}
+	
+	/**
+	 * Determines whether the data element is accountable for transactions
+	 */
+	public boolean isAccountableForTransaction()
+	{
+		return !primaryKey || semanticMeaning;
+	}
+	
+	/**
+	 * Determines whether the data element is accountable for data functions
+	 */
+	public boolean isAccountableForDataFunction()
+	{
+		if (primaryKey)
+			return semanticMeaning;
+		
+		if (referencedRecordType != null)
+			return referencedRecordType.getDataFunction() != recordType.getDataFunction();
+		
+		return true;
+	}
 }

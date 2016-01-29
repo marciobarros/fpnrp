@@ -40,14 +40,6 @@ public class TransactionModel
 	}
 
 	/**
-	 * Returns the index for a given transaction
-	 */
-	public int getTransactionIndex(TransactionFunction transaction)
-	{
-		return transactions.indexOf(transaction);
-	}
-
-	/**
 	 * Returns a transaction function, given its name
 	 */
 	public TransactionFunction getTransactionFunctionName(String name) 

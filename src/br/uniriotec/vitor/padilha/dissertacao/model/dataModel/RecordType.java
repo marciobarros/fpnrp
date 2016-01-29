@@ -26,14 +26,20 @@ public class RecordType
 	 * Fields of the record type 
 	 */
 	private List<DataElement> dataElements;
+	
+	/**
+	 * Index of the record type within the data function (to increase calculation speed)
+	 */
+	private @Getter int index;
 
 	/**
 	 * Initializes the record type
 	 */
-	public RecordType(DataFunction dataFunction, String name)
+	public RecordType(DataFunction dataFunction, String name, int index)
 	{
 		this.name = name;
 		this.dataFunction = dataFunction;
+		this.index = index;
 		this.dataElements = new ArrayList<DataElement>();
 	}
 
@@ -51,14 +57,6 @@ public class RecordType
 	public DataElement getDataElementIndex(int index) 
 	{
 		return dataElements.get(index);
-	}
-
-	/**
-	 * Returns the index for a data element in the record type
-	 */
-	public int getIndexForDataElement(DataElement dataElement)
-	{
-		return dataElements.indexOf(dataElement);
 	}
 
 	/**

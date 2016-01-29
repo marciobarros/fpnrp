@@ -26,14 +26,20 @@ public class DataFunction
 	 * List of record types comprising the data function
 	 */
 	private List<RecordType> recordTypes;
+	
+	/**
+	 * Index of the data function within the data model (to increase calculation speed)
+	 */
+	private @Getter int index;
 
 	/**
 	 * Initializes the data function
 	 */
-	public DataFunction(String name, DataFunctionType type)
+	public DataFunction(String name, DataFunctionType type, int index)
 	{
 		this.name = name;
 		this.type = type;
+		this.index = index;
 		this.recordTypes = new ArrayList<RecordType>();
 	}
 	
@@ -51,14 +57,6 @@ public class DataFunction
 	public RecordType getRecordTypeIndex(int index) 
 	{
 		return recordTypes.get(index);
-	}
-
-	/**
-	 * Returns the index for a record type in the data function
-	 */
-	public int getIndexForRecordType(RecordType recordType)
-	{
-		return recordTypes.indexOf(recordType);
 	}
 
 	/**
@@ -95,27 +93,5 @@ public class DataFunction
 	public Iterable<RecordType> getRecordTypes()
 	{
 		return recordTypes;
-	}
-
-	/**
-	 * Counts the data elements in the data function
-	 */
-	public int countDataElements() 
-	{
-		int count = 0;
-		
-		for (RecordType recordType : recordTypes)
-		{
-			for (DataElement dataElement : recordType.getDataElements())
-			{
-				if (!dataElement.isPrimaryKey() || dataElement.isSemanticMeaning())
-				{
-					if (dataElement.getReferencedRecordType() == null || dataElement.getReferencedRecordType().getDataFunction() != this)
-						count++;
-				}
-			}
-		}
-		
-		return count;
 	}
 }

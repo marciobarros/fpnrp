@@ -109,8 +109,7 @@
 				<det name="externa" />
 			</ret>
 			<ret name="PreRequisitos">
-				<det name="idDisciplinaPreRequisito" ref="Disciplina"
-					hasSemanticMeaning="true" />
+				<det name="idDisciplinaPreRequisito" ref="Disciplina" hasSemanticMeaning="true" />
 				<det name="idDisciplina" ref="Disciplina" />
 			</ret>
 			<ret name="InfoExternas">
@@ -564,38 +563,24 @@
 
 		</transaction>
 
-		<transaction name="ConsultarInscricaoEmTurma" errorMsg="true"
-			type="EQ">
-
+		<transaction name="ConsultarInscricaoEmTurma" errorMsg="true" type="EQ">
 			<ftr name="Inscricao" ret="Inscricao" useAllDets="true" />
 			<ftr name="Aluno" ret="Aluno">
 				<det name="nome" />
 				<det name="dre" />
 			</ftr>
-
-
 			<dependency ref="RealizarInscricaoEmTurma" />
-
 		</transaction>
-		<transaction name="CancelarInscricaoEmTurma" errorMsg="true"
-			type="EI">
-
+		<transaction name="CancelarInscricaoEmTurma" errorMsg="true" type="EI">
 			<ftr name="Inscricao" ret="Inscricao" useAllDets="true" />
 			<ftr name="Aluno" ret="Aluno">
 				<det name="nome" />
 				<det name="dre" />
 			</ftr>
-
-
 			<dependency ref="CancelarInscricaoEmTurma" />
 			<dependency ref="RealizarInscricaoEmTurma" />
-
 		</transaction>
-
-
-		<transaction name="GeracaoDeComprovanteDeInscricao"
-			errorMsg="true" type="EO">
-
+		<transaction name="GeracaoDeComprovanteDeInscricao" errorMsg="true" type="EO">
 			<ftr name="Inscricao" ret="Inscricao" useAllDets="true" />
 			<ftr name="Aluno" ret="Aluno">
 				<det name="nome" />
@@ -615,14 +600,10 @@
 				<det name="dias" />
 				<det name="horario" />
 			</ftr>
-
-
 			<dependency ref="RealizarInscricaoEmTurma" />
 			<dependency ref="IncluirNovaTurma" />
 			<dependency ref="IncluirNovoAluno" />
 			<dependency ref="IncluirNovaDisciplina" />
-
 		</transaction>
-
 	</transaction-model>
 </system>
