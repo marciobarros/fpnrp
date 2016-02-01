@@ -1187,18 +1187,18 @@ public class TestFunctionPointCalculator
 	@Test
 	public void testCostAllTransactions() throws Exception
 	{
-		assertEquals(190, calculador.calculateCost(calculador.allTransactions()));
-		assertEquals(14, calculador.calculateCost(selectTransactions(0)));
-		assertEquals(22, calculador.calculateCost(selectTransactions(1)));
-		assertEquals(18, calculador.calculateCost(selectTransactions(2)));
-		assertEquals(21, calculador.calculateCost(selectTransactions(3)));
-		assertEquals(21, calculador.calculateCost(selectTransactions(4)));
-		assertEquals(24, calculador.calculateCost(selectTransactions(5)));
-		assertEquals(24, calculador.calculateCost(selectTransactions(6)));
-		assertEquals(21, calculador.calculateCost(selectTransactions(7)));
-		assertEquals(27, calculador.calculateCost(selectTransactions(8)));
-		assertEquals(24, calculador.calculateCost(selectTransactions(9)));
-		assertEquals(27, calculador.calculateCost(selectTransactions(10)));
+		assertEquals(190, calculador.calculateClassicCost(calculador.allTransactions()));
+		assertEquals(14, calculador.calculateClassicCost(selectTransactions(0)));
+		assertEquals(22, calculador.calculateClassicCost(selectTransactions(1)));
+		assertEquals(18, calculador.calculateClassicCost(selectTransactions(2)));
+		assertEquals(21, calculador.calculateClassicCost(selectTransactions(3)));
+		assertEquals(21, calculador.calculateClassicCost(selectTransactions(4)));
+		assertEquals(24, calculador.calculateClassicCost(selectTransactions(5)));
+		assertEquals(24, calculador.calculateClassicCost(selectTransactions(6)));
+		assertEquals(21, calculador.calculateClassicCost(selectTransactions(7)));
+		assertEquals(27, calculador.calculateClassicCost(selectTransactions(8)));
+		assertEquals(24, calculador.calculateClassicCost(selectTransactions(9)));
+		assertEquals(27, calculador.calculateClassicCost(selectTransactions(10)));
 	}
 	
 	private void checkBasicField(RecordType rt, int index, String name)

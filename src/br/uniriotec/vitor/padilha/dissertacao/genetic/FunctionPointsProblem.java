@@ -17,17 +17,19 @@ public class FunctionPointsProblem extends Problem
 {
 	private FunctionPointsCalculator calculator;
 	private double availableBudget;
+	private boolean optimizedVersion;
 	private double totalSatisfaction;
 	private int evaluations;
 
 	/**
 	 * Initializes the problem
 	 */
-	public FunctionPointsProblem(SoftwareSystem system, double budgetPercentile) throws ClassNotFoundException
+	public FunctionPointsProblem(SoftwareSystem system, double budgetPercentile, boolean optimizedVersion) throws ClassNotFoundException
 	{
 		this.calculator = new FunctionPointsCalculator(system);
-		availableBudget = calculator.getTotalCost() * budgetPercentile / 100.0;
-		totalSatisfaction = calculator.getTotalSatisfaction();
+		this.optimizedVersion = optimizedVersion;
+		this.availableBudget = calculator.getTotalOptimizedCost() * budgetPercentile / 100.0;
+		this.totalSatisfaction = calculator.getTotalSatisfaction();
 		
 		this.evaluations = 0;
 		numberOfObjectives_ = 1;
@@ -45,7 +47,7 @@ public class FunctionPointsProblem extends Problem
 	public void evaluate(Solution solution) throws JMException
 	{
 		boolean[] transactions = convertSolutionBooleanArray(solution);
-		int cost = calculator.calculateCost(transactions);
+		int cost = optimizedVersion ? calculator.calculateOptimizedCost(transactions) : calculator.calculateClassicCost(transactions);
 		double fitness = 0;
 
 		if (cost <= availableBudget)
@@ -72,7 +74,7 @@ public class FunctionPointsProblem extends Problem
 	public int calculateSolutionCost(Solution solution)
 	{
 		boolean[] transactions = convertSolutionBooleanArray(solution);
-		return calculator.calculateCost(transactions);
+		return optimizedVersion ? calculator.calculateOptimizedCost(transactions) : calculator.calculateClassicCost(transactions);
 	}
 
 	/**

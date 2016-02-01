@@ -18,14 +18,16 @@ import br.uniriotec.vitor.padilha.dissertacao.model.SoftwareSystem;
 public class GeneticAlgorithmExperiment extends MonoExperiment<SoftwareSystem>
 {
 	private double budgetPercentile;
-	FunctionPointsProblem problem;
+	private boolean optimizedVersion;
+	private FunctionPointsProblem problem;
 	
 	/**
 	 * Initializes the experiment indicating the available percentile of the total budget
 	 */
-	public GeneticAlgorithmExperiment(double budgetPercentile)
+	public GeneticAlgorithmExperiment(double budgetPercentile, boolean optimizedVersion)
 	{
 		this.budgetPercentile = budgetPercentile;
+		this.optimizedVersion = optimizedVersion;
 	}
 	
 	/**
@@ -34,7 +36,7 @@ public class GeneticAlgorithmExperiment extends MonoExperiment<SoftwareSystem>
 	@Override
 	protected Solution runCycle(SoftwareSystem instance, int instanceNumber) throws Exception
 	{
-		problem = new FunctionPointsProblem(instance, budgetPercentile);
+		problem = new FunctionPointsProblem(instance, budgetPercentile, optimizedVersion);
 		int transactionCount = problem.countTransactions();
 
 		int populationSize = 4 * transactionCount;
