@@ -23,7 +23,8 @@ public class FunctionPointsCalculator
 	private SoftwareSystem system;
 	private DataModelStatus dataModelStatus;
 	private int[] transactionCost;
-	private @Getter int totalCost;
+	private @Getter int totalOptimizedCost;
+	private @Getter int totalClassicCost;
 	private int[] transactionSatisfaction;
 	private @Getter int totalSatisfaction;
 	private @Getter int transactionCount;
@@ -37,7 +38,8 @@ public class FunctionPointsCalculator
 		this.dataModelStatus = new DataModelStatus(system.getDataModel());
 		this.transactionCount = system.getTransactionModel().countTransactionFunctions();
 		this.transactionCost = calculateTransactionFunctionPoints();
-		this.totalCost = calculateTotalCost();
+		this.totalOptimizedCost = calculateTotalOptimizedCost();
+		this.totalClassicCost = calculateTotalClassicCost();
 		this.transactionSatisfaction = calculateTransactionSatisfaction();
 		this.totalSatisfaction = calculateTotalSatisfaction();
 	}
@@ -128,9 +130,17 @@ public class FunctionPointsCalculator
 	/**
 	 * Calculates the total cost for the system
 	 */
-	private int calculateTotalCost()
+	private int calculateTotalOptimizedCost()
 	{
-		return calculateCost(allTransactions());
+		return calculateOptimizedCost(allTransactions());
+	}
+
+	/**
+	 * Calculates the total cost for the system
+	 */
+	private int calculateTotalClassicCost()
+	{
+		return calculateClassicCost(allTransactions());
 	}
 	
 	/**
@@ -161,13 +171,23 @@ public class FunctionPointsCalculator
 	}
 
 	/**
-	 * Calculates the cost of implementing a set of transactions
+	 * Calculates the cost of implementing a set of transactions - optimized version
 	 */
-	public int calculateCost(boolean[] selectedTransactions)
+	public int calculateOptimizedCost(boolean[] selectedTransactions)
 	{
 		selectedTransactions = expandSelectionDueDependencies(selectedTransactions);
 		calculateDataModelStatus(dataModelStatus, selectedTransactions);
-		return calculateFunctionPointsTransactionModel(selectedTransactions) + calculateDataModelFunctionPoints();
+		return calculateFunctionPointsTransactionModel(selectedTransactions) + calculateDataModelOptimizedFunctionPoints();
+	}
+
+	/**
+	 * Calculates the cost of implementing a set of transactions - classic version
+	 */
+	public int calculateClassicCost(boolean[] selectedTransactions)
+	{
+		selectedTransactions = expandSelectionDueDependencies(selectedTransactions);
+		calculateDataModelStatus(dataModelStatus, selectedTransactions);
+		return calculateFunctionPointsTransactionModel(selectedTransactions) + calculateDataModelClassicFunctionPoints();
 	}
 	
 	/**
@@ -213,11 +233,10 @@ public class FunctionPointsCalculator
 		}
 	}
 	
-
 	/**
-	 * Calculates the amount of function points required to implement the data model
+	 * Calculates the amount of function points required to implement the data model - optimized version
 	 */
-	private int calculateDataModelFunctionPoints()
+	private int calculateDataModelOptimizedFunctionPoints()
 	{
 		int sum = 0;
 		
@@ -225,8 +244,29 @@ public class FunctionPointsCalculator
 		{
 			DataFunction df = system.getDataModel().getDataFunctionIndex(i);
 			DataFunctionStatus dfs = dataModelStatus.getDataFunctionStatus(i);
-			int retCount = dfs.countRecordTypes();
-			int detCount = dfs.countDataElements();
+			int retCount = dfs.countOptimizedRecordTypes();
+			int detCount = dfs.countOptimizedDataElements();
+			
+			if (detCount > 0)
+				sum += Complexity.calculateDataFunctionComplexity(retCount, detCount).calculateFunctionPoints(df.getType());
+		}
+		
+		return sum;
+	}
+	
+	/**
+	 * Calculates the amount of function points required to implement the data model - classic version
+	 */
+	private int calculateDataModelClassicFunctionPoints()
+	{
+		int sum = 0;
+		
+		for (int i = 0; i < system.getDataModel().countDataFunctions(); i++)
+		{
+			DataFunction df = system.getDataModel().getDataFunctionIndex(i);
+			DataFunctionStatus dfs = dataModelStatus.getDataFunctionStatus(i);
+			int retCount = dfs.countClassicRecordTypes();
+			int detCount = dfs.countClassicDataElements();
 			
 			if (detCount > 0)
 				sum += Complexity.calculateDataFunctionComplexity(retCount, detCount).calculateFunctionPoints(df.getType());

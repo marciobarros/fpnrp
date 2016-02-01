@@ -1,6 +1,5 @@
 package br.uniriotec.vitor.padilha.dissertacao.calc;
 
-import lombok.Getter;
 import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.DataElement;
 import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.DataFunction;
 import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.DataModel;
@@ -98,23 +97,44 @@ class DataFunctionStatus
 		recordTypeStatus[index].useDataElement(det);
 	}
 	
-	public int countRecordTypes()
+	public int countOptimizedRecordTypes()
 	{
 		int counter = 0;
 		
 		for (int i = 0; i < recordTypeStatus.length; i++)
-			if (recordTypeStatus[i].getFieldCounter() > 0)
+			if (recordTypeStatus[i].getOptimizedFieldCounter() > 0)
 				counter++;
 		
 		return counter;
 	}
 	
-	public int countDataElements()
+	public int countOptimizedDataElements()
 	{
 		int counter = 0;
 		
 		for (int i = 0; i < recordTypeStatus.length; i++)
-			counter += recordTypeStatus[i].getFieldCounter();
+			counter += recordTypeStatus[i].getOptimizedFieldCounter();
+		
+		return counter;
+	}
+	
+	public int countClassicRecordTypes()
+	{
+		int counter = 0;
+		
+		for (int i = 0; i < recordTypeStatus.length; i++)
+			if (recordTypeStatus[i].getClassicFieldCounter() > 0)
+				counter++;
+		
+		return counter;
+	}
+	
+	public int countClassicDataElements()
+	{
+		int counter = 0;
+		
+		for (int i = 0; i < recordTypeStatus.length; i++)
+			counter += recordTypeStatus[i].getClassicFieldCounter();
 		
 		return counter;
 	}
@@ -128,11 +148,24 @@ class DataFunctionStatus
 class RecordTypeStatus
 {
 	private int usedFieldMask;
-	private @Getter int fieldCounter;
+	private int fieldCounter;
+	private int maxFieldCounter;
 	
 	public RecordTypeStatus(RecordType recordType)
 	{
+		this.maxFieldCounter = calculateMaximumFieldCounter(recordType);
 		clear();
+	}
+	
+	private int calculateMaximumFieldCounter(RecordType recordType)
+	{
+		int count = 0;
+		
+		for (DataElement det : recordType.getDataElements())
+			if (det.isAccountableForDataFunction())
+				count++;
+		
+		return count;
 	}
 	
 	public void clear()
@@ -151,5 +184,15 @@ class RecordTypeStatus
 			usedFieldMask |= (1 << index);
 			fieldCounter++;
 		}
+	}
+	
+	public int getOptimizedFieldCounter()
+	{
+		return fieldCounter;
+	}
+	
+	public int getClassicFieldCounter()
+	{
+		return (fieldCounter != 0) ? maxFieldCounter : 0;
 	}
 }
