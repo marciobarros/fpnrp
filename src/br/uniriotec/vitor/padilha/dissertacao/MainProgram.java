@@ -12,7 +12,7 @@ import br.uniriotec.vitor.padilha.dissertacao.reader.FunctionsPointReader;
 
 public class MainProgram
 {
-	private static final int CYCLES = 150;
+	private static final int CYCLES = 50;
 	private static final String[] INSTANCES_NAMES = new String[] { "Academico", "GestaoDePessoas", "Parametros", "BolsaDeValores" };
 	private static final String INSTANCE_DIRECTORY = "data/instancias/";
 

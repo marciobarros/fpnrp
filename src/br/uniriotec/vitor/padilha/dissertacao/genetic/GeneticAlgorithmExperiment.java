@@ -40,13 +40,13 @@ public class GeneticAlgorithmExperiment extends MonoExperiment<SoftwareSystem>
 		int transactionCount = problem.countTransactions();
 
 		int populationSize = 4 * transactionCount;
-		int maxEvaluations = 20 * 4 * transactionCount * transactionCount;
+		int maxEvaluations = /*20 * */ 4 * transactionCount * transactionCount;
 		
 		Operator crossover = new SinglePointCrossover();
-		crossover.setParameter("probability", 0.8);
+		crossover.setParameter("probability", 0.9);
 		
 		Operator mutation = new BitFlipMutation();
-		mutation.setParameter("probability", 0.02);
+		mutation.setParameter("probability", 1.0 / transactionCount);
 
 		Operator selection = new BinaryTournament();
 
