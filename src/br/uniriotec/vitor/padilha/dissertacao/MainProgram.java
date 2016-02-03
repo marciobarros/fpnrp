@@ -26,7 +26,8 @@ public class MainProgram
 			System.out.print(instance + ": ");
 			System.out.print(system.getTransactionModel().countTransactionFunctions() + " TF, ");
 			System.out.print(system.getDataModel().countDataFunctions() + " DF, ");
-			System.out.println(calculator.getTotalCost() + " FP");
+			System.out.print(calculator.getTotalClassicCost() + " CFP ");
+			System.out.println(calculator.getTotalOptimizedCost() + " OFP");
 		}
 
 		System.out.println();
@@ -43,12 +44,12 @@ public class MainProgram
 			Vector<SoftwareSystem> systems = new Vector<SoftwareSystem>();
 			systems.add(system);
 			
-			for (int percentile = 10; percentile <= 90; percentile+= 10)
+			for (int percentile = 10; percentile <= 90; percentile += 10)
 			{
 				long startTime = System.currentTimeMillis();
 				System.out.print("Processing " + instance + " at " + percentile + "% ... ");
 				
-				GeneticAlgorithmExperiment ga = new GeneticAlgorithmExperiment(percentile);
+				GeneticAlgorithmExperiment ga = new GeneticAlgorithmExperiment(percentile, true);
 				ga.addListerner(new StreamMonoExperimentListener(new OutputStreamWriter(out), true));
 //				ga.addListerner(new StreamMonoExperimentListener(new OutputStreamWriter(System.out), true));
 				ga.run(systems, CYCLES);
