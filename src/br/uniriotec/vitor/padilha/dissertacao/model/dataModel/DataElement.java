@@ -88,7 +88,7 @@ public class DataElement
 			return semanticMeaning;
 		
 		if (referencedRecordType != null)
-			return referencedRecordType.getDataFunction() != recordType.getDataFunction();
+			return semanticMeaning || referencedRecordType.getDataFunction() != recordType.getDataFunction();
 		
 		return true;
 	}

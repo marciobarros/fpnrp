@@ -199,166 +199,101 @@
 				<det name="dre" />
 			</ftr>
 			<ftr name="Aluno" ret="Trancamento" useAllDets="true" />
-
-
 			<dependency ref="IncluirNovoAluno" />
 			<dependency ref="ConsultarAluno" />
 			<dependency ref="InformarTrancamentoDeAluno" />
-
 		</transaction>
-
-
-		<transaction name="IncluirBolsaParaAluno" errorMsg="true"
-			type="EI">
-
+		<transaction name="IncluirBolsaParaAluno" errorMsg="true" type="EI">
 			<ftr name="Aluno" ret="Aluno">
 				<det name="nome" />
 				<det name="dre" />
 			</ftr>
 			<ftr name="Aluno" ret="Bolsista" useAllDets="true" />
 			<ftr name="Aluno" ret="Trancamento" useAllDets="true" />
-
-
 			<dependency ref="IncluirNovoAluno" />
 			<dependency ref="ConsultarAluno" />
-
 		</transaction>
-		<transaction name="AlterarBolsaDeAluno" errorMsg="true"
-			type="EI">
-
+		<transaction name="AlterarBolsaDeAluno" errorMsg="true" type="EI">
 			<ftr name="Aluno" ret="Aluno">
 				<det name="nome" />
 				<det name="dre" />
 			</ftr>
 			<ftr name="Aluno" ret="Bolsista" useAllDets="true" />
-
-
 			<dependency ref="IncluirBolsaParaAluno" />
 			<dependency ref="ConsultarBolsasDeAluno" />
-
 		</transaction>
-		<transaction name="ConsultarBolsasDeAluno" errorMsg="true"
-			type="EQ">
-
+		<transaction name="ConsultarBolsasDeAluno" errorMsg="true" type="EQ">
 			<ftr name="Aluno" ret="Aluno">
 				<det name="nome" />
 				<det name="dre" />
 			</ftr>
 			<ftr name="Aluno" ret="Bolsista" useAllDets="true" />
-
-
 			<dependency ref="IncluirBolsaParaAluno" />
-
 		</transaction>
-		<transaction name="RemoverBolsaParaAluno" errorMsg="true"
-			type="EI">
-
+		<transaction name="RemoverBolsaParaAluno" errorMsg="true" type="EI">
 			<ftr name="Aluno" ret="Aluno">
 				<det name="nome" />
 				<det name="dre" />
 			</ftr>
 			<ftr name="Aluno" ret="Bolsista" useAllDets="true" />
-
-
 			<dependency ref="IncluirBolsaParaAluno" />
 			<dependency ref="ConsultarBolsasDeAluno" />
-
 		</transaction>
-
-		<transaction name="IncluirNovoProfessor" errorMsg="true"
-			type="EI">
-
+		<transaction name="IncluirNovoProfessor" errorMsg="true" type="EI">
 			<ftr name="Professor" ret="Professor" useAllDets="true" />
 			<ftr name="Area" ret="Area">
 				<det name="nome" />
 			</ftr>
-
-
 			<dependency ref="IncluirNovaArea" />
-
 		</transaction>
 		<transaction name="AlterarProfessor" errorMsg="true" type="EI">
-
 			<ftr name="Professor" ret="Professor" useAllDets="true" />
 			<ftr name="Area" ret="Area">
 				<det name="nome" />
 			</ftr>
-
-
 			<dependency ref="IncluirNovoProfessor" />
 			<dependency ref="ConsultarProfessor" />
-
 		</transaction>
-		<transaction name="ConsultarProfessor" errorMsg="true"
-			type="EQ">
-
+		<transaction name="ConsultarProfessor" errorMsg="true" type="EQ">
 			<ftr name="Professor" ret="Professor" useAllDets="true" />
 			<ftr name="Area" ret="Area">
 				<det name="nome" />
 			</ftr>
-
-
 			<dependency ref="IncluirNovoProfessor" />
-
 		</transaction>
 		<transaction name="RemoverProfessor" errorMsg="true" type="EI">
-
 			<ftr name="Professor" ret="Professor" useAllDets="true" />
-
-
 			<dependency ref="IncluirNovoProfessor" />
 			<dependency ref="ConsultarProfessor" />
-
 		</transaction>
-
-
 		<transaction name="IncluirNovaArea" errorMsg="true" type="EI">
-
 			<ftr name="Area" ret="Area" useAllDets="true" />
 			<ftr name="Professor" ret="Professor">
 				<det name="nome" />
 			</ftr>
-
-
 			<dependency ref="IncluirNovoProfessor" />
-
 		</transaction>
 		<transaction name="AlterarArea" errorMsg="true" type="EI">
-
 			<ftr name="Area" ret="Area" useAllDets="true" />
 			<ftr name="Professor" ret="Professor">
 				<det name="nome" />
 			</ftr>
-
-
 			<dependency ref="IncluirNovaArea" />
 			<dependency ref="ConsultarArea" />
-
 		</transaction>
 		<transaction name="ConsultarArea" errorMsg="true" type="EQ">
-
 			<ftr name="Area" ret="Area" useAllDets="true" />
 			<ftr name="Professor" ret="Professor">
 				<det name="nome" />
 			</ftr>
-
-
 			<dependency ref="IncluirNovaArea" />
-
 		</transaction>
 		<transaction name="RemoverArea" errorMsg="true" type="EI">
-
 			<ftr name="Area" ret="Area" useAllDets="true" />
-
-
 			<dependency ref="IncluirNovaArea" />
 			<dependency ref="ConsultarArea" />
-
 		</transaction>
-
-
 		<transaction name="IncluirNovaLinha" errorMsg="true" type="EI">
-
 			<ftr name="Area" ret="Area">
 				<det name="nome" />
 			</ftr>
@@ -366,13 +301,9 @@
 			<ftr name="Professor" ret="Professor">
 				<det name="nome" />
 			</ftr>
-
-
 			<dependency ref="IncluirNovaArea" />
-
 		</transaction>
 		<transaction name="AlterarLinha" errorMsg="true" type="EI">
-
 			<ftr name="Area" ret="Area">
 				<det name="nome" />
 			</ftr>
@@ -380,14 +311,10 @@
 			<ftr name="Professor" ret="Professor">
 				<det name="nome" />
 			</ftr>
-
-
 			<dependency ref="IncluirNovaLinha" />
 			<dependency ref="ConsultarLinha" />
-
 		</transaction>
 		<transaction name="ConsultarLinha" errorMsg="true" type="EQ">
-
 			<ftr name="Area" ret="Area">
 				<det name="nome" />
 			</ftr>
@@ -395,174 +322,103 @@
 			<ftr name="Professor" ret="Professor">
 				<det name="nome" />
 			</ftr>
-
-
 			<dependency ref="IncluirNovaLinha" />
-
 		</transaction>
 		<transaction name="RemoverLinha" errorMsg="true" type="EI">
-
 			<ftr name="Area" ret="Area">
 				<det name="nome" />
 			</ftr>
 			<ftr name="Area" ret="Linha" useAllDets="true" />
-
-
 			<dependency ref="IncluirNovaLinha" />
 			<dependency ref="ConsultarLinha" />
-
 		</transaction>
-
 		<transaction name="IncluirUsuario" errorMsg="true" type="EI">
-
 			<ftr name="Usuario" ret="Usuario" useAllDets="true" />
-
 		</transaction>
 		<transaction name="AlterarUsuario" errorMsg="true" type="EI">
-
 			<ftr name="Usuario" ret="Usuario" useAllDets="true" />
-
-
 			<dependency ref="IncluirUsuario" />
 			<dependency ref="ConsultarUsuario" />
-
 		</transaction>
 		<transaction name="ConsultarUsuario" errorMsg="true" type="EQ">
-
 			<ftr name="Usuario" ret="Usuario" useAllDets="true" />
-
-
 			<dependency ref="IncluirUsuario" />
-
 		</transaction>
 		<transaction name="RemoverUsuario" errorMsg="true" type="EI">
-
 			<ftr name="Usuario" ret="Usuario">
 				<det name="nome" />
 				<det name="login" />
 			</ftr>
-
-
 			<dependency ref="IncluirUsuario" />
 			<dependency ref="ConsultarUsuario" />
-
 		</transaction>
-
-
-
-		<transaction name="IncluirNovaDisciplina" errorMsg="true"
-			type="EI">
-
+		<transaction name="IncluirNovaDisciplina" errorMsg="true" type="EI">
 			<ftr name="Disciplina" ret="Disciplina" useAllDets="true" />
 			<ftr name="Disciplina" ret="PreRequisitos" useAllDets="true" />
 			<ftr name="Disciplina" ret="InfoExternas" useAllDets="true" />
-
-
 		</transaction>
-		<transaction name="AlterarDisciplina" errorMsg="true"
-			type="EI">
-
+		<transaction name="AlterarDisciplina" errorMsg="true" type="EI">
 			<ftr name="Disciplina" ret="Disciplina" useAllDets="true" />
 			<ftr name="Disciplina" ret="PreRequisitos" useAllDets="true" />
 			<ftr name="Disciplina" ret="InfoExternas" useAllDets="true" />
-
-
 			<dependency ref="IncluirNovaDisciplina" />
 			<dependency ref="ConsultarDisciplina" />
-
 		</transaction>
-		<transaction name="ConsultarDisciplina" errorMsg="true"
-			type="EQ">
-
+		<transaction name="ConsultarDisciplina" errorMsg="true" type="EQ">
 			<ftr name="Disciplina" ret="Disciplina" useAllDets="true" />
 			<ftr name="Disciplina" ret="PreRequisitos" useAllDets="true" />
 			<ftr name="Disciplina" ret="InfoExternas" useAllDets="true" />
-
-
 			<dependency ref="IncluirNovaDisciplina" />
-
 		</transaction>
-		<transaction name="RemoverDisciplina" errorMsg="true"
-			type="EI">
-
+		<transaction name="RemoverDisciplina" errorMsg="true" type="EI">
 			<ftr name="Disciplina" ret="Disciplina">
 				<det name="nome" />
 			</ftr>
-
-
 			<dependency ref="IncluirNovaDisciplina" />
 			<dependency ref="ConsultarDisciplina" />
-
 		</transaction>
-
-
-
 		<transaction name="IncluirNovaTurma" errorMsg="true" type="EI">
-
 			<ftr name="Turma" ret="Turma" useAllDets="true" />
 			<ftr name="Professor" ret="Professor">
 				<det name="nome" />
 			</ftr>
-
 		</transaction>
 		<transaction name="AlterarTurma" errorMsg="true" type="EI">
-
 			<ftr name="Turma" ret="Turma" useAllDets="true" />
 			<ftr name="Professor" ret="Professor">
 				<det name="nome" />
 			</ftr>
-
-
 			<dependency ref="IncluirNovaTurma" />
 			<dependency ref="ConsultarTurma" />
-
 		</transaction>
 		<transaction name="ConsultarTurma" errorMsg="true" type="EQ">
-
 			<ftr name="Turma" ret="Turma" useAllDets="true" />
 			<ftr name="Professor" ret="Professor">
 				<det name="nome" />
 			</ftr>
-
-
 			<dependency ref="IncluirNovaTurma" />
-
 		</transaction>
 		<transaction name="RemoverTurma" errorMsg="true" type="EI">
-
 			<ftr name="Turma" ret="Turma">
-
 				<det name="ano" />
 				<det name="periodo" />
 			</ftr>
 			<ftr name="Disciplina" ret="Disciplina">
 				<det name="nome" />
 			</ftr>
-
-
 			<dependency ref="IncluirNovaTurma" />
 			<dependency ref="ConsultarTurma" />
-
 		</transaction>
-
-
-
-		<transaction name="RealizarInscricaoEmTurma" errorMsg="true"
-			type="EI">
-
+		<transaction name="RealizarInscricaoEmTurma" errorMsg="true" type="EI">
 			<ftr name="Inscricao" ret="Inscricao" useAllDets="true" />
 			<ftr name="Aluno" ret="Aluno">
 				<det name="nome" />
 				<det name="dre" />
 			</ftr>
-
-
 			<dependency ref="IncluirNovaTurma" />
 			<dependency ref="IncluirNovoAluno" />
 			<dependency ref="IncluirNovaDisciplina" />
-
 		</transaction>
-
 		<transaction name="ConsultarInscricaoEmTurma" errorMsg="true" type="EQ">
 			<ftr name="Inscricao" ret="Inscricao" useAllDets="true" />
 			<ftr name="Aluno" ret="Aluno">

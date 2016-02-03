@@ -2,11 +2,14 @@ package br.uniriotec.vitor.padilha.dissertacao.calc;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 import lombok.Getter;
 import br.uniriotec.vitor.padilha.dissertacao.model.SoftwareSystem;
 import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.DataElement;
 import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.DataFunction;
+import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.RecordType;
 import br.uniriotec.vitor.padilha.dissertacao.model.stakeholderModel.Interest;
 import br.uniriotec.vitor.padilha.dissertacao.model.stakeholderModel.Stakeholder;
 import br.uniriotec.vitor.padilha.dissertacao.model.transactionModel.FileReference;
@@ -63,7 +66,7 @@ public class FunctionPointsCalculator
 	/**
 	 * Counts the data functions referenced by a transaction
 	 */
-	private int countTransactionReferencedDataFunctions(TransactionFunction transaction) 
+	public int countTransactionReferencedDataFunctions(TransactionFunction transaction) 
 	{
 		List<DataFunction> dataFunctions = new ArrayList<DataFunction>();
 		
@@ -81,7 +84,7 @@ public class FunctionPointsCalculator
 	/**
 	 * Counts the data elements referenced by a transaction
 	 */
-	private int countTransactionDataElements(TransactionFunction transaction) 
+	public int countTransactionDataElements(TransactionFunction transaction) 
 	{
 		List<DataElement> dataElements = new ArrayList<DataElement>();
 		
@@ -117,6 +120,16 @@ public class FunctionPointsCalculator
 	}
 
 	/**
+	 * Calculates the complexity of a transaction
+	 */
+	public Complexity calculateTransactionComplexity(TransactionFunction transaction)
+	{
+		int ftrCount = countTransactionReferencedDataFunctions(transaction);
+		int detCount = countTransactionDataElements(transaction);
+		return Complexity.calculateTransactionComplexity(ftrCount, detCount, transaction.getType());
+	}
+
+	/**
 	 * Calculates the number of function points associated to a transaction
 	 */
 	public int calculateTransactionFunctionPoints(TransactionFunction transaction)
@@ -125,6 +138,50 @@ public class FunctionPointsCalculator
 		int detCount = countTransactionDataElements(transaction);
 		Complexity complexity = Complexity.calculateTransactionComplexity(ftrCount, detCount, transaction.getType());
 		return complexity.calculateFunctionPoints(transaction.getType());
+	}
+
+	/**
+	 * Counts the record types comprising a data function
+	 */
+	public int countDataFunctionRecordTypes(DataFunction dataFunction) 
+	{
+		return dataFunction.countRecordTypes();
+	}
+
+	/**
+	 * Counts the data elements comprising a data function
+	 */
+	public int countDataFunctionDataElements(DataFunction dataFunction) 
+	{
+		int detCount = 0;
+		
+		for (RecordType ret : dataFunction.getRecordTypes())
+			for (DataElement det : ret.getDataElements())
+				if (det.isAccountableForDataFunction())
+					detCount++;
+		
+		return detCount;
+	}
+
+	/**
+	 * Calculates the complexity of a data function
+	 */
+	public Complexity calculateDataFunctionComplexity(DataFunction dataFunction)
+	{
+		int retCount = countDataFunctionRecordTypes(dataFunction);
+		int detCount = countDataFunctionDataElements(dataFunction);
+		return Complexity.calculateDataFunctionComplexity(retCount, detCount);
+	}
+
+	/**
+	 * Calculates the number of function points associated to a data function
+	 */
+	public int calculateDataFunctionFunctionPoints(DataFunction dataFunction)
+	{
+		int retCount = countDataFunctionRecordTypes(dataFunction);
+		int detCount = countDataFunctionDataElements(dataFunction);
+		Complexity complexity = Complexity.calculateDataFunctionComplexity(retCount, detCount);
+		return complexity.calculateFunctionPoints(dataFunction.getType());
 	}
 
 	/**
@@ -176,7 +233,7 @@ public class FunctionPointsCalculator
 	public int calculateOptimizedCost(boolean[] selectedTransactions)
 	{
 		selectedTransactions = expandSelectionDueDependencies(selectedTransactions);
-		calculateDataModelStatus(dataModelStatus, selectedTransactions);
+		calculateDataModelStatus(selectedTransactions);
 		return calculateFunctionPointsTransactionModel(selectedTransactions) + calculateDataModelOptimizedFunctionPoints();
 	}
 
@@ -186,14 +243,14 @@ public class FunctionPointsCalculator
 	public int calculateClassicCost(boolean[] selectedTransactions)
 	{
 		selectedTransactions = expandSelectionDueDependencies(selectedTransactions);
-		calculateDataModelStatus(dataModelStatus, selectedTransactions);
+		calculateDataModelStatus(selectedTransactions);
 		return calculateFunctionPointsTransactionModel(selectedTransactions) + calculateDataModelClassicFunctionPoints();
 	}
 	
 	/**
 	 * Calculates the status of the data model according to the selected transactions
 	 */
-	private void calculateDataModelStatus(DataModelStatus dataModelStatus, boolean[] selectedTransactions)
+	public void calculateDataModelStatus(boolean[] selectedTransactions)
 	{
 		dataModelStatus.clear();
 		
@@ -274,9 +331,49 @@ public class FunctionPointsCalculator
 		
 		return sum;
 	}
+	
+	/**
+	 * Returns the count of classic record types for a data function
+	 */
+	public int countClassicRecordTypes(DataFunction dataFunction)
+	{
+		int index = dataFunction.getIndex();
+		DataFunctionStatus dfs = dataModelStatus.getDataFunctionStatus(index);
+		return dfs.countClassicRecordTypes();
+	}
+	
+	/**
+	 * Returns the count of classic data elements for a data function
+	 */
+	public int countClassicDataElements(DataFunction dataFunction)
+	{
+		int index = dataFunction.getIndex();
+		DataFunctionStatus dfs = dataModelStatus.getDataFunctionStatus(index);
+		return dfs.countClassicDataElements();
+	}
+	
+	/**
+	 * Returns the count of optimized record types for a data function
+	 */
+	public int countOptimizedRecordTypes(DataFunction dataFunction)
+	{
+		int index = dataFunction.getIndex();
+		DataFunctionStatus dfs = dataModelStatus.getDataFunctionStatus(index);
+		return dfs.countOptimizedRecordTypes();
+	}
+	
+	/**
+	 * Returns the count of optimized data elements for a data function
+	 */
+	public int countOptimizedDataElements(DataFunction dataFunction)
+	{
+		int index = dataFunction.getIndex();
+		DataFunctionStatus dfs = dataModelStatus.getDataFunctionStatus(index);
+		return dfs.countOptimizedDataElements();
+	}
 
 	/**
-	 * Calcultes the amount of function points required to implement the transaction model alone
+	 * Calculates the amount of function points required to implement the transaction model alone
 	 */
 	private int calculateFunctionPointsTransactionModel(boolean[] selectedTransactions)
 	{
@@ -306,6 +403,14 @@ public class FunctionPointsCalculator
 				result += transactionSatisfaction[i];
 		
 		return result;
+	}
+
+	/**
+	 * Calculates the satisfaction for a set of transactions as a percentile of total satisfaction
+	 */
+	public double calculateSatisfactionPercentile(boolean[] selectedTransactions)
+	{
+		return (100.0 * calculateSatisfaction(selectedTransactions)) / totalSatisfaction;
 	}
 
 	/**
@@ -387,6 +492,70 @@ public class FunctionPointsCalculator
 	{
 		selectedTransactions[index] = false;
 		return selectedTransactions;
+	}
+	
+	/**
+	 * Creates the boolean representation of a solution from its string
+	 */
+	public boolean[] fromString(String solution)
+	{
+		boolean[] result = new boolean[solution.length() - 2];
+		
+		for (int i = 1; i < solution.length()-1; i++)
+			result[i-1] = (solution.charAt(i) == '1');
+		
+		return result;
+	}
+	
+	/**
+	 * Creates the boolean representation for a random solution
+	 */
+	public boolean[] randomTransactions()
+	{
+		boolean[] result = new boolean[transactionCount];
+		Random rnd = ThreadLocalRandom.current();
+		
+		for (int i = 0; i < transactionCount; i++)
+			result[i] = rnd.nextBoolean();
+		
+		return result;
+	}
+	
+	/**
+	 * Creates the boolean representation for a random solution
+	 */
+	public boolean[] randomTransactions(double percentile)
+	{	
+		int[] positions = new int[transactionCount];
+		
+		for (int i = 0; i < transactionCount; i++)
+			positions[i] = i;
+			
+		shuffle(positions);
+		
+		boolean[] result = new boolean[transactionCount];
+		int count = (int) Math.floor(percentile * transactionCount / 100.0);
+		
+		for (int i = 0; i < count; i++)
+			result[positions[i]] = true;
+		
+		return result;
+	}
+
+	/**
+	 * Fisher–Yates shuffle algorithm
+	 */
+	private void shuffle(int[] data)
+	{
+		Random rnd = ThreadLocalRandom.current();
+		
+		for (int i = data.length-1; i > 0; i--)
+		{
+			int index = rnd.nextInt(i + 1);
+			int a = data[index];
+			data[index] = data[i];
+			data[i] = a;
+		}
 	}
 
 	/**

@@ -120,13 +120,7 @@ class DataFunctionStatus
 	
 	public int countClassicRecordTypes()
 	{
-		int counter = 0;
-		
-		for (int i = 0; i < recordTypeStatus.length; i++)
-			if (recordTypeStatus[i].getClassicFieldCounter() > 0)
-				counter++;
-		
-		return counter;
+		return recordTypeStatus.length;
 	}
 	
 	public int countClassicDataElements()
@@ -181,7 +175,7 @@ class RecordTypeStatus
 		
 		if ((usedFieldMask & fieldMask) == 0)
 		{
-			usedFieldMask |= (1 << index);
+			usedFieldMask |= fieldMask;
 			fieldCounter++;
 		}
 	}
@@ -193,6 +187,6 @@ class RecordTypeStatus
 	
 	public int getClassicFieldCounter()
 	{
-		return (fieldCounter != 0) ? maxFieldCounter : 0;
+		return maxFieldCounter;
 	}
 }
