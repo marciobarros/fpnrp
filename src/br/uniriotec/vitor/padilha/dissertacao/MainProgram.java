@@ -49,7 +49,7 @@ public class MainProgram
 				long startTime = System.currentTimeMillis();
 				System.out.print("Processing " + instance + " at " + percentile + "% ... ");
 				
-				GeneticAlgorithmExperiment ga = new GeneticAlgorithmExperiment(percentile, false);
+				GeneticAlgorithmExperiment ga = new GeneticAlgorithmExperiment(percentile, true);
 				ga.addListerner(new StreamMonoExperimentListener(new OutputStreamWriter(out), true));
 //				ga.addListerner(new StreamMonoExperimentListener(new OutputStreamWriter(System.out), true));
 				ga.run(systems, CYCLES);
