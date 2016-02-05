@@ -508,6 +508,19 @@ public class FunctionPointsCalculator
 	}
 	
 	/**
+	 * Creates a string representation of a solution
+	 */
+	public String toString(boolean[] solution)
+	{
+		String result = "";
+		
+		for (int i = 0; i < solution.length; i++)
+			result += solution[i] ? "1" : "0";
+		
+		return "[" + result + "]";
+	}
+	
+	/**
 	 * Creates the boolean representation for a random solution
 	 */
 	public boolean[] randomTransactions()

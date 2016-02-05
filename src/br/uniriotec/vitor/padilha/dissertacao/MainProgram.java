@@ -2,14 +2,18 @@ package br.uniriotec.vitor.padilha.dissertacao;
 
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
+import java.text.DecimalFormat;
 import java.util.Vector;
 
 import unirio.experiments.monoobjective.execution.StreamMonoExperimentListener;
+import br.uniriotec.vitor.padilha.dissertacao.analysis.monoobjective.model.MonoExperimentResult;
+import br.uniriotec.vitor.padilha.dissertacao.analysis.monoobjective.reader.MonoExperimentFileReader;
 import br.uniriotec.vitor.padilha.dissertacao.calc.FunctionPointsCalculator;
 import br.uniriotec.vitor.padilha.dissertacao.calc.SolutionSimulator;
 import br.uniriotec.vitor.padilha.dissertacao.genetic.GeneticAlgorithmExperiment;
 import br.uniriotec.vitor.padilha.dissertacao.model.SoftwareSystem;
 import br.uniriotec.vitor.padilha.dissertacao.reader.FunctionsPointReader;
+import br.uniriotec.vitor.padilha.dissertacao.utils.MathUtils;
 
 public class MainProgram
 {
@@ -55,9 +59,9 @@ public class MainProgram
 		System.out.println();
 	}
 
-	protected static void optimize(String... instances) throws Exception
+	protected static void optimize(String outputFilename, boolean optimizedVersion, String... instances) throws Exception
 	{
-		FileOutputStream out = new FileOutputStream("saida.txt");
+		FileOutputStream out = new FileOutputStream(outputFilename);
 		
 		for (String instance : instances)
 		{
@@ -71,27 +75,41 @@ public class MainProgram
 				long startTime = System.currentTimeMillis();
 				System.out.print("Processing " + instance + " at " + percentile + "% ... ");
 				
-				GeneticAlgorithmExperiment ga = new GeneticAlgorithmExperiment(percentile, true);
+				GeneticAlgorithmExperiment ga = new GeneticAlgorithmExperiment(percentile, optimizedVersion);
 				ga.addListerner(new StreamMonoExperimentListener(new OutputStreamWriter(out), true));
 				ga.run(systems, CYCLES);
 
 				long finishTime = System.currentTimeMillis();
 				long seconds = (finishTime - startTime) / 1000;
-				System.out.println("finished in " + seconds + " ms");
+				System.out.println("finished in " + seconds + " s");
 			}
 		}
 
 		out.close();
 	}
 
-	/**
-	 * @param args
-	 * @throws Exception
-	 */
+	protected static void analyze(String optimizedResultsFilename, String classicResultsFilename) throws Exception
+	{
+		MonoExperimentFileReader reader = new MonoExperimentFileReader();
+		MonoExperimentResult resultOptimized = reader.execute(optimizedResultsFilename);
+		MonoExperimentResult resultClassic = reader.execute(classicResultsFilename);
+		
+		DecimalFormat nf2 = new DecimalFormat("0.00");
+		
+		for (int i = 0; i < resultOptimized.countInstances(); i++)
+		{
+			double fitnessOptimized = MathUtils.mean(resultOptimized.getInstanceIndex(i).getObjectives());
+			double fitnessClassic = MathUtils.mean(resultClassic.getInstanceIndex(i).getObjectives());
+			System.out.println("Instance #" + i + " " + nf2.format(fitnessOptimized) + " " + nf2.format(fitnessClassic));
+		}
+	}
+	
 	public static void main(String[] args) throws Exception
 	{
-		showProperties(INSTANCES_NAMES);
-		simulateDifferences(INSTANCES_NAMES);
-//		optimize(INSTANCES_NAMES);		
+//		showProperties(INSTANCES_NAMES);
+//		simulateDifferences(INSTANCES_NAMES);
+		optimize("saida fpnrp 50c 4TT.txt", true, INSTANCES_NAMES);	
+		optimize("saida classic 50c 4TT.txt", false, INSTANCES_NAMES);
+		analyze("saida fpnrp.txt", "saida classic.txt");
 	}
 }

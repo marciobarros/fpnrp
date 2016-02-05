@@ -71,10 +71,47 @@ public class SolutionSimulator
 			Complexity complexityOptimized = Complexity.calculateDataFunctionComplexity(retCountOptimized, detCountOptimized);
 			
 			if (complexityClassic != complexityOptimized)
+			{
+//				printDifferences(solution);				
 				return true;
+			}
 		}
 
 		return false;
+	}
+
+	/**
+	 * Shows the differences between the classic and optimized versions for a solution
+	 */
+	protected void printDifferences(boolean[] solution)
+	{
+//		System.out.println("=================");
+//		System.out.println(system.getName() + ": " + calculator.toString(solution));
+		int sum = 0;
+		
+		for (int i = 0; i < system.getDataModel().countDataFunctions(); i++)
+		{
+			DataFunction dataFunction = system.getDataModel().getDataFunctionIndex(i);
+			
+			int retCountClassic = calculator.countClassicRecordTypes(dataFunction);
+			int detCountClassic = calculator.countClassicDataElements(dataFunction);
+			Complexity complexityClassic = Complexity.calculateDataFunctionComplexity(retCountClassic, detCountClassic);
+			int functionPointsClassic = complexityClassic.calculateFunctionPoints(dataFunction.getType());
+			
+			int retCountOptimized = calculator.countOptimizedRecordTypes(dataFunction);
+			int detCountOptimized = calculator.countOptimizedDataElements(dataFunction);
+			Complexity complexityOptimized = Complexity.calculateDataFunctionComplexity(retCountOptimized, detCountOptimized);
+			int functionPointsOptimized = complexityOptimized.calculateFunctionPoints(dataFunction.getType());
+			
+			if (complexityClassic != complexityOptimized)
+			{
+				int difference = (functionPointsClassic - functionPointsOptimized);
+				sum += difference;
+//				System.out.println(difference + " FP " + dataFunction.getName() + " " + retCountClassic + " CRET " + detCountClassic + " CDET " + retCountOptimized + " ORET " + detCountOptimized + " ODET"); 
+			}
+		}
+
+		System.out.print(sum + " "); 
 	}
 
 	/**
