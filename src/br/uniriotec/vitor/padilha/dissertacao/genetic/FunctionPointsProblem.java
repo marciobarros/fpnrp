@@ -5,7 +5,9 @@ import jmetal.base.Solution;
 import jmetal.base.solutionType.BinarySolutionType;
 import jmetal.base.variable.Binary;
 import jmetal.util.JMException;
+import br.uniriotec.vitor.padilha.dissertacao.calc.ClassicFunctionPointsCalculator;
 import br.uniriotec.vitor.padilha.dissertacao.calc.FunctionPointsCalculator;
+import br.uniriotec.vitor.padilha.dissertacao.calc.OptimizedFunctionPointsCalculator;
 import br.uniriotec.vitor.padilha.dissertacao.model.SoftwareSystem;
 
 /**
@@ -17,7 +19,6 @@ public class FunctionPointsProblem extends Problem
 {
 	private FunctionPointsCalculator calculator;
 	private double availableBudget;
-	private boolean optimizedVersion;
 	private double totalSatisfaction;
 	private int evaluations;
 
@@ -26,9 +27,8 @@ public class FunctionPointsProblem extends Problem
 	 */
 	public FunctionPointsProblem(SoftwareSystem system, double budgetPercentile, boolean optimizedVersion) throws ClassNotFoundException
 	{
-		this.calculator = new FunctionPointsCalculator(system);
-		this.optimizedVersion = optimizedVersion;
-		this.availableBudget = calculator.getTotalOptimizedCost() * budgetPercentile / 100.0;
+		this.calculator = optimizedVersion ? new OptimizedFunctionPointsCalculator(system) : new ClassicFunctionPointsCalculator(system);
+		this.availableBudget = calculator.calculateCost(calculator.allTransactions()) * budgetPercentile / 100.0;
 		this.totalSatisfaction = calculator.getTotalSatisfaction();
 		
 		this.evaluations = 0;
@@ -47,7 +47,7 @@ public class FunctionPointsProblem extends Problem
 	public void evaluate(Solution solution) throws JMException
 	{
 		boolean[] transactions = convertSolutionBooleanArray(solution);
-		int cost = optimizedVersion ? calculator.calculateOptimizedCost(transactions) : calculator.calculateClassicCost(transactions);
+		int cost = calculator.calculateCost(transactions);
 		double fitness = 0;
 
 		if (cost <= availableBudget)
@@ -74,7 +74,7 @@ public class FunctionPointsProblem extends Problem
 	public int calculateSolutionCost(Solution solution)
 	{
 		boolean[] transactions = convertSolutionBooleanArray(solution);
-		return optimizedVersion ? calculator.calculateOptimizedCost(transactions) : calculator.calculateClassicCost(transactions);
+		return calculator.calculateCost(transactions);
 	}
 
 	/**

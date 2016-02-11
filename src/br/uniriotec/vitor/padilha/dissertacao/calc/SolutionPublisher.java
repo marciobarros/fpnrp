@@ -10,8 +10,9 @@ public class SolutionPublisher
 	{
 		StringBuffer sb = new StringBuffer();
 		
-		FunctionPointsCalculator calculator = new FunctionPointsCalculator(system);
-		boolean[] expandedSolution = calculator.expandSelectionDueDependencies(solution);
+		ClassicFunctionPointsCalculator classicCalculator = new ClassicFunctionPointsCalculator(system);
+		OptimizedFunctionPointsCalculator optimizedCalculator = new OptimizedFunctionPointsCalculator(system);
+		boolean[] expandedSolution = classicCalculator.expandSelectionDueDependencies(solution);
 		
 //		for (int i = 0; i < system.getDataModel().countDataFunctions(); i++)
 //		{
@@ -39,10 +40,10 @@ public class SolutionPublisher
 		for (int i = 0; i < system.getDataModel().countDataFunctions(); i++)
 		{
 			DataFunction dataFunction = system.getDataModel().getDataFunctionIndex(i);
-			int retCountClassic = calculator.countClassicRecordTypes(dataFunction);
-			int detCountClassic = calculator.countClassicDataElements(dataFunction);
-			int retCountOptimized = calculator.countOptimizedRecordTypes(dataFunction);
-			int detCountOptimized = calculator.countOptimizedDataElements(dataFunction);
+			int retCountClassic = classicCalculator.countRecordTypes(dataFunction);
+			int detCountClassic = classicCalculator.countDataElements(dataFunction);
+			int retCountOptimized = optimizedCalculator.countRecordTypes(dataFunction);
+			int detCountOptimized = optimizedCalculator.countDataElements(dataFunction);
 			sb.append("DF\t" + dataFunction.getType().name() + "\t" + dataFunction.getName() + "\t" + retCountClassic + "\t" + detCountClassic + " DET\t" + retCountOptimized + "\t" + detCountOptimized + "\n");
 		}
 		
@@ -51,8 +52,8 @@ public class SolutionPublisher
 			if (expandedSolution[i])
 			{
 				TransactionFunction transaction = system.getTransactionModel().getTransactionFunctionIndex(i);
-				int ftrCount = calculator.countTransactionReferencedDataFunctions(transaction);
-				int detCount = calculator.countTransactionDataElements(transaction);
+				int ftrCount = classicCalculator.countTransactionReferencedDataFunctions(transaction);
+				int detCount = classicCalculator.countTransactionDataElements(transaction);
 				sb.append("TF\t" + transaction.getType().name() + "\t" + transaction.getName() + "\t" + ftrCount + " FTR\t" + detCount + " DET\n");
 			}
 		}

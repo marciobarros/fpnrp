@@ -8,7 +8,8 @@ import java.util.Vector;
 import unirio.experiments.monoobjective.execution.StreamMonoExperimentListener;
 import br.uniriotec.vitor.padilha.dissertacao.analysis.monoobjective.model.MonoExperimentResult;
 import br.uniriotec.vitor.padilha.dissertacao.analysis.monoobjective.reader.MonoExperimentFileReader;
-import br.uniriotec.vitor.padilha.dissertacao.calc.FunctionPointsCalculator;
+import br.uniriotec.vitor.padilha.dissertacao.calc.ClassicFunctionPointsCalculator;
+import br.uniriotec.vitor.padilha.dissertacao.calc.OptimizedFunctionPointsCalculator;
 import br.uniriotec.vitor.padilha.dissertacao.calc.SolutionSimulator;
 import br.uniriotec.vitor.padilha.dissertacao.genetic.GeneticAlgorithmExperiment;
 import br.uniriotec.vitor.padilha.dissertacao.model.SoftwareSystem;
@@ -26,13 +27,14 @@ public class MainProgram
 		for (String instance : instances)
 		{
 			SoftwareSystem system = new FunctionsPointReader().execute(INSTANCE_DIRECTORY + instance + "/functions-point.xml", INSTANCE_DIRECTORY + instance + "/stakeholders-interest.xml");
-			FunctionPointsCalculator calculator = new FunctionPointsCalculator(system);
+			ClassicFunctionPointsCalculator classicCalculator = new ClassicFunctionPointsCalculator(system);
+			OptimizedFunctionPointsCalculator optimizedCalculator = new OptimizedFunctionPointsCalculator(system);
 			
 			System.out.print(instance + ": ");
 			System.out.print(system.getTransactionModel().countTransactionFunctions() + " TF, ");
 			System.out.print(system.getDataModel().countDataFunctions() + " DF, ");
-			System.out.print(calculator.getTotalClassicCost() + " CFP ");
-			System.out.println(calculator.getTotalOptimizedCost() + " OFP");
+			System.out.print(classicCalculator.calculateCost(classicCalculator.allTransactions()) + " CFP ");
+			System.out.println(optimizedCalculator.calculateCost(optimizedCalculator.allTransactions()) + " OFP");
 		}
 
 		System.out.println();
@@ -108,8 +110,8 @@ public class MainProgram
 	{
 //		showProperties(INSTANCES_NAMES);
 //		simulateDifferences(INSTANCES_NAMES);
-		optimize("saida fpnrp 50c 4TT.txt", true, INSTANCES_NAMES);	
-		optimize("saida classic 50c 4TT.txt", false, INSTANCES_NAMES);
+		optimize("saida fpnrp 50c 80TT.txt", true, INSTANCES_NAMES);	
+		optimize("saida classic 50c 80TT.txt", false, INSTANCES_NAMES);
 		analyze("saida fpnrp.txt", "saida classic.txt");
 	}
 }

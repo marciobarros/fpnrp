@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import br.uniriotec.vitor.padilha.dissertacao.MainProgram;
 import br.uniriotec.vitor.padilha.dissertacao.calc.FunctionPointsCalculator;
+import br.uniriotec.vitor.padilha.dissertacao.calc.OptimizedFunctionPointsCalculator;
 import br.uniriotec.vitor.padilha.dissertacao.model.SoftwareSystem;
 import br.uniriotec.vitor.padilha.dissertacao.reader.FunctionsPointReader;
 
@@ -20,7 +21,7 @@ public class TestSatisfaction
 	public void testAcademico10p() throws Exception
 	{
 		SoftwareSystem system = new FunctionsPointReader().execute(MainProgram.INSTANCE_DIRECTORY + "Academico/functions-point.xml", MainProgram.INSTANCE_DIRECTORY + "Academico/stakeholders-interest.xml");
-		FunctionPointsCalculator calculator = new FunctionPointsCalculator(system);
+		FunctionPointsCalculator calculator = new OptimizedFunctionPointsCalculator(system);
 		
 		assertEquals(10.4265, calculator.calculateSatisfactionPercentile(calculator.fromString("[000000000000000000000000000110000000000]")), 0.0001);
 		assertEquals(10.4265, calculator.calculateSatisfactionPercentile(calculator.fromString("[000000000000000000000000000010000000000]")), 0.0001);
@@ -78,7 +79,7 @@ public class TestSatisfaction
 	public void testAcademico20p() throws Exception
 	{
 		SoftwareSystem system = new FunctionsPointReader().execute(MainProgram.INSTANCE_DIRECTORY + "Academico/functions-point.xml", MainProgram.INSTANCE_DIRECTORY + "Academico/stakeholders-interest.xml");
-		FunctionPointsCalculator calculator = new FunctionPointsCalculator(system);
+		FunctionPointsCalculator calculator = new OptimizedFunctionPointsCalculator(system);
 		
 		assertEquals(28.91, calculator.calculateSatisfactionPercentile(calculator.fromString("[000110100010000000000000000000000000000]")), 0.0001);
 		assertEquals(28.91, calculator.calculateSatisfactionPercentile(calculator.fromString("[001100100010000000000000000000000000000]")), 0.0001);
@@ -136,7 +137,7 @@ public class TestSatisfaction
 	public void testAcademico30p() throws Exception
 	{
 		SoftwareSystem system = new FunctionsPointReader().execute(MainProgram.INSTANCE_DIRECTORY + "Academico/functions-point.xml", MainProgram.INSTANCE_DIRECTORY + "Academico/stakeholders-interest.xml");
-		FunctionPointsCalculator calculator = new FunctionPointsCalculator(system);
+		FunctionPointsCalculator calculator = new OptimizedFunctionPointsCalculator(system);
 		
 		assertEquals(46.9194, calculator.calculateSatisfactionPercentile(calculator.fromString("[000100100010000000000000001111100000000]")), 0.0001);
 		assertEquals(43.128, calculator.calculateSatisfactionPercentile(calculator.fromString("[001010000110000000000000000100100010000]")), 0.0001);
@@ -194,7 +195,7 @@ public class TestSatisfaction
 	public void testAcademico40p() throws Exception
 	{
 		SoftwareSystem system = new FunctionsPointReader().execute(MainProgram.INSTANCE_DIRECTORY + "Academico/functions-point.xml", MainProgram.INSTANCE_DIRECTORY + "Academico/stakeholders-interest.xml");
-		FunctionPointsCalculator calculator = new FunctionPointsCalculator(system);
+		FunctionPointsCalculator calculator = new OptimizedFunctionPointsCalculator(system);
 		
 		assertEquals(57.346, calculator.calculateSatisfactionPercentile(calculator.fromString("[101100100011001100100000000111100000000]")), 0.0001);
 		assertEquals(56.872, calculator.calculateSatisfactionPercentile(calculator.fromString("[001110101110011001100000000111000000000]")), 0.0001);
@@ -252,7 +253,7 @@ public class TestSatisfaction
 	public void testAcademico50p() throws Exception
 	{
 		SoftwareSystem system = new FunctionsPointReader().execute(MainProgram.INSTANCE_DIRECTORY + "Academico/functions-point.xml", MainProgram.INSTANCE_DIRECTORY + "Academico/stakeholders-interest.xml");
-		FunctionPointsCalculator calculator = new FunctionPointsCalculator(system);
+		FunctionPointsCalculator calculator = new OptimizedFunctionPointsCalculator(system);
 		
 		assertEquals(36.4929, calculator.calculateSatisfactionPercentile(calculator.fromString("[000001100010000000000000000010000000000]")), 0.0001);
 		assertEquals(39.3365, calculator.calculateSatisfactionPercentile(calculator.fromString("[001100110010000000000000000110000000000]")), 0.0001);
@@ -310,7 +311,7 @@ public class TestSatisfaction
 	public void testAcademico60p() throws Exception
 	{
 		SoftwareSystem system = new FunctionsPointReader().execute(MainProgram.INSTANCE_DIRECTORY + "Academico/functions-point.xml", MainProgram.INSTANCE_DIRECTORY + "Academico/stakeholders-interest.xml");
-		FunctionPointsCalculator calculator = new FunctionPointsCalculator(system);
+		FunctionPointsCalculator calculator = new OptimizedFunctionPointsCalculator(system);
 		
 		assertEquals(67.7725, calculator.calculateSatisfactionPercentile(calculator.fromString("[100100100110001000100000000111100110000]")), 0.0001);
 		assertEquals(67.2986, calculator.calculateSatisfactionPercentile(calculator.fromString("[001100101110011000100000000000110010000]")), 0.0001);
@@ -368,7 +369,7 @@ public class TestSatisfaction
 	public void testAcademico70p() throws Exception
 	{
 		SoftwareSystem system = new FunctionsPointReader().execute(MainProgram.INSTANCE_DIRECTORY + "Academico/functions-point.xml", MainProgram.INSTANCE_DIRECTORY + "Academico/stakeholders-interest.xml");
-		FunctionPointsCalculator calculator = new FunctionPointsCalculator(system);
+		FunctionPointsCalculator calculator = new OptimizedFunctionPointsCalculator(system);
 		
 		assertEquals(79.6209, calculator.calculateSatisfactionPercentile(calculator.fromString("[101110110011001101100000000010110110110]")), 0.0001);
 		assertEquals(79.1469, calculator.calculateSatisfactionPercentile(calculator.fromString("[100110101110001101100000000101100011110]")), 0.0001);
@@ -426,7 +427,7 @@ public class TestSatisfaction
 	public void testAcademico80p() throws Exception
 	{
 		SoftwareSystem system = new FunctionsPointReader().execute(MainProgram.INSTANCE_DIRECTORY + "Academico/functions-point.xml", MainProgram.INSTANCE_DIRECTORY + "Academico/stakeholders-interest.xml");
-		FunctionPointsCalculator calculator = new FunctionPointsCalculator(system);
+		FunctionPointsCalculator calculator = new OptimizedFunctionPointsCalculator(system);
 		
 		assertEquals(86.7299, calculator.calculateSatisfactionPercentile(calculator.fromString("[000100101010001100110000000011111110111]")), 0.0001);
 		assertEquals(86.7299, calculator.calculateSatisfactionPercentile(calculator.fromString("[101110101110011111100000000010101010111]")), 0.0001);
@@ -484,7 +485,7 @@ public class TestSatisfaction
 	public void testAcademico90p() throws Exception
 	{
 		SoftwareSystem system = new FunctionsPointReader().execute(MainProgram.INSTANCE_DIRECTORY + "Academico/functions-point.xml", MainProgram.INSTANCE_DIRECTORY + "Academico/stakeholders-interest.xml");
-		FunctionPointsCalculator calculator = new FunctionPointsCalculator(system);
+		FunctionPointsCalculator calculator = new OptimizedFunctionPointsCalculator(system);
 		
 		assertEquals(92.891, calculator.calculateSatisfactionPercentile(calculator.fromString("[101110100110001100111100011011111011111]")), 0.0001);
 		assertEquals(93.3649, calculator.calculateSatisfactionPercentile(calculator.fromString("[000100101111011101110101011111111010111]")), 0.0001);
@@ -542,7 +543,7 @@ public class TestSatisfaction
 	public void testGestaoPessoas10p() throws Exception
 	{
 		SoftwareSystem system = new FunctionsPointReader().execute(MainProgram.INSTANCE_DIRECTORY + "GestaoDePessoas/functions-point.xml", MainProgram.INSTANCE_DIRECTORY + "GestaoDePessoas/stakeholders-interest.xml");
-		FunctionPointsCalculator calculator = new FunctionPointsCalculator(system);
+		FunctionPointsCalculator calculator = new OptimizedFunctionPointsCalculator(system);
 		
 		assertEquals(16.6282, calculator.calculateSatisfactionPercentile(calculator.fromString("[00000000000000000000000000000000000000000000000000001100100000000]")), 0.0001);
 		assertEquals(15.7044, calculator.calculateSatisfactionPercentile(calculator.fromString("[00000000000000000000000000000000000000000000000000010110111000000]")), 0.0001);
@@ -600,7 +601,7 @@ public class TestSatisfaction
 	public void testGestaoPessoas20p() throws Exception
 	{
 		SoftwareSystem system = new FunctionsPointReader().execute(MainProgram.INSTANCE_DIRECTORY + "GestaoDePessoas/functions-point.xml", MainProgram.INSTANCE_DIRECTORY + "GestaoDePessoas/stakeholders-interest.xml");
-		FunctionPointsCalculator calculator = new FunctionPointsCalculator(system);
+		FunctionPointsCalculator calculator = new OptimizedFunctionPointsCalculator(system);
 		
 		assertEquals(23.0947, calculator.calculateSatisfactionPercentile(calculator.fromString("[00100000000000000000000000000000000000000000000000000000010000000]")), 0.0001);
 		assertEquals(23.0947, calculator.calculateSatisfactionPercentile(calculator.fromString("[00010000000000000000000000000000000000000000000000000000110000000]")), 0.0001);
@@ -658,7 +659,7 @@ public class TestSatisfaction
 	public void testGestaoPessoas30p() throws Exception
 	{
 		SoftwareSystem system = new FunctionsPointReader().execute(MainProgram.INSTANCE_DIRECTORY + "GestaoDePessoas/functions-point.xml", MainProgram.INSTANCE_DIRECTORY + "GestaoDePessoas/stakeholders-interest.xml");
-		FunctionPointsCalculator calculator = new FunctionPointsCalculator(system);
+		FunctionPointsCalculator calculator = new OptimizedFunctionPointsCalculator(system);
 		
 		assertEquals(36.9515, calculator.calculateSatisfactionPercentile(calculator.fromString("[10111000000000000000000001100000000000000000000000011000001000000]")), 0.0001);
 		assertEquals(37.4134, calculator.calculateSatisfactionPercentile(calculator.fromString("[00100000000100000000000000100000000000000000000000000000101000000]")), 0.0001);
@@ -716,7 +717,7 @@ public class TestSatisfaction
 	public void testGestaoPessoas40p() throws Exception
 	{
 		SoftwareSystem system = new FunctionsPointReader().execute(MainProgram.INSTANCE_DIRECTORY + "GestaoDePessoas/functions-point.xml", MainProgram.INSTANCE_DIRECTORY + "GestaoDePessoas/stakeholders-interest.xml");
-		FunctionPointsCalculator calculator = new FunctionPointsCalculator(system);
+		FunctionPointsCalculator calculator = new OptimizedFunctionPointsCalculator(system);
 		
 		assertEquals(51.2702, calculator.calculateSatisfactionPercentile(calculator.fromString("[00100000001100000000101001000011000000000000000000011100100000000]")), 0.0001);
 		assertEquals(50.3464, calculator.calculateSatisfactionPercentile(calculator.fromString("[10110000000100000000000000100010000000000000000111000100100000000]")), 0.0001);
@@ -774,7 +775,7 @@ public class TestSatisfaction
 	public void testGestaoPessoas50p() throws Exception
 	{
 		SoftwareSystem system = new FunctionsPointReader().execute(MainProgram.INSTANCE_DIRECTORY + "GestaoDePessoas/functions-point.xml", MainProgram.INSTANCE_DIRECTORY + "GestaoDePessoas/stakeholders-interest.xml");
-		FunctionPointsCalculator calculator = new FunctionPointsCalculator(system);
+		FunctionPointsCalculator calculator = new OptimizedFunctionPointsCalculator(system);
 		
 		assertEquals(95.1501, calculator.calculateSatisfactionPercentile(calculator.fromString("[00100111111001100111011011110011010110111001101111101101111111010]")), 0.0001);
 		assertEquals(95.1501, calculator.calculateSatisfactionPercentile(calculator.fromString("[10101110011011110110011001010010011010111010100111001100111111000]")), 0.0001);
@@ -832,7 +833,7 @@ public class TestSatisfaction
 	public void testGestaoPessoas60p() throws Exception
 	{
 		SoftwareSystem system = new FunctionsPointReader().execute(MainProgram.INSTANCE_DIRECTORY + "GestaoDePessoas/functions-point.xml", MainProgram.INSTANCE_DIRECTORY + "GestaoDePessoas/stakeholders-interest.xml");
-		FunctionPointsCalculator calculator = new FunctionPointsCalculator(system);
+		FunctionPointsCalculator calculator = new OptimizedFunctionPointsCalculator(system);
 		
 		assertEquals(86.836, calculator.calculateSatisfactionPercentile(calculator.fromString("[00110010001100100101001011000010010000111011000111011111101111010]")), 0.0001);
 		assertEquals(86.836, calculator.calculateSatisfactionPercentile(calculator.fromString("[00100011101101010111011001010010000010110000000011001100100111000]")), 0.0001);
@@ -890,7 +891,7 @@ public class TestSatisfaction
 	public void testGestaoPessoas70p() throws Exception
 	{
 		SoftwareSystem system = new FunctionsPointReader().execute(MainProgram.INSTANCE_DIRECTORY + "GestaoDePessoas/functions-point.xml", MainProgram.INSTANCE_DIRECTORY + "GestaoDePessoas/stakeholders-interest.xml");
-		FunctionPointsCalculator calculator = new FunctionPointsCalculator(system);
+		FunctionPointsCalculator calculator = new OptimizedFunctionPointsCalculator(system);
 		
 		assertEquals(61.4319, calculator.calculateSatisfactionPercentile(calculator.fromString("[10100010101100000000000011000010000000000000000110001110100000000]")), 0.0001);
 		assertEquals(61.4319, calculator.calculateSatisfactionPercentile(calculator.fromString("[10110010001100000000000011010011000000000000000010011111101000000]")), 0.0001);
@@ -948,7 +949,7 @@ public class TestSatisfaction
 	public void testGestaoPessoas80p() throws Exception
 	{
 		SoftwareSystem system = new FunctionsPointReader().execute(MainProgram.INSTANCE_DIRECTORY + "GestaoDePessoas/functions-point.xml", MainProgram.INSTANCE_DIRECTORY + "GestaoDePessoas/stakeholders-interest.xml");
-		FunctionPointsCalculator calculator = new FunctionPointsCalculator(system);
+		FunctionPointsCalculator calculator = new OptimizedFunctionPointsCalculator(system);
 		
 		assertEquals(78.5219, calculator.calculateSatisfactionPercentile(calculator.fromString("[00101010001000010000000001010010001100000000000111101101100111000]")), 0.0001);
 		assertEquals(78.5219, calculator.calculateSatisfactionPercentile(calculator.fromString("[10100011001110000000100011100010000000100000000111101110100111000]")), 0.0001);
@@ -1006,7 +1007,7 @@ public class TestSatisfaction
 	public void testGestaoPessoas90p() throws Exception
 	{
 		SoftwareSystem system = new FunctionsPointReader().execute(MainProgram.INSTANCE_DIRECTORY + "GestaoDePessoas/functions-point.xml", MainProgram.INSTANCE_DIRECTORY + "GestaoDePessoas/stakeholders-interest.xml");
-		FunctionPointsCalculator calculator = new FunctionPointsCalculator(system);
+		FunctionPointsCalculator calculator = new OptimizedFunctionPointsCalculator(system);
 		
 		assertEquals(67.4365, calculator.calculateSatisfactionPercentile(calculator.fromString("[00100010101000000000100111100000000101011010000111001101101000000]")), 0.0001);
 		assertEquals(69.2841, calculator.calculateSatisfactionPercentile(calculator.fromString("[10101010101110000000100000100011010110000000000011001111101000000]")), 0.0001);
@@ -1064,7 +1065,7 @@ public class TestSatisfaction
 	public void testParametros10p() throws Exception
 	{
 		SoftwareSystem system = new FunctionsPointReader().execute(MainProgram.INSTANCE_DIRECTORY + "Parametros/functions-point.xml", MainProgram.INSTANCE_DIRECTORY + "Parametros/stakeholders-interest.xml");
-		FunctionPointsCalculator calculator = new FunctionPointsCalculator(system);
+		FunctionPointsCalculator calculator = new OptimizedFunctionPointsCalculator(system);
 
 		assertEquals(15.3061, calculator.calculateSatisfactionPercentile(calculator.fromString("[00000000000000000010000000000000000000000000110100000000000000000000000000000000000000000000000000]")), 0.0001);
 		assertEquals(15.1927, calculator.calculateSatisfactionPercentile(calculator.fromString("[10000000000000010100000000000000000000000000010100000000000000000000000000000000000000000000000000]")), 0.0001);
@@ -1102,7 +1103,7 @@ public class TestSatisfaction
 	public void testParametros20p() throws Exception
 	{
 		SoftwareSystem system = new FunctionsPointReader().execute(MainProgram.INSTANCE_DIRECTORY + "Parametros/functions-point.xml", MainProgram.INSTANCE_DIRECTORY + "Parametros/stakeholders-interest.xml");
-		FunctionPointsCalculator calculator = new FunctionPointsCalculator(system);
+		FunctionPointsCalculator calculator = new OptimizedFunctionPointsCalculator(system);
 		
 		assertEquals(28.458, calculator.calculateSatisfactionPercentile(calculator.fromString("[00100000000000000110000000000000000000000000110100000000000001010000000000000001000000000000000000]")), 0.0001);
 		assertEquals(29.3651, calculator.calculateSatisfactionPercentile(calculator.fromString("[00000000000000000001000101000000000000000000110100000000000000000000000000000001000100000000000000]")), 0.0001);
@@ -1140,7 +1141,7 @@ public class TestSatisfaction
 	public void testParametros30p() throws Exception
 	{
 		SoftwareSystem system = new FunctionsPointReader().execute(MainProgram.INSTANCE_DIRECTORY + "Parametros/functions-point.xml", MainProgram.INSTANCE_DIRECTORY + "Parametros/stakeholders-interest.xml");
-		FunctionPointsCalculator calculator = new FunctionPointsCalculator(system);
+		FunctionPointsCalculator calculator = new OptimizedFunctionPointsCalculator(system);
 	
 		assertEquals(43.6508, calculator.calculateSatisfactionPercentile(calculator.fromString("[00000100000000001111001001110000000000000000111000000000000101011010000000000011000100000000000000]")), 0.0001);
 		assertEquals(43.424, calculator.calculateSatisfactionPercentile(calculator.fromString("[00100100001000000111110100100000000000000000111100000000000101100010000000000011000100000000000000]")), 0.0001);
@@ -1178,7 +1179,7 @@ public class TestSatisfaction
 	public void testParametros40p() throws Exception
 	{
 		SoftwareSystem system = new FunctionsPointReader().execute(MainProgram.INSTANCE_DIRECTORY + "Parametros/functions-point.xml", MainProgram.INSTANCE_DIRECTORY + "Parametros/stakeholders-interest.xml");
-		FunctionPointsCalculator calculator = new FunctionPointsCalculator(system);
+		FunctionPointsCalculator calculator = new OptimizedFunctionPointsCalculator(system);
 
 		assertEquals(53.7415, calculator.calculateSatisfactionPercentile(calculator.fromString("[00100111000000010111111000011000001000000100110100000000000001010011000000001111001100000000000000]")), 0.0001);
 		assertEquals(55.5556, calculator.calculateSatisfactionPercentile(calculator.fromString("[10110101000000011111011101111000000000000001111100000000000001000110000000001101110100000000000000]")), 0.0001);
@@ -1216,7 +1217,7 @@ public class TestSatisfaction
 	public void testParametros50p() throws Exception
 	{
 		SoftwareSystem system = new FunctionsPointReader().execute(MainProgram.INSTANCE_DIRECTORY + "Parametros/functions-point.xml", MainProgram.INSTANCE_DIRECTORY + "Parametros/stakeholders-interest.xml");
-		FunctionPointsCalculator calculator = new FunctionPointsCalculator(system);
+		FunctionPointsCalculator calculator = new OptimizedFunctionPointsCalculator(system);
 
 		assertEquals(63.9456, calculator.calculateSatisfactionPercentile(calculator.fromString("[10100000000000010101011110110000000011010000111100000011011001010011000000011101011100000000000000]")), 0.0001);
 		assertEquals(64.6259, calculator.calculateSatisfactionPercentile(calculator.fromString("[00100000000010011111011001110000000011010100110100000000000011010011000000010111010101000000000000]")), 0.0001);
@@ -1254,7 +1255,7 @@ public class TestSatisfaction
 	public void testParametros60p() throws Exception
 	{
 		SoftwareSystem system = new FunctionsPointReader().execute(MainProgram.INSTANCE_DIRECTORY + "Parametros/functions-point.xml", MainProgram.INSTANCE_DIRECTORY + "Parametros/stakeholders-interest.xml");
-		FunctionPointsCalculator calculator = new FunctionPointsCalculator(system);
+		FunctionPointsCalculator calculator = new OptimizedFunctionPointsCalculator(system);
 
 		assertEquals(73.4694, calculator.calculateSatisfactionPercentile(calculator.fromString("[00111101000000011101111111110000000010011100110111100100000011011111100000011101011101000000000000]")), 0.0001);
 		assertEquals(73.6961, calculator.calculateSatisfactionPercentile(calculator.fromString("[10101101100000001111011101110000001011010101111111001110011101111111000000111111111111000000000000]")), 0.0001);
@@ -1292,7 +1293,7 @@ public class TestSatisfaction
 	public void testParametros70p() throws Exception
 	{
 		SoftwareSystem system = new FunctionsPointReader().execute(MainProgram.INSTANCE_DIRECTORY + "Parametros/functions-point.xml", MainProgram.INSTANCE_DIRECTORY + "Parametros/stakeholders-interest.xml");
-		FunctionPointsCalculator calculator = new FunctionPointsCalculator(system);
+		FunctionPointsCalculator calculator = new OptimizedFunctionPointsCalculator(system);
 
 		assertEquals(83.22, calculator.calculateSatisfactionPercentile(calculator.fromString("[10100001101000011101111010111000000011000101111101000111001011010110011111110101110111000000000000]")), 0.0001);
 		assertEquals(82.9932, calculator.calculateSatisfactionPercentile(calculator.fromString("[10110111000000011111011010111000001011010101110111011101001101110111001111110111011101000000000000]")), 0.0001);
@@ -1330,7 +1331,7 @@ public class TestSatisfaction
 	public void testParametros80p() throws Exception
 	{
 		SoftwareSystem system = new FunctionsPointReader().execute(MainProgram.INSTANCE_DIRECTORY + "Parametros/functions-point.xml", MainProgram.INSTANCE_DIRECTORY + "Parametros/stakeholders-interest.xml");
-		FunctionPointsCalculator calculator = new FunctionPointsCalculator(system);
+		FunctionPointsCalculator calculator = new OptimizedFunctionPointsCalculator(system);
 
 		assertEquals(89.7959, calculator.calculateSatisfactionPercentile(calculator.fromString("[10110001101011001101111111111001111011000100110101000100011111010111001111011111111101010000000100]")), 0.0001);
 		assertEquals(90.0227, calculator.calculateSatisfactionPercentile(calculator.fromString("[10110011001011001101011111111001011010001100110111011111011111110110011111110101111101000000001100]")), 0.0001);
@@ -1368,7 +1369,7 @@ public class TestSatisfaction
 	public void testParametros90p() throws Exception
 	{
 		SoftwareSystem system = new FunctionsPointReader().execute(MainProgram.INSTANCE_DIRECTORY + "Parametros/functions-point.xml", MainProgram.INSTANCE_DIRECTORY + "Parametros/stakeholders-interest.xml");
-		FunctionPointsCalculator calculator = new FunctionPointsCalculator(system);
+		FunctionPointsCalculator calculator = new OptimizedFunctionPointsCalculator(system);
 
 		assertEquals(96.3719, calculator.calculateSatisfactionPercentile(calculator.fromString("[11110011000010001111111110111101011010011101111111100101101011111110111101111101010111111100011100]")), 0.0001);
 		assertEquals(96.3719, calculator.calculateSatisfactionPercentile(calculator.fromString("[11111011001011011101011010111101110010011100110101011111111111110110111101010111110101011100110100]")), 0.0001);
@@ -1406,7 +1407,7 @@ public class TestSatisfaction
 	public void testBolsaValores10p() throws Exception
 	{
 		SoftwareSystem system = new FunctionsPointReader().execute(MainProgram.INSTANCE_DIRECTORY + "BolsaDeValores/functions-point.xml", MainProgram.INSTANCE_DIRECTORY + "BolsaDeValores/stakeholders-interest.xml");
-		FunctionPointsCalculator calculator = new FunctionPointsCalculator(system);
+		FunctionPointsCalculator calculator = new OptimizedFunctionPointsCalculator(system);
 		
 		assertEquals(19.6429, calculator.calculateSatisfactionPercentile(calculator.fromString("[00000000000000000000000000110000000000110010010000000100000000111000000011010110011111110000000000000000000001001000000000000011000000000000000000000000000000000000000000000000000000000000000000000000]")), 0.0001);
 		assertEquals(19.8052, calculator.calculateSatisfactionPercentile(calculator.fromString("[00000000000000000000000000100000000100110011100100000100000000100000000011001111100111110000000000000000000000000000000000000101000000000000000100000000000000000000000000000000000000000000000000000000]")), 0.0001);
@@ -1444,7 +1445,7 @@ public class TestSatisfaction
 	public void testBolsaValores20p() throws Exception
 	{
 		SoftwareSystem system = new FunctionsPointReader().execute(MainProgram.INSTANCE_DIRECTORY + "BolsaDeValores/functions-point.xml", MainProgram.INSTANCE_DIRECTORY + "BolsaDeValores/stakeholders-interest.xml");
-		FunctionPointsCalculator calculator = new FunctionPointsCalculator(system);
+		FunctionPointsCalculator calculator = new OptimizedFunctionPointsCalculator(system);
 		
 		assertEquals(38.474, calculator.calculateSatisfactionPercentile(calculator.fromString("[00000000000000001010000000110110001111111111111101101001100000101000000011111111111111110100000000000000000000001000000000000111101010100010110100000000000000100000000000000000000000000000000000000000]")), 0.0001);
 		assertEquals(38.7987, calculator.calculateSatisfactionPercentile(calculator.fromString("[00000000000000010000000000110100011101111111110110010111100000110010100011011111111111110000000000000000100000000000000000000111001010101010111100000000000000100000000000000000000000000000000000000000]")), 0.0001);
@@ -1482,7 +1483,7 @@ public class TestSatisfaction
 	public void testBolsaValores30p() throws Exception
 	{
 		SoftwareSystem system = new FunctionsPointReader().execute(MainProgram.INSTANCE_DIRECTORY + "BolsaDeValores/functions-point.xml", MainProgram.INSTANCE_DIRECTORY + "BolsaDeValores/stakeholders-interest.xml");
-		FunctionPointsCalculator calculator = new FunctionPointsCalculator(system);
+		FunctionPointsCalculator calculator = new OptimizedFunctionPointsCalculator(system);
 		
 		assertEquals(59.9026, calculator.calculateSatisfactionPercentile(calculator.fromString("[10100000000000111111000000111110011111111111111111111111000100111010001011011111111111110000110000111110110000001001001000000111111111111111111111110000000000100000000001100000000000001100000001101000]")), 0.0001);
 		assertEquals(60.3896, calculator.calculateSatisfactionPercentile(calculator.fromString("[10100000000000111111000000111110011111111111111111111110100000111011000011111111111111110100011111111110010000001001001000000111111111111111111111110000000000100000000001100000001100000000001100000000]")), 0.0001);
@@ -1520,7 +1521,7 @@ public class TestSatisfaction
 	public void testBolsaValores40p() throws Exception
 	{
 		SoftwareSystem system = new FunctionsPointReader().execute(MainProgram.INSTANCE_DIRECTORY + "BolsaDeValores/functions-point.xml", MainProgram.INSTANCE_DIRECTORY + "BolsaDeValores/stakeholders-interest.xml");
-		FunctionPointsCalculator calculator = new FunctionPointsCalculator(system);
+		FunctionPointsCalculator calculator = new OptimizedFunctionPointsCalculator(system);
 		
 		assertEquals(67.6948, calculator.calculateSatisfactionPercentile(calculator.fromString("[10100000000111111111000000111110011111111111111111111111100010111011000011111111111111110000011111111110110000101000001000101111111111111111111111100000001101111000000000000001100000000001101101111100]")), 0.0001);
 		assertEquals(67.8571, calculator.calculateSatisfactionPercentile(calculator.fromString("[11100000000100111111000000111110111111111111111111111111101011111010000111011111111111110010011111111110110001101000001110000111111111111111111111100000000001111000000000001110001100000000001101101100]")), 0.0001);
@@ -1558,7 +1559,7 @@ public class TestSatisfaction
 	public void testBolsaValores50p() throws Exception
 	{
 		SoftwareSystem system = new FunctionsPointReader().execute(MainProgram.INSTANCE_DIRECTORY + "BolsaDeValores/functions-point.xml", MainProgram.INSTANCE_DIRECTORY + "BolsaDeValores/stakeholders-interest.xml");
-		FunctionPointsCalculator calculator = new FunctionPointsCalculator(system);
+		FunctionPointsCalculator calculator = new OptimizedFunctionPointsCalculator(system);
 		
 		assertEquals(51.461, calculator.calculateSatisfactionPercentile(calculator.fromString("[00100000000000011111000000110110011111111111111111110111100100111010000011011111111111110000000000000000010001000000001000000111110111111111111111100000000001111000000000000000000000000000000000000000]")), 0.0001);
 		assertEquals(50.487, calculator.calculateSatisfactionPercentile(calculator.fromString("[00000000000000011110000000110110011111111111111011111111110100111010000011011111111111110000000000110010110001000000001000000111101111111111111101010000000000100000000000000000000000000000000000000000]")), 0.0001);
@@ -1596,7 +1597,7 @@ public class TestSatisfaction
 	public void testBolsaValores60p() throws Exception
 	{
 		SoftwareSystem system = new FunctionsPointReader().execute(MainProgram.INSTANCE_DIRECTORY + "BolsaDeValores/functions-point.xml", MainProgram.INSTANCE_DIRECTORY + "BolsaDeValores/stakeholders-interest.xml");
-		FunctionPointsCalculator calculator = new FunctionPointsCalculator(system);
+		FunctionPointsCalculator calculator = new OptimizedFunctionPointsCalculator(system);
 		
 		assertEquals(74.513, calculator.calculateSatisfactionPercentile(calculator.fromString("[11101010000000111111010011111111111111111111111111111111110000111110010111011111111111110110011111111010110000001111111000000111111111111111111111110000001101111000001110000001111100000001111101101000]")), 0.0001);
 		assertEquals(74.513, calculator.calculateSatisfactionPercentile(calculator.fromString("[11101100111111111111000000111110111111111111111111111111110000111011010011011111111111111011111111111100110000001111000110000111110111111111111111110000001111111000000000001101100000001101111101101000]")), 0.0001);
@@ -1634,7 +1635,7 @@ public class TestSatisfaction
 	public void testBolsaValores70p() throws Exception
 	{
 		SoftwareSystem system = new FunctionsPointReader().execute(MainProgram.INSTANCE_DIRECTORY + "BolsaDeValores/functions-point.xml", MainProgram.INSTANCE_DIRECTORY + "BolsaDeValores/stakeholders-interest.xml");
-		FunctionPointsCalculator calculator = new FunctionPointsCalculator(system);
+		FunctionPointsCalculator calculator = new OptimizedFunctionPointsCalculator(system);
 		
 		assertEquals(81.4935, calculator.calculateSatisfactionPercentile(calculator.fromString("[01110000110111111111111111111110111111111111111111111111111011111010011011011111111111110101111111111010110001001111111110000111111111111111111111111101100001111000001100000001101101101101101101101000]")), 0.0001);
 		assertEquals(81.8182, calculator.calculateSatisfactionPercentile(calculator.fromString("[11111111111111111111000000111111111111111111111111111111101100111010100011011111111111110011111111111110110000101111111111000111111111111111111111110001101101110000001101101101101110001100001101101100]")), 0.0001);
@@ -1672,7 +1673,7 @@ public class TestSatisfaction
 	public void testBolsaValores80p() throws Exception
 	{
 		SoftwareSystem system = new FunctionsPointReader().execute(MainProgram.INSTANCE_DIRECTORY + "BolsaDeValores/functions-point.xml", MainProgram.INSTANCE_DIRECTORY + "BolsaDeValores/stakeholders-interest.xml");
-		FunctionPointsCalculator calculator = new FunctionPointsCalculator(system);
+		FunctionPointsCalculator calculator = new OptimizedFunctionPointsCalculator(system);
 		
 		assertEquals(88.6364, calculator.calculateSatisfactionPercentile(calculator.fromString("[11101101111111111111111111111111111111111111111111111111111011111110100011011111111111110001111111111110110100101111111110111111111111111111111111111100001111111000000001101111101111111101111101101000]")), 0.0001);
 		assertEquals(88.474, calculator.calculateSatisfactionPercentile(calculator.fromString("[11111111111111111111010011111111111111111111111111111111101011111010001011011111111111110111111111111110110000001111111100111111111111111111111111111101111101111000001110001111101101111111111111101000]")), 0.0001);
@@ -1710,7 +1711,7 @@ public class TestSatisfaction
 	public void testBolsaValores90p() throws Exception
 	{
 		SoftwareSystem system = new FunctionsPointReader().execute(MainProgram.INSTANCE_DIRECTORY + "BolsaDeValores/functions-point.xml", MainProgram.INSTANCE_DIRECTORY + "BolsaDeValores/stakeholders-interest.xml");
-		FunctionPointsCalculator calculator = new FunctionPointsCalculator(system);
+		FunctionPointsCalculator calculator = new OptimizedFunctionPointsCalculator(system);
 		
 		assertEquals(94.8052, calculator.calculateSatisfactionPercentile(calculator.fromString("[11111111111111111111111111111111111111111111111111111111101011111111001111011111111111110101111111111110110101101111111111110111111111111111111111111111111111111101001101101111111111111111111111111100]")), 0.0001);
 		assertEquals(94.9675, calculator.calculateSatisfactionPercentile(calculator.fromString("[11111111111111111111111111111111111111111111111111111111111011111111010011011111111111111101111111111110110101101111111111110111111111111111111111111111101111111000001111111101111111111111111111111110]")), 0.0001);

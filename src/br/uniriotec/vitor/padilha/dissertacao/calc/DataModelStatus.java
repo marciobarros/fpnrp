@@ -97,7 +97,7 @@ class DataFunctionStatus
 		recordTypeStatus[index].useDataElement(det);
 	}
 	
-	public int countOptimizedRecordTypes()
+	public int countRecordTypes()
 	{
 		int counter = 0;
 		
@@ -108,27 +108,12 @@ class DataFunctionStatus
 		return counter;
 	}
 	
-	public int countOptimizedDataElements()
+	public int countDataElements()
 	{
 		int counter = 0;
 		
 		for (int i = 0; i < recordTypeStatus.length; i++)
 			counter += recordTypeStatus[i].getOptimizedFieldCounter();
-		
-		return counter;
-	}
-	
-	public int countClassicRecordTypes()
-	{
-		return recordTypeStatus.length;
-	}
-	
-	public int countClassicDataElements()
-	{
-		int counter = 0;
-		
-		for (int i = 0; i < recordTypeStatus.length; i++)
-			counter += recordTypeStatus[i].getClassicFieldCounter();
 		
 		return counter;
 	}
@@ -143,23 +128,10 @@ class RecordTypeStatus
 {
 	private int usedFieldMask;
 	private int fieldCounter;
-	private int maxFieldCounter;
 	
 	public RecordTypeStatus(RecordType recordType)
 	{
-		this.maxFieldCounter = calculateMaximumFieldCounter(recordType);
 		clear();
-	}
-	
-	private int calculateMaximumFieldCounter(RecordType recordType)
-	{
-		int count = 0;
-		
-		for (DataElement det : recordType.getDataElements())
-			if (det.isAccountableForDataFunction())
-				count++;
-		
-		return count;
 	}
 	
 	public void clear()
@@ -183,10 +155,5 @@ class RecordTypeStatus
 	public int getOptimizedFieldCounter()
 	{
 		return fieldCounter;
-	}
-	
-	public int getClassicFieldCounter()
-	{
-		return maxFieldCounter;
 	}
 }

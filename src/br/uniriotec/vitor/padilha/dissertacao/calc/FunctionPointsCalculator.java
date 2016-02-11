@@ -9,7 +9,6 @@ import lombok.Getter;
 import br.uniriotec.vitor.padilha.dissertacao.model.SoftwareSystem;
 import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.DataElement;
 import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.DataFunction;
-import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.RecordType;
 import br.uniriotec.vitor.padilha.dissertacao.model.stakeholderModel.Interest;
 import br.uniriotec.vitor.padilha.dissertacao.model.stakeholderModel.Stakeholder;
 import br.uniriotec.vitor.padilha.dissertacao.model.transactionModel.FileReference;
@@ -21,13 +20,10 @@ import br.uniriotec.vitor.padilha.dissertacao.model.transactionModel.Transaction
  * 
  * @author marciobarros
  */
-public class FunctionPointsCalculator
+public abstract class FunctionPointsCalculator
 {
 	private SoftwareSystem system;
-	private DataModelStatus dataModelStatus;
 	private int[] transactionCost;
-	private @Getter int totalOptimizedCost;
-	private @Getter int totalClassicCost;
 	private int[] transactionSatisfaction;
 	private @Getter int totalSatisfaction;
 	private @Getter int transactionCount;
@@ -38,13 +34,18 @@ public class FunctionPointsCalculator
 	public FunctionPointsCalculator(SoftwareSystem system)
 	{
 		this.system = system;
-		this.dataModelStatus = new DataModelStatus(system.getDataModel());
 		this.transactionCount = system.getTransactionModel().countTransactionFunctions();
 		this.transactionCost = calculateTransactionFunctionPoints();
-		this.totalOptimizedCost = calculateTotalOptimizedCost();
-		this.totalClassicCost = calculateTotalClassicCost();
 		this.transactionSatisfaction = calculateTransactionSatisfaction();
-		this.totalSatisfaction = calculateTotalSatisfaction();
+		this.totalSatisfaction = calculateSatisfaction(allTransactions());
+	}
+
+	/**
+	 * Returns the system under analysis to the calculator's subclasses
+	 */
+	protected SoftwareSystem getSystem()
+	{
+		return system;
 	}
 	
 	/**
@@ -139,66 +140,6 @@ public class FunctionPointsCalculator
 		Complexity complexity = Complexity.calculateTransactionComplexity(ftrCount, detCount, transaction.getType());
 		return complexity.calculateFunctionPoints(transaction.getType());
 	}
-
-	/**
-	 * Counts the record types comprising a data function
-	 */
-	public int countDataFunctionRecordTypes(DataFunction dataFunction) 
-	{
-		return dataFunction.countRecordTypes();
-	}
-
-	/**
-	 * Counts the data elements comprising a data function
-	 */
-	public int countDataFunctionDataElements(DataFunction dataFunction) 
-	{
-		int detCount = 0;
-		
-		for (RecordType ret : dataFunction.getRecordTypes())
-			for (DataElement det : ret.getDataElements())
-				if (det.isAccountableForDataFunction())
-					detCount++;
-		
-		return detCount;
-	}
-
-	/**
-	 * Calculates the complexity of a data function
-	 */
-	public Complexity calculateDataFunctionComplexity(DataFunction dataFunction)
-	{
-		int retCount = countDataFunctionRecordTypes(dataFunction);
-		int detCount = countDataFunctionDataElements(dataFunction);
-		return Complexity.calculateDataFunctionComplexity(retCount, detCount);
-	}
-
-	/**
-	 * Calculates the number of function points associated to a data function
-	 */
-	public int calculateDataFunctionFunctionPoints(DataFunction dataFunction)
-	{
-		int retCount = countDataFunctionRecordTypes(dataFunction);
-		int detCount = countDataFunctionDataElements(dataFunction);
-		Complexity complexity = Complexity.calculateDataFunctionComplexity(retCount, detCount);
-		return complexity.calculateFunctionPoints(dataFunction.getType());
-	}
-
-	/**
-	 * Calculates the total cost for the system
-	 */
-	private int calculateTotalOptimizedCost()
-	{
-		return calculateOptimizedCost(allTransactions());
-	}
-
-	/**
-	 * Calculates the total cost for the system
-	 */
-	private int calculateTotalClassicCost()
-	{
-		return calculateClassicCost(allTransactions());
-	}
 	
 	/**
 	 * Calculates stakeholder's satisfaction for each transaction
@@ -218,164 +159,16 @@ public class FunctionPointsCalculator
 		
 		return satisfaction;
 	}
-	
-	/**
-	 * Calculates the total stakeholder's satisfaction for the system
-	 */
-	private int calculateTotalSatisfaction()
-	{
-		return calculateSatisfaction(allTransactions());
-	}
 
 	/**
 	 * Calculates the cost of implementing a set of transactions - optimized version
 	 */
-	public int calculateOptimizedCost(boolean[] selectedTransactions)
-	{
-		selectedTransactions = expandSelectionDueDependencies(selectedTransactions);
-		calculateDataModelStatus(selectedTransactions);
-		return calculateFunctionPointsTransactionModel(selectedTransactions) + calculateDataModelOptimizedFunctionPoints();
-	}
-
-	/**
-	 * Calculates the cost of implementing a set of transactions - classic version
-	 */
-	public int calculateClassicCost(boolean[] selectedTransactions)
-	{
-		selectedTransactions = expandSelectionDueDependencies(selectedTransactions);
-		calculateDataModelStatus(selectedTransactions);
-		return calculateFunctionPointsTransactionModel(selectedTransactions) + calculateDataModelClassicFunctionPoints();
-	}
-	
-	/**
-	 * Calculates the status of the data model according to the selected transactions
-	 */
-	public void calculateDataModelStatus(boolean[] selectedTransactions)
-	{
-		dataModelStatus.clear();
-		
-		for (int i = 0; i < transactionCount; i++)
-		{
-			if (selectedTransactions[i])
-			{
-				TransactionFunction transaction = system.getTransactionModel().getTransactionFunctionIndex(i);
-				markUsedDataElements(dataModelStatus, transaction);
-			}
-		}		
-	}
-
-	/**
-	 * Marks the data elements used by a transaction function
-	 */
-	private void markUsedDataElements(DataModelStatus dataModelStatus, TransactionFunction transaction)
-	{
-		for (FileReference reference : transaction.getFileReferences())
-		{
-			if (reference.isUseAllFields())
-			{
-				for (DataElement dataElement : reference.getReferencedRecordType().getDataElements())
-				{
-					if (dataElement.isAccountableForDataFunction())
-						dataModelStatus.useDataElement(dataElement);
-				}
-			}
-			else
-			{
-				for (DataElement dataElement : reference.getDataElements())
-				{
-					if (dataElement.isAccountableForDataFunction())
-						dataModelStatus.useDataElement(dataElement);
-				}
-			}
-		}
-	}
-	
-	/**
-	 * Calculates the amount of function points required to implement the data model - optimized version
-	 */
-	private int calculateDataModelOptimizedFunctionPoints()
-	{
-		int sum = 0;
-		
-		for (int i = 0; i < system.getDataModel().countDataFunctions(); i++)
-		{
-			DataFunction df = system.getDataModel().getDataFunctionIndex(i);
-			DataFunctionStatus dfs = dataModelStatus.getDataFunctionStatus(i);
-			int retCount = dfs.countOptimizedRecordTypes();
-			int detCount = dfs.countOptimizedDataElements();
-			
-			if (detCount > 0)
-				sum += Complexity.calculateDataFunctionComplexity(retCount, detCount).calculateFunctionPoints(df.getType());
-		}
-		
-		return sum;
-	}
-	
-	/**
-	 * Calculates the amount of function points required to implement the data model - classic version
-	 */
-	private int calculateDataModelClassicFunctionPoints()
-	{
-		int sum = 0;
-		
-		for (int i = 0; i < system.getDataModel().countDataFunctions(); i++)
-		{
-			DataFunction df = system.getDataModel().getDataFunctionIndex(i);
-			DataFunctionStatus dfs = dataModelStatus.getDataFunctionStatus(i);
-			int retCount = dfs.countClassicRecordTypes();
-			int detCount = dfs.countClassicDataElements();
-			
-			if (detCount > 0)
-				sum += Complexity.calculateDataFunctionComplexity(retCount, detCount).calculateFunctionPoints(df.getType());
-		}
-		
-		return sum;
-	}
-	
-	/**
-	 * Returns the count of classic record types for a data function
-	 */
-	public int countClassicRecordTypes(DataFunction dataFunction)
-	{
-		int index = dataFunction.getIndex();
-		DataFunctionStatus dfs = dataModelStatus.getDataFunctionStatus(index);
-		return dfs.countClassicRecordTypes();
-	}
-	
-	/**
-	 * Returns the count of classic data elements for a data function
-	 */
-	public int countClassicDataElements(DataFunction dataFunction)
-	{
-		int index = dataFunction.getIndex();
-		DataFunctionStatus dfs = dataModelStatus.getDataFunctionStatus(index);
-		return dfs.countClassicDataElements();
-	}
-	
-	/**
-	 * Returns the count of optimized record types for a data function
-	 */
-	public int countOptimizedRecordTypes(DataFunction dataFunction)
-	{
-		int index = dataFunction.getIndex();
-		DataFunctionStatus dfs = dataModelStatus.getDataFunctionStatus(index);
-		return dfs.countOptimizedRecordTypes();
-	}
-	
-	/**
-	 * Returns the count of optimized data elements for a data function
-	 */
-	public int countOptimizedDataElements(DataFunction dataFunction)
-	{
-		int index = dataFunction.getIndex();
-		DataFunctionStatus dfs = dataModelStatus.getDataFunctionStatus(index);
-		return dfs.countOptimizedDataElements();
-	}
+	public abstract int calculateCost(boolean[] selectedTransactions);
 
 	/**
 	 * Calculates the amount of function points required to implement the transaction model alone
 	 */
-	private int calculateFunctionPointsTransactionModel(boolean[] selectedTransactions)
+	protected int calculateFunctionPointsTransactionModel(boolean[] selectedTransactions)
 	{
 		int sum = 0;
 		
@@ -556,7 +349,7 @@ public class FunctionPointsCalculator
 	}
 
 	/**
-	 * Fisher–Yates shuffle algorithm
+	 * Fisher-Yates shuffle algorithm
 	 */
 	private void shuffle(int[] data)
 	{

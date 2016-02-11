@@ -11,7 +11,8 @@ import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.DataFunction;
 public class SolutionSimulator
 {
 	private SoftwareSystem system;
-	private FunctionPointsCalculator calculator;
+	private ClassicFunctionPointsCalculator classicCalculator;
+	private OptimizedFunctionPointsCalculator optimizedCalculator;
 
 	/**
 	 * Initializes the simulator
@@ -19,7 +20,8 @@ public class SolutionSimulator
 	public SolutionSimulator(SoftwareSystem system)
 	{
 		this.system = system;
-		this.calculator = new FunctionPointsCalculator(system);
+		this.classicCalculator = new ClassicFunctionPointsCalculator(system);
+		this.optimizedCalculator = new OptimizedFunctionPointsCalculator(system);
 	}
 	
 	/**
@@ -27,18 +29,18 @@ public class SolutionSimulator
 	 */
 	public boolean checkDifferent(boolean[] solution)
 	{
-		boolean[] expandedSolution = calculator.expandSelectionDueDependencies(solution);
-		calculator.calculateDataModelStatus(expandedSolution);
+		boolean[] expandedSolution = classicCalculator.expandSelectionDueDependencies(solution);
+		optimizedCalculator.calculateDataModelStatus(expandedSolution);
 		
 		for (int i = 0; i < system.getDataModel().countDataFunctions(); i++)
 		{
 			DataFunction dataFunction = system.getDataModel().getDataFunctionIndex(i);
 			
-			int retCountClassic = calculator.countClassicRecordTypes(dataFunction);
-			int detCountClassic = calculator.countClassicDataElements(dataFunction);
+			int retCountClassic = classicCalculator.countRecordTypes(dataFunction);
+			int detCountClassic = classicCalculator.countDataElements(dataFunction);
 			
-			int retCountOptimized = calculator.countOptimizedRecordTypes(dataFunction);
-			int detCountOptimized = calculator.countOptimizedDataElements(dataFunction);
+			int retCountOptimized = optimizedCalculator.countRecordTypes(dataFunction);
+			int detCountOptimized = optimizedCalculator.countDataElements(dataFunction);
 			
 			if (retCountClassic != retCountOptimized)
 				return true;
@@ -55,19 +57,19 @@ public class SolutionSimulator
 	 */
 	public boolean checkSignificantlyDifferent(boolean[] solution)
 	{
-		boolean[] expandedSolution = calculator.expandSelectionDueDependencies(solution);
-		calculator.calculateDataModelStatus(expandedSolution);
+		boolean[] expandedSolution = classicCalculator.expandSelectionDueDependencies(solution);
+		optimizedCalculator.calculateDataModelStatus(expandedSolution);
 		
 		for (int i = 0; i < system.getDataModel().countDataFunctions(); i++)
 		{
 			DataFunction dataFunction = system.getDataModel().getDataFunctionIndex(i);
 			
-			int retCountClassic = calculator.countClassicRecordTypes(dataFunction);
-			int detCountClassic = calculator.countClassicDataElements(dataFunction);
+			int retCountClassic = classicCalculator.countRecordTypes(dataFunction);
+			int detCountClassic = classicCalculator.countDataElements(dataFunction);
 			Complexity complexityClassic = Complexity.calculateDataFunctionComplexity(retCountClassic, detCountClassic);
 			
-			int retCountOptimized = calculator.countOptimizedRecordTypes(dataFunction);
-			int detCountOptimized = calculator.countOptimizedDataElements(dataFunction);
+			int retCountOptimized = optimizedCalculator.countRecordTypes(dataFunction);
+			int detCountOptimized = optimizedCalculator.countDataElements(dataFunction);
 			Complexity complexityOptimized = Complexity.calculateDataFunctionComplexity(retCountOptimized, detCountOptimized);
 			
 			if (complexityClassic != complexityOptimized)
@@ -93,13 +95,13 @@ public class SolutionSimulator
 		{
 			DataFunction dataFunction = system.getDataModel().getDataFunctionIndex(i);
 			
-			int retCountClassic = calculator.countClassicRecordTypes(dataFunction);
-			int detCountClassic = calculator.countClassicDataElements(dataFunction);
+			int retCountClassic = classicCalculator.countRecordTypes(dataFunction);
+			int detCountClassic = classicCalculator.countDataElements(dataFunction);
 			Complexity complexityClassic = Complexity.calculateDataFunctionComplexity(retCountClassic, detCountClassic);
 			int functionPointsClassic = complexityClassic.calculateFunctionPoints(dataFunction.getType());
 			
-			int retCountOptimized = calculator.countOptimizedRecordTypes(dataFunction);
-			int detCountOptimized = calculator.countOptimizedDataElements(dataFunction);
+			int retCountOptimized = optimizedCalculator.countRecordTypes(dataFunction);
+			int detCountOptimized = optimizedCalculator.countDataElements(dataFunction);
 			Complexity complexityOptimized = Complexity.calculateDataFunctionComplexity(retCountOptimized, detCountOptimized);
 			int functionPointsOptimized = complexityOptimized.calculateFunctionPoints(dataFunction.getType());
 			
@@ -119,21 +121,21 @@ public class SolutionSimulator
 	 */
 	public int calculateDifference(boolean[] solution)
 	{
-		boolean[] expandedSolution = calculator.expandSelectionDueDependencies(solution);
-		calculator.calculateDataModelStatus(expandedSolution);
+		boolean[] expandedSolution = classicCalculator.expandSelectionDueDependencies(solution);
+		optimizedCalculator.calculateDataModelStatus(expandedSolution);
 		int sum = 0;
 		
 		for (int i = 0; i < system.getDataModel().countDataFunctions(); i++)
 		{
 			DataFunction dataFunction = system.getDataModel().getDataFunctionIndex(i);
 			
-			int retCountClassic = calculator.countClassicRecordTypes(dataFunction);
-			int detCountClassic = calculator.countClassicDataElements(dataFunction);
+			int retCountClassic = classicCalculator.countRecordTypes(dataFunction);
+			int detCountClassic = classicCalculator.countDataElements(dataFunction);
 			Complexity complexityClassic = Complexity.calculateDataFunctionComplexity(retCountClassic, detCountClassic);
 			int functionPointsClassic = complexityClassic.calculateFunctionPoints(dataFunction.getType());
 			
-			int retCountOptimized = calculator.countOptimizedRecordTypes(dataFunction);
-			int detCountOptimized = calculator.countOptimizedDataElements(dataFunction);
+			int retCountOptimized = optimizedCalculator.countRecordTypes(dataFunction);
+			int detCountOptimized = optimizedCalculator.countDataElements(dataFunction);
 			Complexity complexityOptimized = Complexity.calculateDataFunctionComplexity(retCountOptimized, detCountOptimized);
 			int functionPointsOptimized = complexityOptimized.calculateFunctionPoints(dataFunction.getType());
 			
@@ -155,7 +157,7 @@ public class SolutionSimulator
 		
 		for (int i = 0; i < numberOfEvaluations; i++)
 		{
-			boolean[] random = calculator.randomTransactions(proportion);
+			boolean[] random = classicCalculator.randomTransactions(proportion);
 			
 			if (checkDifferent(random))
 				count++;
@@ -173,7 +175,7 @@ public class SolutionSimulator
 		
 		for (int i = 0; i < numberOfEvaluations; i++)
 		{
-			boolean[] random = calculator.randomTransactions(proportion);
+			boolean[] random = classicCalculator.randomTransactions(proportion);
 			
 			if (checkSignificantlyDifferent(random))
 				count++;
@@ -191,7 +193,7 @@ public class SolutionSimulator
 		
 		for (int i = 0; i < numberOfEvaluations; i++)
 		{
-			boolean[] random = calculator.randomTransactions(proportion);
+			boolean[] random = classicCalculator.randomTransactions(proportion);
 			sum += calculateDifference(random);
 		}
 		
