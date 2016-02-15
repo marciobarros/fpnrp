@@ -80,7 +80,7 @@ public class FunctionPointsProblem extends Problem
 	/**
 	 * Converts a solution to a boolean array indicating the presence of transactions
 	 */
-	private boolean[] convertSolutionBooleanArray(Solution solution)
+	public boolean[] convertSolutionBooleanArray(Solution solution)
 	{
 		Binary portfolio = (Binary) solution.getDecisionVariables()[0];
 		boolean[] transactions = new boolean[calculator.getTransactionCount()];

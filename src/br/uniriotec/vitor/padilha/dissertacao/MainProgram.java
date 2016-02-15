@@ -110,8 +110,8 @@ public class MainProgram
 	{
 //		showProperties(INSTANCES_NAMES);
 //		simulateDifferences(INSTANCES_NAMES);
-//		optimize("saida fpnrp 50c 80TT.txt", true, INSTANCES_NAMES);	
-//		optimize("saida classic 50c 80TT.txt", false, INSTANCES_NAMES);
+		optimize("saida fpnrp 50c 80TT.txt", true, INSTANCES_NAMES);	
+		optimize("saida classic 50c 80TT.txt", false, INSTANCES_NAMES);
 		analyze("saida fpnrp 50c 80TT.txt", "saida classic 50c 80TT.txt");
 	}
 }
