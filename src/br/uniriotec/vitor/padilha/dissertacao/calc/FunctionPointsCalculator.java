@@ -290,7 +290,7 @@ public abstract class FunctionPointsCalculator
 	/**
 	 * Creates the boolean representation of a solution from its string
 	 */
-	public boolean[] fromString(String solution)
+	public static boolean[] fromString(String solution)
 	{
 		boolean[] result = new boolean[solution.length() - 2];
 		
@@ -303,7 +303,7 @@ public abstract class FunctionPointsCalculator
 	/**
 	 * Creates a string representation of a solution
 	 */
-	public String toString(boolean[] solution)
+	public static String toString(boolean[] solution)
 	{
 		String result = "";
 		

@@ -1,13 +1,19 @@
 package br.uniriotec.vitor.padilha.dissertacao.genetic;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.PrintWriter;
+
 import jmetal.base.Operator;
 import jmetal.base.Solution;
 import jmetal.base.SolutionSet;
 import jmetal.base.operator.crossover.SinglePointCrossover;
 import jmetal.base.operator.mutation.BitFlipMutation;
 import jmetal.base.operator.selection.BinaryTournament;
+import jmetal.metaheuristics.singleObjective.geneticAlgorithm.GANotifier;
 import jmetal.metaheuristics.singleObjective.geneticAlgorithm.gGA;
 import unirio.experiments.monoobjective.execution.MonoExperiment;
+import br.uniriotec.vitor.padilha.dissertacao.calc.FunctionPointsCalculator;
 import br.uniriotec.vitor.padilha.dissertacao.model.SoftwareSystem;
 
 /**
@@ -15,11 +21,15 @@ import br.uniriotec.vitor.padilha.dissertacao.model.SoftwareSystem;
  * 
  * @author marciobarros
  */
-public class GeneticAlgorithmExperiment extends MonoExperiment<SoftwareSystem>
+public class GeneticAlgorithmExperiment extends MonoExperiment<SoftwareSystem> implements GANotifier
 {
 	private double budgetPercentile;
 	private boolean optimizedVersion;
 	private FunctionPointsProblem problem;
+	private PrintWriter iterationDetailsFile;
+	private SoftwareSystem instance;
+	private double currentSatisfaction;
+	private int cycleNumber;
 	
 	/**
 	 * Initializes the experiment indicating the available percentile of the total budget
@@ -28,6 +38,7 @@ public class GeneticAlgorithmExperiment extends MonoExperiment<SoftwareSystem>
 	{
 		this.budgetPercentile = budgetPercentile;
 		this.optimizedVersion = optimizedVersion;
+		this.cycleNumber = 0;
 	}
 	
 	/**
@@ -35,7 +46,7 @@ public class GeneticAlgorithmExperiment extends MonoExperiment<SoftwareSystem>
 	 */
 	@Override
 	protected Solution runCycle(SoftwareSystem instance, int instanceNumber) throws Exception
-	{
+	{		
 		problem = new FunctionPointsProblem(instance, budgetPercentile, optimizedVersion);
 		int transactionCount = problem.countTransactions();
 
@@ -57,6 +68,14 @@ public class GeneticAlgorithmExperiment extends MonoExperiment<SoftwareSystem>
 		algorithm.addOperator("mutation", mutation);
 		algorithm.addOperator("selection", selection);
 		
+		this.cycleNumber++;
+		this.instance = instance;
+		this.currentSatisfaction = Double.MAX_VALUE;
+
+		this.iterationDetailsFile = new PrintWriter(new BufferedWriter(new FileWriter("iterationDetails.txt", true)));
+		algorithm.execute(this);
+		this.iterationDetailsFile.close();
+		
 		SolutionSet solutions = algorithm.execute();
 		return solutions.get(0);
 	}
@@ -71,5 +90,26 @@ public class GeneticAlgorithmExperiment extends MonoExperiment<SoftwareSystem>
 		data[0] = problem.calculateSolutionCost(solution);
 		data[1] = solution.getObjective(0);
 		return data;
+	}
+
+	/**
+	 * Publishes information as the solution improves
+	 */
+	@Override
+	public void newIteration(int iterationNumber, Solution solution)
+	{
+		double satisfaction = solution.getObjective(0);
+
+		if (satisfaction < currentSatisfaction)
+		{
+			boolean[] solutionArray = problem.convertSolutionBooleanArray(solution);
+			String sSolution = FunctionPointsCalculator.toString(solutionArray);
+
+			double cost = problem.calculateSolutionCost(solution);
+			String sType = optimizedVersion ? "OPT" : "CLS"; 
+			this.iterationDetailsFile.println(sType + "\t" + instance.getName() + "\t" + budgetPercentile + "%\t" + cycleNumber + "\t" + iterationNumber + "\t" + cost + "\t" + satisfaction + "\t" + sSolution);
+			
+			currentSatisfaction = satisfaction;
+		}
 	}
 }
