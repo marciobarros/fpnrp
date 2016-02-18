@@ -23,7 +23,7 @@ import br.uniriotec.vitor.padilha.dissertacao.model.transactionModel.Transaction
 public abstract class FunctionPointsCalculator
 {
 	private SoftwareSystem system;
-	private int[] transactionCost;
+	protected int[] transactionCost;
 	private int[] transactionSatisfaction;
 	private @Getter int totalSatisfaction;
 	private @Getter int transactionCount;

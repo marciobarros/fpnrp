@@ -287,7 +287,7 @@
 		<transaction name="RemoverLotacao" errorMsg="true" type="EI">
 			<ftr name="HistoricoLotacao" ret="HistoricoLotacao" dataModelElement="Empregado">
 				<det name="dataInicio"/>
-			</ftr>>
+			</ftr>
 			<ftr name="Empregado">
 				<det name="matricula"/>
 				<det name="nome"/>
@@ -298,7 +298,7 @@
 		<transaction name="ConsultarLotacoes" errorMsg="true" type="EQ">
 			<ftr name="HistoricoLotacao" ret="HistoricoLotacao" dataModelElement="Empregado">
 				<det name="dataInicio"/>
-			</ftr>>
+			</ftr>
 			<ftr name="Empregado">
 				<det name="matricula"/>
 				<det name="nome"/>
