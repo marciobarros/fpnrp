@@ -118,13 +118,23 @@ public class ClassicFunctionPointsCalculator extends FunctionPointsCalculator
 			if ((dataModelBitMask & (1 << i)) != 0)
 				dataModelCost += dataFunctionCost[i];
 		
-//		for (int i = 0; i < selectedTransactions.length; i++)
-//		{
-//			if (selectedTransactions[i])
-//			{
-//				System.out.println(getSystem().getTransactionModel().getTransactionFunctionIndex(i).getName() + " " + transactionCost[i]);
-//			}
-//		}
+		System.out.println("===");
+
+		for (int i = 0; i < dataFunctionCost.length; i++)
+		{
+			if ((dataModelBitMask & (1 << i)) != 0)
+			{
+				System.out.println(getSystem().getDataModel().getDataFunctionIndex(i).getName() + " " + dataFunctionCost[i]);
+			}
+		}
+		
+		for (int i = 0; i < selectedTransactions.length; i++)
+		{
+			if (selectedTransactions[i])
+			{
+				System.out.println(getSystem().getTransactionModel().getTransactionFunctionIndex(i).getName() + " " + transactionCost[i]);
+			}
+		}
 		
 		return calculateFunctionPointsTransactionModel(selectedTransactions) + dataModelCost;
 	}
