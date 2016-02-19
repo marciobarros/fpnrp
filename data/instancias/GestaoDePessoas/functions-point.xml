@@ -277,9 +277,6 @@
 				<det name="matricula"/>
 				<det name="nome"/>
 			</ftr>
-			<ftr name="MotivoTransferencia">
-				 <det name="descricao"/>
-			</ftr>
 			<dependency ref="IncluirNovoEmpregado"/>
 			<dependency ref="IncluirCentroDeCusto"/>
 			<dependency ref="IncluirMotivoDeTransferencia"/>

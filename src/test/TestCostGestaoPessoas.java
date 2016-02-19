@@ -327,27 +327,27 @@ public class TestCostGestaoPessoas
 	public void testSolutionsFromDissertationClassic60p()
 	{
 		assertEquals(168, classicCalculator.calculateCost(FunctionPointsCalculator.fromString("[00100010101000000000100111100000000101011010000111001101101000000]")));
-		assertEquals(168, classicCalculator.calculateCost(FunctionPointsCalculator.fromString("[10101010101110000000100000100011010110000000000011001111101000000]"))); // 168
+		assertEquals(168, classicCalculator.calculateCost(FunctionPointsCalculator.fromString("[10101010101110000000100000100011010110000000000011001111101000000]")));
 		assertEquals(166, classicCalculator.calculateCost(FunctionPointsCalculator.fromString("[10111010101101000000000001110100000100100001000001001110101000000]")));
 		assertEquals(168, classicCalculator.calculateCost(FunctionPointsCalculator.fromString("[10100010101000000000000001100010001010000000100111011100100000000]")));
 		assertEquals(166, classicCalculator.calculateCost(FunctionPointsCalculator.fromString("[00100011001010000000000001000011010100100001000011001110100000000]")));
 		assertEquals(168, classicCalculator.calculateCost(FunctionPointsCalculator.fromString("[00110011100000000000100000010010000100000000000011001000100000010]")));
 		assertEquals(168, classicCalculator.calculateCost(FunctionPointsCalculator.fromString("[00111000000000000000000011100010000000000001000010111110101110000]")));
 		assertEquals(168, classicCalculator.calculateCost(FunctionPointsCalculator.fromString("[00101010011100000000001001100011000111000000000111011110111000000]")));
-		assertEquals(168, classicCalculator.calculateCost(FunctionPointsCalculator.fromString("[00101010101110100000000001110010000100000000100011101110101000000]")));
-		assertEquals(170, classicCalculator.calculateCost(FunctionPointsCalculator.fromString("[00100010000000000000000011010010000000010000000010101100001100000]")));
-		assertEquals(168, classicCalculator.calculateCost(FunctionPointsCalculator.fromString("[00111010001110000000100001000010001000000000001011100100111000000]")));
-		assertEquals(169, classicCalculator.calculateCost(FunctionPointsCalculator.fromString("[00100001011100100000000011010010010000100000000010001101100000000]")));
+		assertEquals(166, classicCalculator.calculateCost(FunctionPointsCalculator.fromString("[00101010101110100000000001110010000100000000100011101110101000000]")));
+		assertEquals(168, classicCalculator.calculateCost(FunctionPointsCalculator.fromString("[00100010000000000000000011010010000000010000000010101100001100000]")));
+		assertEquals(166, classicCalculator.calculateCost(FunctionPointsCalculator.fromString("[00111010001110000000100001000010001000000000001011100100111000000]")));
+		assertEquals(167, classicCalculator.calculateCost(FunctionPointsCalculator.fromString("[00100001011100100000000011010010010000100000000010001101100000000]")));
 		assertEquals(167, classicCalculator.calculateCost(FunctionPointsCalculator.fromString("[10100010001000000000110011100010010001000000000111111101110000000]")));
-		assertEquals(168, classicCalculator.calculateCost(FunctionPointsCalculator.fromString("[10110010001000100000000001010110001000000000000111101101100000000]")));
+		assertEquals(166, classicCalculator.calculateCost(FunctionPointsCalculator.fromString("[10110010001000100000000001010110001000000000000111101101100000000]")));
 		assertEquals(168, classicCalculator.calculateCost(FunctionPointsCalculator.fromString("[10100111001000000000010101000011010000100000000011001110111000000]")));
-		assertEquals(170, classicCalculator.calculateCost(FunctionPointsCalculator.fromString("[00100010101111100000100010110010000000000001100111000100110000000]")));
-		assertEquals(170, classicCalculator.calculateCost(FunctionPointsCalculator.fromString("[00101000000000010000000000100010000000010000000011011000100001000]")));
-		assertEquals(168, classicCalculator.calculateCost(FunctionPointsCalculator.fromString("[00100001101000100000100011000111000000100001001110111101100000000]")));
-		assertEquals(168, classicCalculator.calculateCost(FunctionPointsCalculator.fromString("[10110010001010000000100011100011011100000000000111001111100000000]")));
-		assertEquals(170, classicCalculator.calculateCost(FunctionPointsCalculator.fromString("[00101010000010000000000000010010000000000000000010101101100100010]")));
+		assertEquals(168, classicCalculator.calculateCost(FunctionPointsCalculator.fromString("[00100010101111100000100010110010000000000001100111000100110000000]")));
+		assertEquals(168, classicCalculator.calculateCost(FunctionPointsCalculator.fromString("[00101000000000010000000000100010000000010000000011011000100001000]")));
+		assertEquals(166, classicCalculator.calculateCost(FunctionPointsCalculator.fromString("[00100001101000100000100011000111000000100001001110111101100000000]")));
+		assertEquals(166, classicCalculator.calculateCost(FunctionPointsCalculator.fromString("[10110010001010000000100011100011011100000000000111001111100000000]")));
+		assertEquals(168, classicCalculator.calculateCost(FunctionPointsCalculator.fromString("[00101010000010000000000000010010000000000000000010101101100100010]")));
 		assertEquals(167, classicCalculator.calculateCost(FunctionPointsCalculator.fromString("[10110010001000000000101101010111100110000000000111101110100000000]")));
-		assertEquals(170, classicCalculator.calculateCost(FunctionPointsCalculator.fromString("[00101000101000000000000010100011000100010001000011101001001100010]")));
+		assertEquals(168, classicCalculator.calculateCost(FunctionPointsCalculator.fromString("[00101000101000000000000010100011000100010001000011101001001100010]")));
 		assertEquals(168, classicCalculator.calculateCost(FunctionPointsCalculator.fromString("[00010010000000000000100000100010000000000000000001111101100000010]")));
 		assertEquals(167, classicCalculator.calculateCost(FunctionPointsCalculator.fromString("[10100010101100000000010001011001010100100000000111011100110000000]")));
 		assertEquals(167, classicCalculator.calculateCost(FunctionPointsCalculator.fromString("[10111010101000000000000100100100001100011000000011111111100000000]")));
