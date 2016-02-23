@@ -18,7 +18,7 @@ import br.uniriotec.vitor.padilha.dissertacao.utils.MathUtils;
 
 public class MainProgram
 {
-	private static final int CYCLES = 50;
+	private static final int CYCLES = 200;
 	private static final String[] INSTANCES_NAMES = new String[] { "Academico", "GestaoDePessoas", "Parametros", "BolsaDeValores" };
 	public static final String INSTANCE_DIRECTORY = "data/instancias/";
 
@@ -110,8 +110,8 @@ public class MainProgram
 	{
 //		showProperties(INSTANCES_NAMES);
 //		simulateDifferences(INSTANCES_NAMES);
-		optimize("saida fpnrp 50c 80TT.txt", true, INSTANCES_NAMES);	
-		optimize("saida classic 50c 80TT.txt", false, INSTANCES_NAMES);
-		analyze("saida fpnrp 50c 80TT.txt", "saida classic 50c 80TT.txt");
+//		optimize("saida fpnrp 200c 80TT.txt", true, INSTANCES_NAMES);	
+//		optimize("saida classic 200c 80TT.txt", false, INSTANCES_NAMES);
+		analyze("saida fpnrp 200c 80TT.txt", "saida classic 200c 80TT.txt");
 	}
 }
