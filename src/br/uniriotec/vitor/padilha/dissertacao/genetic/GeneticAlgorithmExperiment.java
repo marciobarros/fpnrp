@@ -73,7 +73,7 @@ public class GeneticAlgorithmExperiment extends MonoExperiment<SoftwareSystem> i
 		this.currentSatisfaction = Double.MAX_VALUE;
 
 		this.iterationDetailsFile = new PrintWriter(new BufferedWriter(new FileWriter("iterationDetails.txt", true)));
-		algorithm.execute(this);
+		algorithm.execute();
 		this.iterationDetailsFile.close();
 		
 		SolutionSet solutions = algorithm.execute();
