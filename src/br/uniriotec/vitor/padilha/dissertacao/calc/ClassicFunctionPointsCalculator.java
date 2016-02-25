@@ -118,24 +118,27 @@ public class ClassicFunctionPointsCalculator extends FunctionPointsCalculator
 			if ((dataModelBitMask & (1 << i)) != 0)
 				dataModelCost += dataFunctionCost[i];
 		
-		System.out.println("===");
+		DetailedReport report = new DetailedReport();
 
 		for (int i = 0; i < dataFunctionCost.length; i++)
-		{
 			if ((dataModelBitMask & (1 << i)) != 0)
 			{
-				System.out.println(getSystem().getDataModel().getDataFunctionIndex(i).getName() + " " + dataFunctionCost[i]);
+				DataFunction df = getSystem().getDataModel().getDataFunctionIndex(i);
+				DataFunctionReport dfr = report.addDataFunction(df, dataFunctionCost[i]);
+				dfr.setRet(countRecordTypes(df));
+				dfr.setDet(countDataElements(df));
 			}
-		}
 		
 		for (int i = 0; i < selectedTransactions.length; i++)
-		{
 			if (selectedTransactions[i])
 			{
-				System.out.println(getSystem().getTransactionModel().getTransactionFunctionIndex(i).getName() + " " + transactionCost[i]);
+				TransactionFunction tf = getSystem().getTransactionModel().getTransactionFunctionIndex(i);
+				TransactionFunctionReport tfr = report.addTransactionFunction(tf, transactionCost[i]);
+				tfr.setFtr(countTransactionReferencedDataFunctions(tf));
+				tfr.setDet(countTransactionDataElements(tf));
 			}
-		}
 		
+		report.report("saida.txt");
 		return calculateFunctionPointsTransactionModel(selectedTransactions) + dataModelCost;
 	}
 	
