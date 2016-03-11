@@ -3,7 +3,6 @@ package br.uniriotec.vitor.padilha.dissertacao.calc;
 import br.uniriotec.vitor.padilha.dissertacao.model.SoftwareSystem;
 import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.DataElement;
 import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.DataFunction;
-import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.RecordType;
 import br.uniriotec.vitor.padilha.dissertacao.model.transactionModel.FileReference;
 import br.uniriotec.vitor.padilha.dissertacao.model.transactionModel.TransactionFunction;
 
@@ -47,11 +46,23 @@ public class OptimizedFunctionPointsCalculator extends FunctionPointsCalculator
 	}
 
 	/**
+	 * Checks whether a data function is required
+	 */
+	@Override
+	protected boolean isDataFunctionRequired(DataFunction dataFunction, boolean[] solution)
+	{
+		DataFunctionStatus dfs = dataModelStatus.getDataFunctionStatus(dataFunction);
+		return dfs.countDataElements() != 0;
+	}
+
+	/**
 	 * Counts the record types comprising a data function
 	 */
+	@Override
 	public int countDataFunctionRecordTypes(DataFunction dataFunction) 
 	{
-		return dataFunction.countRecordTypes();
+		DataFunctionStatus dfs = dataModelStatus.getDataFunctionStatus(dataFunction);
+		return dfs.countRecordTypes();
 	}
 
 	/**
@@ -59,15 +70,32 @@ public class OptimizedFunctionPointsCalculator extends FunctionPointsCalculator
 	 */
 	public int countDataFunctionDataElements(DataFunction dataFunction) 
 	{
-		int detCount = 0;
-		
-		for (RecordType ret : dataFunction.getRecordTypes())
-			for (DataElement det : ret.getDataElements())
-				if (det.isAccountableForDataFunction())
-					detCount++;
-		
-		return detCount;
+		DataFunctionStatus dfs = dataModelStatus.getDataFunctionStatus(dataFunction);
+		return dfs.countDataElements();
 	}
+
+	/**
+	 * Counts the record types comprising a data function
+	 */
+//	public int _countDataFunctionRecordTypes(DataFunction dataFunction) 
+//	{
+//		return dataFunction.countRecordTypes();
+//	}
+
+	/**
+	 * Counts the data elements comprising a data function
+	 */
+//	public int _countDataFunctionDataElements(DataFunction dataFunction) 
+//	{
+//		int detCount = 0;
+//		
+//		for (RecordType ret : dataFunction.getRecordTypes())
+//			for (DataElement det : ret.getDataElements())
+//				if (det.isAccountableForDataFunction())
+//					detCount++;
+//		
+//		return detCount;
+//	}
 
 	/**
 	 * Calculates the complexity of a data function

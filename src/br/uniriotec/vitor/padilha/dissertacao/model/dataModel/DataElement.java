@@ -76,7 +76,10 @@ public class DataElement
 	 */
 	public boolean isAccountableForTransaction()
 	{
-		return !primaryKey || semanticMeaning;
+		if (referencedRecordType != null)
+			return semanticMeaning || referencedRecordType.getDataFunction() != recordType.getDataFunction();
+		
+		return (!primaryKey || semanticMeaning);
 	}
 	
 	/**

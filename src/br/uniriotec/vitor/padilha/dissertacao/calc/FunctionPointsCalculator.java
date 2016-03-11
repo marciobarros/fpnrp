@@ -40,6 +40,45 @@ public abstract class FunctionPointsCalculator
 		this.totalSatisfaction = calculateSatisfaction(allTransactions());
 	}
 
+	public void report(boolean[] solution)
+	{
+		boolean[] expandedSolution = expandSelectionDueDependencies(solution);
+		calculateCost(solution);
+		
+		for (int i = 0; i < getSystem().getDataModel().countDataFunctions(); i++)
+		{
+			DataFunction df = getSystem().getDataModel().getDataFunctionIndex(i);
+
+			if (isDataFunctionRequired(df, expandedSolution))
+			{
+				int retCount = countDataFunctionRecordTypes(df);
+				int detCount = countDataFunctionDataElements(df);
+				Complexity complexity = Complexity.calculateDataFunctionComplexity(retCount, detCount);
+				int fp = complexity.calculateFunctionPoints(df.getType());
+				System.out.println(df.getName() + " " + retCount + " " + detCount + " " + complexity.name() + " " + fp);
+			}
+		}
+		
+		for (int i = 0; i < getSystem().getTransactionModel().countTransactionFunctions(); i++)
+		{
+			if (expandedSolution[i])
+			{
+				TransactionFunction tf = getSystem().getTransactionModel().getTransactionFunctionIndex(i);
+				int ftrCount = countTransactionReferencedDataFunctions(tf);
+				int detCount = countTransactionDataElements(tf);
+				Complexity complexity = Complexity.calculateTransactionComplexity(ftrCount, detCount, tf.getType());
+				int fp = complexity.calculateFunctionPoints(tf.getType());
+				System.out.println(tf.getName() + " " + ftrCount + " " + detCount + " " + complexity.name() + " " + fp + " " + getTransactionDataElements(tf));
+			}
+		}
+	}
+	
+	protected abstract boolean isDataFunctionRequired(DataFunction dataFunction, boolean[] solution);
+
+	protected abstract int countDataFunctionRecordTypes(DataFunction dataFunction);
+	
+	protected abstract int countDataFunctionDataElements(DataFunction dataFunction);
+
 	/**
 	 * Returns the system under analysis to the calculator's subclasses
 	 */
@@ -90,23 +129,67 @@ public abstract class FunctionPointsCalculator
 		List<DataElement> dataElements = new ArrayList<DataElement>();
 		
 		for (FileReference fileReference : transaction.getFileReferences())
-			captureFileReferencedDataElements(fileReference, dataElements);
+			captureFileReferencedDataElements(transaction, fileReference, dataElements);
 		
 		return dataElements.size() + transaction.getExtraDataElements() + (transaction.isErrorMessages() ? 1 : 0);
 	}
 
 	/**
+	 * Get the data elements referenced by a transaction
+	 */
+	public String getTransactionDataElements(TransactionFunction transaction) 
+	{
+		List<DataElement> dataElements = new ArrayList<DataElement>();
+		
+		for (FileReference fileReference : transaction.getFileReferences())
+			captureFileReferencedDataElements(transaction, fileReference, dataElements);
+		
+		StringBuffer sb = new StringBuffer();
+		
+		for (DataElement det : dataElements)
+		{
+			if (sb.length() > 0)
+				sb.append(", ");
+			
+			sb.append(det.getRecordType().getName() + "." + det.getName());
+		}
+		
+		if (transaction.getExtraDataElements() > 0)
+		{
+			if (sb.length() > 0)
+				sb.append(", ");
+			
+			sb.append(transaction.getExtraDataElements() + " EXTRA");
+		}
+		
+		if (transaction.isErrorMessages())
+		{
+			if (sb.length() > 0)
+				sb.append(", ");
+			
+			sb.append("MSG");
+		}
+		
+		return sb.toString();
+	}
+
+	/**
 	 * Captures all data elements referenced by a file reference to a list
 	 */
-	public void captureFileReferencedDataElements(FileReference fileReference, List<DataElement> dataElements) 
+	public void captureFileReferencedDataElements(TransactionFunction transaction, FileReference fileReference, List<DataElement> dataElements) 
 	{
 		if (fileReference.isUseAllFields())
 		{
 			for (DataElement dataElement : fileReference.getReferencedRecordType().getDataElements())
 			{
 				if (dataElement.isAccountableForTransaction())
+				{
+					if (dataElement.getReferencedRecordType() != null && transaction.hasFileReference(dataElement.getReferencedRecordType()))
+						continue;
+					
 					if (!dataElements.contains(dataElement))
 						dataElements.add(dataElement);
+				}
 			}
 		}
 		else
@@ -114,8 +197,13 @@ public abstract class FunctionPointsCalculator
 			for (DataElement dataElement : fileReference.getDataElements())
 			{
 				if (dataElement.isAccountableForTransaction())
+				{
+					if (dataElement.getReferencedRecordType() != null && transaction.hasFileReference(dataElement.getReferencedRecordType()))
+						continue;
+
 					if (!dataElements.contains(dataElement))
 						dataElements.add(dataElement);
+				}
 			}
 		}
 	}

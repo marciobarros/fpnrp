@@ -233,7 +233,7 @@ public class TestFunctionPointCalculator
 	@Test
 	public void testCostAllTransactions() throws Exception
 	{
-		assertEquals(190, calculador.calculateCost(calculador.allTransactions()));
+		assertEquals(185, calculador.calculateCost(calculador.allTransactions()));
 		assertEquals(14, calculador.calculateCost(selectTransactions(0)));
 		assertEquals(22, calculador.calculateCost(selectTransactions(1)));
 		assertEquals(18, calculador.calculateCost(selectTransactions(2)));

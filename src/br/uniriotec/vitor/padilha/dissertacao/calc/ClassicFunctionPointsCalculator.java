@@ -63,9 +63,35 @@ public class ClassicFunctionPointsCalculator extends FunctionPointsCalculator
 	}
 
 	/**
+	 * Checks whether a data function is required
+	 */
+	@Override
+	protected boolean isDataFunctionRequired(DataFunction dataFunction, boolean[] solution)
+	{
+		boolean[] selectedTransactions = expandSelectionDueDependencies(solution);
+		long dataModelBitMask = 0;
+		
+		for (int i = 0; i < selectedTransactions.length; i++)
+			if (selectedTransactions[i])
+				dataModelBitMask |= transactionToDataFunctions[i];
+
+		return ((dataModelBitMask & (1 << dataFunction.getIndex())) != 0);
+	}
+
+	/**
+	 * Counts the record types comprising a data function
+	 */
+	@Override
+	protected int countDataFunctionRecordTypes(DataFunction dataFunction) 
+	{
+		return dataFunction.countRecordTypes();
+	}
+
+	/**
 	 * Counts the data elements comprising a data function
 	 */
-	private int countDataFunctionDataElements(DataFunction dataFunction) 
+	@Override
+	protected int countDataFunctionDataElements(DataFunction dataFunction) 
 	{
 		int detCount = 0;
 		
@@ -138,7 +164,6 @@ public class ClassicFunctionPointsCalculator extends FunctionPointsCalculator
 				tfr.setDet(countTransactionDataElements(tf));
 			}
 		
-		report.report("saida.txt");
 		return calculateFunctionPointsTransactionModel(selectedTransactions) + dataModelCost;
 	}
 	

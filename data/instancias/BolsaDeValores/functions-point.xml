@@ -45,7 +45,6 @@
                 <det name="DET0036"/>
                 <det name="DET0037"/>
                 <det name="DET0038"/>
-                <det name="DET0039"/>
                 <det name="DET0040"/>
             </ret>
             <ret name="RET0002">
@@ -69,7 +68,6 @@
                 <det name="DET0003"/>
                 <det name="DET0004"/>
                 <det name="DET0005"/>
-                <det name="DET0006"/>
             </ret>
         </ilf>
         <ilf name="DF0002">
@@ -184,7 +182,6 @@
                 <det name="DET0003"/>
                 <det name="DET0004"/>
                 <det name="DET0005"/>
-                <det name="DET0006"/>
             </ret>
         </ilf>
         <ilf name="DF0004">
@@ -207,7 +204,6 @@
                 <det name="DET0004"/>
                 <det name="DET0005"/>
                 <det name="DET0006"/>
-                <det name="DET0007"/>
             </ret>
         </ilf>
         <ilf name="DF0006">
@@ -289,7 +285,6 @@
                 <det name="DET0013"/>
                 <det name="DET0014"/>
                 <det name="DET0015"/>
-                <det name="DET0016"/>
                 <det name="DET0017"/>
             </ret>
         </ilf>
@@ -337,7 +332,6 @@
                 <det name="DET0015"/>
                 <det name="DET0016"/>
                 <det name="DET0017"/>
-                <det name="DET0018"/>
             </ret>
         </ilf>
         <ilf name="DF0015">
@@ -381,7 +375,6 @@
                 <det name="DET0005"/>
                 <det name="DET0006"/>
                 <det name="DET0007"/>
-                <det name="DET0008"/>
             </ret>
         </ilf>
         <ilf name="DF0018">
@@ -433,7 +426,6 @@
                 <det name="DET0002"/>
                 <det name="DET0003"/>
                 <det name="DET0004"/>
-                <det name="DET0005"/>
             </ret>
         </ilf>
         <ilf name="DF0021">
@@ -441,7 +433,6 @@
                 <det name="DET0000"/>
                 <det name="DET0001"/>
                 <det name="DET0002"/>
-                <det name="DET0003"/>
             </ret>
         </ilf>
         <ilf name="DF0022">
@@ -451,7 +442,6 @@
                 <det name="DET0002"/>
                 <det name="DET0003"/>
                 <det name="DET0004"/>
-                <det name="DET0005"/>
             </ret>
         </ilf>
         <ilf name="DF0023">
@@ -469,7 +459,6 @@
                 <det name="DET0010"/>
                 <det name="DET0011"/>
                 <det name="DET0012"/>
-                <det name="DET0013"/>
             </ret>
         </ilf>
         <ilf name="DF0024">
@@ -542,7 +531,6 @@
                 <det name="DET0004"/>
                 <det name="DET0005"/>
                 <det name="DET0006"/>
-                <det name="DET0007"/>
             </ret>
         </ilf>
         <ilf name="DF0030">
@@ -587,7 +575,6 @@
                 <det name="DET0004"/>
                 <det name="DET0005"/>
                 <det name="DET0006"/>
-                <det name="DET0007"/>
             </ret>
         </ilf>
         <ilf name="DF0034">
@@ -597,7 +584,6 @@
                 <det name="DET0002"/>
                 <det name="DET0003"/>
                 <det name="DET0004"/>
-                <det name="DET0005"/>
             </ret>
         </ilf>
         <ilf name="DF0035">
@@ -638,7 +624,6 @@
                 <det name="DET0003"/>
                 <det name="DET0004"/>
                 <det name="DET0005"/>
-                <det name="DET0006"/>
             </ret>
         </ilf>
         <ilf name="DF0039">
@@ -646,7 +631,6 @@
                 <det name="DET0000"/>
                 <det name="DET0001"/>
                 <det name="DET0002"/>
-                <det name="DET0003"/>
             </ret>
         </ilf>
     </data-model>
@@ -660,7 +644,7 @@
             
         </transaction>
         <transaction type="EI" name="TF0001" errorMsg="true">
-            
+
                 <ftr useAllDets="false" ret="RET0000" name="RET0000" dataModelElement="DF0002">
                     <det name="DET0061"/>
                     <det name="DET0000"/>

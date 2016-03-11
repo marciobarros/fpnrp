@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lombok.Getter;
+import br.uniriotec.vitor.padilha.dissertacao.model.dataModel.RecordType;
 
 /**
  * Class that represents a transaction
@@ -96,5 +97,17 @@ public class TransactionFunction
 	public Iterable<FileReference> getFileReferences()
 	{
 		return fileReferences;
+	}
+
+	/**
+	 * Checks whether the transaction refers to a record type
+	 */
+	public boolean hasFileReference(RecordType recordType)
+	{
+		for (FileReference fileReference : fileReferences)
+			if (fileReference.getReferencedRecordType() == recordType)
+				return true;
+		
+		return false;
 	}
 }
