@@ -1,6 +1,7 @@
 package br.uniriotec.vitor.padilha.dissertacao.calc;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
@@ -299,16 +300,18 @@ public abstract class FunctionPointsCalculator
 	 */
 	public boolean[] expandSelectionDueDependencies(boolean[] selectedTransactions)
 	{
+		boolean[] selectedTransactionsCopy = Arrays.copyOf(selectedTransactions, selectedTransactions.length);
+		
 		for (int i = 0; i < transactionCount; i++)
 		{
 			if (selectedTransactions[i])
 			{
 				TransactionFunction transaction = system.getTransactionModel().getTransactionFunctionIndex(i);
-				selectedTransactions = expandSelectionDueDependencies(transaction, selectedTransactions);
+				selectedTransactions = expandSelectionDueDependencies(transaction, selectedTransactionsCopy);
 			}
 		}
 		
-		return selectedTransactions;
+		return selectedTransactionsCopy;
 	}
 	
 	/**

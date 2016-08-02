@@ -2,29 +2,34 @@ package br.uniriotec.vitor.padilha.dissertacao;
 
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
+import java.io.PrintStream;
 import java.text.DecimalFormat;
 import java.util.Vector;
 
-import unirio.experiments.monoobjective.execution.StreamMonoExperimentListener;
 import br.uniriotec.vitor.padilha.dissertacao.analysis.monoobjective.model.MonoExperimentResult;
 import br.uniriotec.vitor.padilha.dissertacao.analysis.monoobjective.reader.MonoExperimentFileReader;
 import br.uniriotec.vitor.padilha.dissertacao.calc.ClassicFunctionPointsCalculator;
+import br.uniriotec.vitor.padilha.dissertacao.calc.FunctionPointsCalculator;
 import br.uniriotec.vitor.padilha.dissertacao.calc.OptimizedFunctionPointsCalculator;
 import br.uniriotec.vitor.padilha.dissertacao.calc.SolutionSimulator;
 import br.uniriotec.vitor.padilha.dissertacao.genetic.GeneticAlgorithmExperiment;
+import br.uniriotec.vitor.padilha.dissertacao.ils.IteratedLocalSearch;
 import br.uniriotec.vitor.padilha.dissertacao.model.SoftwareSystem;
 import br.uniriotec.vitor.padilha.dissertacao.reader.FunctionsPointReader;
 import br.uniriotec.vitor.padilha.dissertacao.utils.MathUtils;
+import unirio.experiments.monoobjective.execution.StreamMonoExperimentListener;
 
 public class MainProgram
 {
-	private static final int CYCLES = 200;
+	private static final int CYCLES = 10;
+
 	private static final String[] INSTANCES_NAMES = new String[] { "Academico", "GestaoDePessoas", "Parametros", "BolsaDeValores" };
+	
 	public static final String INSTANCE_DIRECTORY = "data/instancias/";
 
-	protected static void showProperties(String... instances) throws Exception
+	protected static void showProperties() throws Exception
 	{
-		for (String instance : instances)
+		for (String instance : INSTANCES_NAMES)
 		{
 			SoftwareSystem system = new FunctionsPointReader().execute(INSTANCE_DIRECTORY + instance + "/functions-point.xml", INSTANCE_DIRECTORY + instance + "/stakeholders-interest.xml");
 			ClassicFunctionPointsCalculator classicCalculator = new ClassicFunctionPointsCalculator(system);
@@ -40,11 +45,11 @@ public class MainProgram
 		System.out.println();
 	}
 
-	protected static void simulateDifferences(String... instances) throws Exception
+	protected static void simulateDifferences() throws Exception
 	{
 		int numberOfEvaluations = 100000;
 		
-		for (String instance : instances)
+		for (String instance : INSTANCES_NAMES)
 		{
 			SoftwareSystem system = new FunctionsPointReader().execute(INSTANCE_DIRECTORY + instance + "/functions-point.xml", INSTANCE_DIRECTORY + instance + "/stakeholders-interest.xml");
 			SolutionSimulator simulator = new SolutionSimulator(system);
@@ -105,13 +110,63 @@ public class MainProgram
 			System.out.println("Instance #" + i + " " + nf2.format(fitnessOptimized) + " " + nf2.format(fitnessClassic));
 		}
 	}
+
+	protected static void optimizeILS(String outputFilename, boolean optimizedVersion, String... instances) throws Exception
+	{
+		FileOutputStream out = new FileOutputStream(outputFilename);
+		PrintStream ps = new PrintStream(out);
+
+		FileOutputStream outDetails = new FileOutputStream("detalhes " + outputFilename);
+		PrintStream psDetails = new PrintStream(outDetails);
+		
+		for (String instance : instances)
+		{
+			SoftwareSystem system = new FunctionsPointReader().execute(INSTANCE_DIRECTORY + instance + "/functions-point.xml", INSTANCE_DIRECTORY + instance + "/stakeholders-interest.xml");
+			FunctionPointsCalculator calculator = optimizedVersion ? new OptimizedFunctionPointsCalculator(system) : new ClassicFunctionPointsCalculator(system);
+
+			for (int percentile = 10; percentile <= 90; percentile += 10)
+			{
+				for (int cycle = 0; cycle < CYCLES; cycle++)
+				{
+					long startTime = System.currentTimeMillis();
+					System.out.print("Processing " + instance + " at " + percentile + "% #" + cycle + " ... ");
+	
+					int transactions = system.getTransactionModel().countTransactionFunctions();
+					int maxEvaluations = 1000 * transactions * transactions;
+					String prefixDetails = system.getName() + percentile + "," + cycle;
+					
+					IteratedLocalSearch ils = new IteratedLocalSearch(psDetails, prefixDetails, system, percentile, optimizedVersion, maxEvaluations);
+					boolean[] solution = ils.execute();
+
+					double satisfaction = calculator.calculateSatisfactionPercentile(solution);
+					double fitness = ils.calculateSolutionFitness(solution);
+					ps.println(system.getName() + " #" + cycle + " " + percentile + " " + satisfaction + " " + fitness + " " + FunctionPointsCalculator.toString(solution));
+					
+					long finishTime = System.currentTimeMillis();
+					long seconds = (finishTime - startTime) / 1000;
+					System.out.println("finished in " + seconds + " s");
+				}
+			}
+		}
+
+		ps.close();
+		out.close();
+
+		psDetails.close();
+		outDetails.close();
+	}
 	
 	public static void main(String[] args) throws Exception
 	{
 //		showProperties(INSTANCES_NAMES);
 //		simulateDifferences(INSTANCES_NAMES);
+
 //		optimize("saida fpnrp 200c 80TT.txt", true, INSTANCES_NAMES);	
 //		optimize("saida classic 200c 80TT.txt", false, INSTANCES_NAMES);
-		analyze("saida fpnrp 200c 80TT.txt", "saida classic 200c 80TT.txt");
+//		analyze("result/analysis 50c 80TT/saida fpnrp 50c 80TT.txt", "result/analysis 50c 80TT/saida classic 50c 80TT.txt");
+
+//		optimizeILS("acad saida ils fpnrp.txt", true, "Academico");	
+		optimizeILS("bols saida ils fpnrp.txt", true, "BolsaDeValores");	
+//		optimizeILS("saida ils classic.txt", false, INSTANCES_NAMES);
 	}
 }
