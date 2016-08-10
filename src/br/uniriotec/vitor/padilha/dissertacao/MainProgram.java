@@ -22,7 +22,7 @@ import unirio.experiments.monoobjective.execution.StreamMonoExperimentListener;
 
 public class MainProgram
 {
-	private static final int CYCLES = 10;
+	private static final int CYCLES = 100;
 
 	private static final String[] INSTANCES_NAMES = new String[] { "Academico", "GestaoDePessoas", "Parametros", "BolsaDeValores" };
 	
@@ -123,8 +123,8 @@ public class MainProgram
 		FileOutputStream out = new FileOutputStream(outputFilename);
 		PrintStream ps = new PrintStream(out);
 
-		FileOutputStream outDetails = new FileOutputStream("detalhes " + outputFilename);
-		PrintStream psDetails = new PrintStream(outDetails);
+//		FileOutputStream outDetails = new FileOutputStream("detalhes " + outputFilename);
+//		PrintStream psDetails = new PrintStream(outDetails);
 		
 		for (String instance : instances)
 		{
@@ -142,7 +142,7 @@ public class MainProgram
 					int maxEvaluations = 1000 * transactions * transactions;
 					String prefixDetails = system.getName() + percentile + "," + cycle;
 					
-					IteratedLocalSearch ils = new IteratedLocalSearch(psDetails, prefixDetails, system, percentile, optimizedVersion, maxEvaluations);
+					IteratedLocalSearch ils = new IteratedLocalSearch(null, prefixDetails, system, percentile, optimizedVersion, maxEvaluations);
 					boolean[] solution = ils.execute();
 
 					double satisfaction = calculator.calculateSatisfactionPercentile(solution);
@@ -159,20 +159,21 @@ public class MainProgram
 		ps.close();
 		out.close();
 
-		psDetails.close();
-		outDetails.close();
+//		psDetails.close();
+//		outDetails.close();
 	}
 	
 	public static void main(String[] args) throws Exception
 	{
-		showProperties("Parametros2");
+//		showProperties("Parametros2");
 //		simulateDifferences(INSTANCES_NAMES);
 
 //		optimize("saida fpnrp 200c 80TT.txt", true, INSTANCES_NAMES);	
 //		optimize("saida classic 200c 80TT.txt", false, INSTANCES_NAMES);
 //		analyze("result/analysis 50c 80TT/saida fpnrp 50c 80TT.txt", "result/analysis 50c 80TT/saida classic 50c 80TT.txt");
 
-//		optimizeILS("acad saida ils fpnrp.txt", true, "Academico");	
+		optimizeILS("parm2 100c ils fpnrp.txt", true, "Parametros2");	
+		optimizeILS("parm2 100c ils clnrp.txt", false, "Parametros2");	
 //		optimizeILS("bols saida ils fpnrp.txt", true, "BolsaDeValores");	
 //		optimizeILS("saida ils classic.txt", false, INSTANCES_NAMES);
 	}
