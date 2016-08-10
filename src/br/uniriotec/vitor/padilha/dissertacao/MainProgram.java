@@ -9,6 +9,7 @@ import java.util.Vector;
 import br.uniriotec.vitor.padilha.dissertacao.analysis.monoobjective.model.MonoExperimentResult;
 import br.uniriotec.vitor.padilha.dissertacao.analysis.monoobjective.reader.MonoExperimentFileReader;
 import br.uniriotec.vitor.padilha.dissertacao.calc.ClassicFunctionPointsCalculator;
+import br.uniriotec.vitor.padilha.dissertacao.calc.Complexity;
 import br.uniriotec.vitor.padilha.dissertacao.calc.FunctionPointsCalculator;
 import br.uniriotec.vitor.padilha.dissertacao.calc.OptimizedFunctionPointsCalculator;
 import br.uniriotec.vitor.padilha.dissertacao.calc.SolutionSimulator;
@@ -27,9 +28,9 @@ public class MainProgram
 	
 	public static final String INSTANCE_DIRECTORY = "data/instancias/";
 
-	protected static void showProperties() throws Exception
+	protected static void showProperties(String... instances) throws Exception
 	{
-		for (String instance : INSTANCES_NAMES)
+		for (String instance : instances)
 		{
 			SoftwareSystem system = new FunctionsPointReader().execute(INSTANCE_DIRECTORY + instance + "/functions-point.xml", INSTANCE_DIRECTORY + instance + "/stakeholders-interest.xml");
 			ClassicFunctionPointsCalculator classicCalculator = new ClassicFunctionPointsCalculator(system);
@@ -37,7 +38,13 @@ public class MainProgram
 			
 			System.out.print(instance + ": ");
 			System.out.print(system.getTransactionModel().countTransactionFunctions() + " TF, ");
+			System.out.print(classicCalculator.countTransactionFunctions(system, Complexity.LOW) + " TF-L, ");
+			System.out.print(classicCalculator.countTransactionFunctions(system, Complexity.MEDIUM) + " TF-M, ");
+			System.out.print(classicCalculator.countTransactionFunctions(system, Complexity.HIGH) + " TF-H, ");
 			System.out.print(system.getDataModel().countDataFunctions() + " DF, ");
+			System.out.print(classicCalculator.countDataFunctions(system, Complexity.LOW) + " DF-L, ");
+			System.out.print(classicCalculator.countDataFunctions(system, Complexity.MEDIUM) + " DF-M, ");
+			System.out.print(classicCalculator.countDataFunctions(system, Complexity.HIGH) + " DF-H, ");
 			System.out.print(classicCalculator.calculateCost(classicCalculator.allTransactions()) + " CFP ");
 			System.out.println(optimizedCalculator.calculateCost(optimizedCalculator.allTransactions()) + " OFP");
 		}
@@ -158,7 +165,7 @@ public class MainProgram
 	
 	public static void main(String[] args) throws Exception
 	{
-//		showProperties(INSTANCES_NAMES);
+		showProperties("Parametros2");
 //		simulateDifferences(INSTANCES_NAMES);
 
 //		optimize("saida fpnrp 200c 80TT.txt", true, INSTANCES_NAMES);	
@@ -166,7 +173,7 @@ public class MainProgram
 //		analyze("result/analysis 50c 80TT/saida fpnrp 50c 80TT.txt", "result/analysis 50c 80TT/saida classic 50c 80TT.txt");
 
 //		optimizeILS("acad saida ils fpnrp.txt", true, "Academico");	
-		optimizeILS("bols saida ils fpnrp.txt", true, "BolsaDeValores");	
+//		optimizeILS("bols saida ils fpnrp.txt", true, "BolsaDeValores");	
 //		optimizeILS("saida ils classic.txt", false, INSTANCES_NAMES);
 	}
 }

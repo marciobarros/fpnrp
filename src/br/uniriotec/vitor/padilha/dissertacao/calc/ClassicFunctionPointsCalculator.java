@@ -52,13 +52,21 @@ public class ClassicFunctionPointsCalculator extends FunctionPointsCalculator
 	}
 
 	/**
+	 * Calculates the complexity associated to a data function
+	 */
+	private Complexity calculateDataFunctionComplexity(DataFunction dataFunction)
+	{
+		int retCount = dataFunction.countRecordTypes();
+		int detCount = countDataFunctionDataElements(dataFunction);
+		return Complexity.calculateDataFunctionComplexity(retCount, detCount);
+	}
+
+	/**
 	 * Calculates the number of function points associated to a data function
 	 */
 	private int calculateDataFunctionPoints(DataFunction dataFunction)
 	{
-		int retCount = dataFunction.countRecordTypes();
-		int detCount = countDataFunctionDataElements(dataFunction);
-		Complexity complexity = Complexity.calculateDataFunctionComplexity(retCount, detCount);
+		Complexity complexity = calculateDataFunctionComplexity(dataFunction);
 		return complexity.calculateFunctionPoints(dataFunction.getType());
 	}
 
@@ -181,5 +189,41 @@ public class ClassicFunctionPointsCalculator extends FunctionPointsCalculator
 	public int countDataElements(DataFunction dataFunction)
 	{
 		return countDataFunctionDataElements(dataFunction);
+	}
+
+	/**
+	 * Counts the number of data functions with a given complexity
+	 */
+	public int countDataFunctions(SoftwareSystem system, Complexity c) 
+	{
+		int count = 0;
+		
+		for (DataFunction df : getSystem().getDataModel().getDataFunctions())
+		{
+			Complexity c1 = calculateDataFunctionComplexity(df);
+			
+			if (c1 == c)
+				count++;
+		}
+		
+		return count;
+	}
+
+	/**
+	 * Counts the number of transaction functions with a given complexity
+	 */
+	public int countTransactionFunctions(SoftwareSystem system, Complexity c) 
+	{
+		int count = 0;
+		
+		for (TransactionFunction tf : getSystem().getTransactionModel().getTransactionFunctions())
+		{
+			Complexity c1 = calculateTransactionComplexity(tf);
+			
+			if (c1 == c)
+				count++;
+		}
+		
+		return count;
 	}
 }
