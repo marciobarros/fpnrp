@@ -10,25 +10,38 @@ vargha.delaney <- function(r1, r2) {
 }
 
 # Load data - micro do Marcio
-data <- read.table(file="/Users/Marcio/Desktop/Codigos/fpnrp/result/analysis 393c/dados.txt", sep=" ", header=TRUE);
+fpdata <- read.table(file="/Users/Marcio/Desktop/Codigos/fpnrp/result/analysis 393c/dados fpnrp.txt", sep=" ", header=TRUE);
+cldata <- read.table(file="/Users/Marcio/Desktop/Codigos/fpnrp/result/analysis 393c/dados clnrp.txt", sep=" ", header=TRUE);
 
 # drops the solution column
 drops <- c("SOL", "CYCLE", "BEST")
-data <- data[ , !(names(data) %in% drops)]
+fpdata <- fpdata[ , !(names(fpdata) %in% drops)]
+cldata <- cldata[ , !(names(cldata) %in% drops)]
 
 # Loads the data table library
 library("data.table")
-dt <- data.table(data)
+fpdt <- data.table(fpdata)
+cldt <- data.table(cldata)
 
-# Descriptive statistics
-medians <- dt[, .(mean = median(FIT)), by=list(INST, MODEL, PERC)]
-medianByRound <- reshape(medians, idvar = c("MODEL", "PERC"), timevar = "INST", direction = "wide")
+# Descriptive statistics for FP-NRP
+fpmedians <- fpdt[, .(mean = median(FIT)), by=list(INST, MODEL, PERC)]
+fpmedianByRound <- reshape(fpmedians, idvar = c("MODEL", "PERC"), timevar = "INST", direction = "wide")
 
-maxs <- dt[, .(max = max(FIT)), by=list(INST, MODEL, PERC)]
-maxByRound <- reshape(maxs, idvar = c("MODEL", "PERC"), timevar = "INST", direction = "wide")
+fpmaxs <- fpdt[, .(max = max(FIT)), by=list(INST, MODEL, PERC)]
+fpmaxByRound <- reshape(fpmaxs, idvar = c("MODEL", "PERC"), timevar = "INST", direction = "wide")
 
-mins <- dt[, .(min = min(FIT)), by=list(INST, MODEL, PERC)]
-minByRound <- reshape(mins, idvar = c("MODEL", "PERC"), timevar = "INST", direction = "wide")
+fpmins <- fpdt[, .(min = min(FIT)), by=list(INST, MODEL, PERC)]
+fpminByRound <- reshape(fpmins, idvar = c("MODEL", "PERC"), timevar = "INST", direction = "wide")
+
+# Descriptive statistics for CL-NRP
+clmedians <- cldt[, .(mean = median(FIT)), by=list(INST, MODEL, PERC)]
+clmedianByRound <- reshape(clmedians, idvar = c("MODEL", "PERC"), timevar = "INST", direction = "wide")
+
+clmaxs <- cldt[, .(max = max(FIT)), by=list(INST, MODEL, PERC)]
+clmaxByRound <- reshape(clmaxs, idvar = c("MODEL", "PERC"), timevar = "INST", direction = "wide")
+
+clmins <- cldt[, .(min = min(FIT)), by=list(INST, MODEL, PERC)]
+clminByRound <- reshape(clmins, idvar = c("MODEL", "PERC"), timevar = "INST", direction = "wide")
 
 # Inference tests and effect-size
 instances <- unique(data$INST)
@@ -57,3 +70,5 @@ for (instance_ in instances)
 }
 
 result <- data.frame(instance=names, pvalue=pvalues, es=effectsizes)
+
+# confidence interval ???

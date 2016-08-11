@@ -172,8 +172,8 @@ public class MainProgram
 //		optimize("saida classic 200c 80TT.txt", false, INSTANCES_NAMES);
 //		analyze("result/analysis 50c 80TT/saida fpnrp 50c 80TT.txt", "result/analysis 50c 80TT/saida classic 50c 80TT.txt");
 
-		optimizeILS("parm2 100c ils fpnrp.txt", true, "Parametros2");	
 		optimizeILS("parm2 100c ils clnrp.txt", false, "Parametros2");	
+		optimizeILS("parm2 100c ils fpnrp.txt", true, "Parametros2");	
 //		optimizeILS("bols saida ils fpnrp.txt", true, "BolsaDeValores");	
 //		optimizeILS("saida ils classic.txt", false, INSTANCES_NAMES);
 	}
