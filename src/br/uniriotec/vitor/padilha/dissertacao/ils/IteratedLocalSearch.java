@@ -22,11 +22,6 @@ import lombok.Getter;
 public class IteratedLocalSearch 
 {
 	/**
-	 * Number of transactions changed during perturbation
-	 */
-	private static final int PERTURBATION_AMOUNT = 10;
-
-	/**
 	 * File where details of the search process will be printed
 	 */
 	private PrintStream detailsFile;
@@ -75,11 +70,16 @@ public class IteratedLocalSearch
 	 * Order under which requirements will be accessed
 	 */
 	private int[] selectionOrder;
+	
+	/**
+	 * Number of transactions changed during perturbation
+	 */
+	private int perturbationAmount;
 
 	/**
 	 * Initializes the search process
 	 */
-	public IteratedLocalSearch(PrintStream detailsFile, String prefixDetails, SoftwareSystem project, double budgetPercentile, boolean optimizedVersion, int maxEvaluations)
+	public IteratedLocalSearch(PrintStream detailsFile, String prefixDetails, SoftwareSystem project, double budgetPercentile, boolean optimizedVersion, int maxEvaluations, int perturbation)
 	{
 		this.project = project;
 		this.calculator = optimizedVersion ? new OptimizedFunctionPointsCalculator(project) : new ClassicFunctionPointsCalculator(project);
@@ -90,6 +90,7 @@ public class IteratedLocalSearch
 		this.prefixDetails = prefixDetails;
 		this.evaluationsConsumed = 0;
 		this.iterationBestFound = 0;
+		this.perturbationAmount = perturbation;
 
 		calculateProfitLossRatios();
 		createRandomSelectionOrder();
@@ -285,7 +286,7 @@ public class IteratedLocalSearch
 		int transactionCount = solution.length;
 		boolean[] perturbedSolution = Arrays.copyOf(solution, transactionCount);
 
-		for (int i = 0; i < PERTURBATION_AMOUNT; i++)
+		for (int i = 0; i < perturbationAmount; i++)
 		{
 			int transaction = PseudoRandom.randInt(0, transactionCount-1);
 			perturbedSolution[transaction] = !perturbedSolution[transaction];

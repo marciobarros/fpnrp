@@ -22,7 +22,7 @@ import unirio.experiments.monoobjective.execution.StreamMonoExperimentListener;
 
 public class MainProgram
 {
-	private static final int CYCLES = 100;
+	private static final int CYCLES = 30;
 
 	private static final String[] INSTANCES_NAMES = new String[] { "Academico", "GestaoDePessoas", "Parametros", "BolsaDeValores" };
 	
@@ -142,7 +142,7 @@ public class MainProgram
 					int maxEvaluations = 1000 * transactions * transactions;
 					String prefixDetails = system.getName() + percentile + "," + cycle;
 					
-					IteratedLocalSearch ils = new IteratedLocalSearch(null, prefixDetails, system, percentile, optimizedVersion, maxEvaluations);
+					IteratedLocalSearch ils = new IteratedLocalSearch(null, prefixDetails, system, percentile, optimizedVersion, maxEvaluations, 5);
 					boolean[] solution = ils.execute();
 
 					double satisfaction = calculator.calculateSatisfactionPercentile(solution);
@@ -162,6 +162,42 @@ public class MainProgram
 //		psDetails.close();
 //		outDetails.close();
 	}
+
+	protected static void optimizeParameter(String outputFilename, int perturbationAmount, String... instances) throws Exception
+	{
+		FileOutputStream out = new FileOutputStream(outputFilename);
+		PrintStream ps = new PrintStream(out);
+
+		for (String instance : instances)
+		{
+			SoftwareSystem system = new FunctionsPointReader().execute(INSTANCE_DIRECTORY + instance + "/functions-point.xml", INSTANCE_DIRECTORY + instance + "/stakeholders-interest.xml");
+			FunctionPointsCalculator calculator = new OptimizedFunctionPointsCalculator(system);
+
+			for (int cycle = 0; cycle < CYCLES; cycle++)
+			{
+				long startTime = System.currentTimeMillis();
+				System.out.print("Processing " + instance + " at " + 30 + "% #" + cycle + " ... ");
+
+				int transactions = system.getTransactionModel().countTransactionFunctions();
+				int maxEvaluations = 1000 * transactions * transactions;
+				String prefixDetails = system.getName() + 30 + "," + cycle;
+				
+				IteratedLocalSearch ils = new IteratedLocalSearch(null, prefixDetails, system, 30, true, maxEvaluations, perturbationAmount);
+				boolean[] solution = ils.execute();
+
+				double satisfaction = calculator.calculateSatisfactionPercentile(solution);
+				double fitness = ils.calculateSolutionFitness(solution);
+				ps.println(system.getName() + " #" + cycle + " " + 30 + " " + satisfaction + " " + fitness + " " + FunctionPointsCalculator.toString(solution));
+				
+				long finishTime = System.currentTimeMillis();
+				long seconds = (finishTime - startTime) / 1000;
+				System.out.println("finished in " + seconds + " s");
+			}
+		}
+
+		ps.close();
+		out.close();
+	}
 	
 	public static void main(String[] args) throws Exception
 	{
@@ -172,9 +208,17 @@ public class MainProgram
 //		optimize("saida classic 200c 80TT.txt", false, INSTANCES_NAMES);
 //		analyze("result/analysis 50c 80TT/saida fpnrp 50c 80TT.txt", "result/analysis 50c 80TT/saida classic 50c 80TT.txt");
 
-		optimizeILS("parm2 100c ils clnrp.txt", false, "Parametros2");	
-		optimizeILS("parm2 100c ils fpnrp.txt", true, "Parametros2");	
+//		optimizeILS("parm2 100c ils clnrp.txt", false, "Parametros2");	
+//		optimizeILS("parm2 100c ils fpnrp.txt", true, "Parametros2");	
 //		optimizeILS("bols saida ils fpnrp.txt", true, "BolsaDeValores");	
 //		optimizeILS("saida ils classic.txt", false, INSTANCES_NAMES);
+
+		optimizeParameter("acad 2p.txt", 2, "Academico");	
+		optimizeParameter("acad 5p.txt", 5, "Academico");	
+		optimizeParameter("acad 10p.txt", 10, "Academico");	
+
+		optimizeParameter("parm 2p.txt", 2, "Parametros");	
+		optimizeParameter("parm 5p.txt", 5, "Parametros");	
+		optimizeParameter("parm 10p.txt", 10, "Parametros");	
 	}
 }
