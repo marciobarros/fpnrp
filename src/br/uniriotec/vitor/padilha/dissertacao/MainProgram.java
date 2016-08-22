@@ -201,7 +201,7 @@ public class MainProgram
 	
 	public static void main(String[] args) throws Exception
 	{
-//		showProperties("Parametros2");
+		showProperties("Parametros2");
 //		simulateDifferences(INSTANCES_NAMES);
 
 //		optimize("saida fpnrp 200c 80TT.txt", true, INSTANCES_NAMES);	
@@ -213,12 +213,12 @@ public class MainProgram
 //		optimizeILS("bols saida ils fpnrp.txt", true, "BolsaDeValores");	
 //		optimizeILS("saida ils classic.txt", false, INSTANCES_NAMES);
 
-		optimizeParameter("acad 2p.txt", 2, "Academico");	
-		optimizeParameter("acad 5p.txt", 5, "Academico");	
-		optimizeParameter("acad 10p.txt", 10, "Academico");	
-
-		optimizeParameter("parm 2p.txt", 2, "Parametros");	
-		optimizeParameter("parm 5p.txt", 5, "Parametros");	
-		optimizeParameter("parm 10p.txt", 10, "Parametros");	
+//		optimizeParameter("acad 2p.txt", 2, "Academico");	
+//		optimizeParameter("acad 5p.txt", 5, "Academico");	
+//		optimizeParameter("acad 10p.txt", 10, "Academico");	
+//
+//		optimizeParameter("parm 2p.txt", 2, "Parametros");	
+//		optimizeParameter("parm 5p.txt", 5, "Parametros");	
+//		optimizeParameter("parm 10p.txt", 10, "Parametros");	
 	}
 }
