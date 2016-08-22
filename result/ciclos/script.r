@@ -10,8 +10,8 @@ vargha.delaney <- function(r1, r2) {
 }
 
 # Load data - micro do Marcio
-fpdata <- read.table(file="/Users/Marcio/Desktop/Codigos/fpnrp/result/analysis 393c/dados fpnrp.txt", sep=" ", header=TRUE);
-cldata <- read.table(file="/Users/Marcio/Desktop/Codigos/fpnrp/result/analysis 393c/dados clnrp.txt", sep=" ", header=TRUE);
+fpdata <- read.table(file="/Users/Marcio/Desktop/Codigos/fpnrp/result/ciclos/dados fpnrp.txt", sep=" ", header=TRUE);
+cldata <- read.table(file="/Users/Marcio/Desktop/Codigos/fpnrp/result/ciclos/dados clnrp.txt", sep=" ", header=TRUE);
 
 # drops the solution column
 drops <- c("SOL", "CYCLE", "BEST")
